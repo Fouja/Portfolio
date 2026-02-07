@@ -598,6 +598,17 @@
                 e.createElement(
                   'div',
                   { className: 'project-links' },
+                  projectImages.length > 1
+                    ? e.createElement(
+                        'button',
+                        {
+                          className: 'project-link',
+                          style: { background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' },
+                          onClick: () => openLightbox(projectImages, 0)
+                        },
+                        'View Gallery'
+                      )
+                    : null,
                   p.live_url
                     ? e.createElement(
                         'a',
