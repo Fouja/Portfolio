@@ -24,7 +24,7 @@
     return value
   }
 
-  function Hero({ profile }) {
+  function Hero({ profile, openLightbox }) {
     const subtitle =
       profile?.hero_subtitle ||
       'Full-Stack Engineer · Python · Django · React · Laravel'
@@ -103,12 +103,12 @@
               : null
           )
         ),
-        e.createElement(HeroIllustration, { profile })
+        e.createElement(HeroIllustration, { profile, openLightbox })
       )
     )
   }
 
-  function HeroIllustration({ profile }) {
+  function HeroIllustration({ profile, openLightbox }) {
     const stats = [
       {
         label: 'Projects Completed',
@@ -136,7 +136,13 @@
         'div',
         { className: 'hero-illustration-avatar' },
         profile?.photo 
-          ? e.createElement('img', { src: profile.photo, alt: profile.name, className: 'profile-photo' })
+          ? e.createElement('img', { 
+              src: profile.photo, 
+              alt: profile.name, 
+              className: 'profile-photo',
+              style: { cursor: 'pointer' },
+              onClick: () => openLightbox && openLightbox([profile.photo], 0)
+            })
           : 'FH'
       ),
       e.createElement(
@@ -421,9 +427,8 @@
     )
   }
 
-  function ProjectsSection({ projects }) {
+  function ProjectsSection({ projects, openLightbox }) {
     const [tab, setTab] = useState('all')
-    const [lightbox, setLightbox] = useState({ isOpen: false, images: [], index: 0 })
 
     const mapped =
       projects && projects.length
@@ -448,30 +453,6 @@
       if (tab === 'all') return true
       return p.project_type === tab
     })
-
-    const openLightbox = (images, index) => {
-      setLightbox({ isOpen: true, images, index })
-    }
-
-    const closeLightbox = () => {
-      setLightbox({ ...lightbox, isOpen: false })
-    }
-
-    const nextImage = (e) => {
-      e.stopPropagation()
-      setLightbox((prev) => ({
-        ...prev,
-        index: (prev.index + 1) % prev.images.length,
-      }))
-    }
-
-    const prevImage = (e) => {
-      e.stopPropagation()
-      setLightbox((prev) => ({
-        ...prev,
-        index: (prev.index - 1 + prev.images.length) % prev.images.length,
-      }))
-    }
 
     return e.createElement(
       'section',
@@ -645,83 +626,6 @@
               )
             )
           })
-        ),
-        lightbox.isOpen && e.createElement(
-          'div',
-          {
-            className: 'lightbox-overlay',
-            style: {
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: 'rgba(0,0,0,0.9)',
-              zIndex: 1000,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'column'
-            },
-            onClick: closeLightbox
-          },
-          e.createElement('button', {
-            onClick: closeLightbox,
-            style: {
-              position: 'absolute',
-              top: '20px',
-              right: '30px',
-              background: 'transparent',
-              border: 'none',
-              color: '#fff',
-              fontSize: '2rem',
-              cursor: 'pointer'
-            }
-          }, '×'),
-          e.createElement('div', {
-            style: { position: 'relative', maxWidth: '90%', maxHeight: '80%' },
-            onClick: (e) => e.stopPropagation()
-          },
-            lightbox.images.length > 1 && e.createElement('button', {
-              onClick: prevImage,
-              style: {
-                position: 'absolute',
-                left: '-50px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'rgba(255,255,255,0.1)',
-                border: 'none',
-                color: '#fff',
-                fontSize: '2rem',
-                cursor: 'pointer',
-                padding: '10px',
-                borderRadius: '50%'
-              }
-            }, '‹'),
-            e.createElement('img', {
-              src: lightbox.images[lightbox.index],
-              style: { maxWidth: '100%', maxHeight: '80vh', borderRadius: '4px' }
-            }),
-            lightbox.images.length > 1 && e.createElement('button', {
-              onClick: nextImage,
-              style: {
-                position: 'absolute',
-                right: '-50px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'rgba(255,255,255,0.1)',
-                border: 'none',
-                color: '#fff',
-                fontSize: '2rem',
-                cursor: 'pointer',
-                padding: '10px',
-                borderRadius: '50%'
-              }
-            }, '›')
-          ),
-          e.createElement('div', {
-            style: { color: '#fff', marginTop: '10px' }
-          }, `${lightbox.index + 1} / ${lightbox.images.length}`)
         )
       )
     )
@@ -962,22 +866,124 @@
 
   function App() {
     const [data] = useState(window.PORTFOLIO_DATA || {})
+    const [lightbox, setLightbox] = useState({ isOpen: false, images: [], index: 0 })
+
+    const openLightbox = (images, index) => {
+      setLightbox({ isOpen: true, images, index })
+    }
+
+    const closeLightbox = () => {
+      setLightbox({ ...lightbox, isOpen: false })
+    }
+
+    const nextImage = (e) => {
+      e.stopPropagation()
+      setLightbox((prev) => ({
+        ...prev,
+        index: (prev.index + 1) % prev.images.length,
+      }))
+    }
+
+    const prevImage = (e) => {
+      e.stopPropagation()
+      setLightbox((prev) => ({
+        ...prev,
+        index: (prev.index - 1 + prev.images.length) % prev.images.length,
+      }))
+    }
 
     const profile = data.profile || null
     return e.createElement(
       e.Fragment,
       null,
-      e.createElement(Hero, { profile }),
+      e.createElement(Hero, { profile, openLightbox }),
       e.createElement(AboutSection, { profile, awards: data.awards }),
       e.createElement(EducationSection, { education: data.education }),
-      e.createElement(ExperienceSection, { experiences: data.experience }), // Note: 'experiences' in API but 'experience' in data.js
-      e.createElement(ProjectsSection, { projects: data.projects }),
-      e.createElement(SkillsSection, { skills: data.skills }), // Note: 'skillCategories' in API but 'skills' in data.js
+      e.createElement(ExperienceSection, { experiences: data.experience }),
+      e.createElement(ProjectsSection, { projects: data.projects, openLightbox }),
+      e.createElement(SkillsSection, { skills: data.skills }),
       e.createElement(ContactSection, {
         profile,
         languages: data.languages,
         interests: data.interests,
-      })
+      }),
+      lightbox.isOpen && e.createElement(
+          'div',
+          {
+            className: 'lightbox-overlay',
+            style: {
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'rgba(0,0,0,0.9)',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column'
+            },
+            onClick: closeLightbox
+          },
+          e.createElement('button', {
+            onClick: closeLightbox,
+            style: {
+              position: 'absolute',
+              top: '20px',
+              right: '30px',
+              background: 'transparent',
+              border: 'none',
+              color: '#fff',
+              fontSize: '2rem',
+              cursor: 'pointer'
+            }
+          }, '×'),
+          e.createElement('div', {
+            style: { position: 'relative', maxWidth: '90%', maxHeight: '80%' },
+            onClick: (e) => e.stopPropagation()
+          },
+            lightbox.images.length > 1 && e.createElement('button', {
+              onClick: prevImage,
+              style: {
+                position: 'absolute',
+                left: '-50px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255,255,255,0.1)',
+                border: 'none',
+                color: '#fff',
+                fontSize: '2rem',
+                cursor: 'pointer',
+                padding: '10px',
+                borderRadius: '50%'
+              }
+            }, '‹'),
+            e.createElement('img', {
+              src: lightbox.images[lightbox.index],
+              style: { maxWidth: '100%', maxHeight: '80vh', borderRadius: '4px' }
+            }),
+            lightbox.images.length > 1 && e.createElement('button', {
+              onClick: nextImage,
+              style: {
+                position: 'absolute',
+                right: '-50px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255,255,255,0.1)',
+                border: 'none',
+                color: '#fff',
+                fontSize: '2rem',
+                cursor: 'pointer',
+                padding: '10px',
+                borderRadius: '50%'
+              }
+            }, '›')
+          ),
+          e.createElement('div', {
+            style: { color: '#fff', marginTop: '10px' }
+          }, `${lightbox.index + 1} / ${lightbox.images.length}`)
+        )
     )
   }
 
