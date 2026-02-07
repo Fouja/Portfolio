@@ -140,8 +140,7 @@
               src: profile.photo, 
               alt: profile.name, 
               className: 'profile-photo',
-              style: { cursor: 'pointer' },
-              onClick: () => openLightbox && openLightbox([profile.photo], 0)
+              style: { cursor: 'default' }
             })
           : 'FH'
       ),
@@ -540,7 +539,7 @@
                     })
                   : (mainImage
                       ? e.createElement('div', {
-                          className: 'project-image-container',
+                          className: 'project-image-wrap',
                           style: { cursor: 'pointer', position: 'relative' },
                           onClick: () => openLightbox(projectImages, 0)
                         },
