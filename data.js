@@ -13,9 +13,7 @@ window.PORTFOLIO_DATA = {
     projects_completed: 25,
     years_experience: 7,
     organizations_worked: 5,
-    // TODO: Add your profile photo here. 
-    // Example: "./assets/profile.jpg"
-    photo: null 
+    photo: "./assets/photomoi.jpg" 
   },
   experience: [
     {
@@ -214,9 +212,20 @@ window.PORTFOLIO_DATA = {
       tech_stack: "Laravel, React, Inertia.js, MySQL, Docker, Electron JS, REST API, HTTPS",
       live_url: "",
       code_url: "",
-      // TODO: Add project images here. 
-      // Example: ["./assets/project1-1.jpg", "./assets/project1-2.jpg"]
-      images: []
+      images: [
+        "./assets/depot_garden_scres/graphics_garden.png",
+        "./assets/depot_garden_scres/history_page.png",
+        "./assets/depot_garden_scres/homepage2_garden.png",
+        "./assets/depot_garden_scres/homepage_garden.png",
+        "./assets/depot_garden_scres/loginpage_garden.png",
+        "./assets/depot_garden_scres/lost_productspage_garden.png",
+        "./assets/depot_garden_scres/pdf_exemple.png",
+        "./assets/depot_garden_scres/receipts_page_garden.png",
+        "./assets/depot_garden_scres/statistics_page.png",
+        "./assets/depot_garden_scres/stock_page_garden.png",
+        "./assets/depot_garden_scres/transferbuttenclick.png",
+        "./assets/depot_garden_scres/transfertded page.png"
+      ]
     },
     {
       title: "Global Statistics Web App",
@@ -225,7 +234,11 @@ window.PORTFOLIO_DATA = {
       tech_stack: "Streamlit, Python, Pandas, Data Visualization",
       live_url: "https://ppaindicator.streamlit.app",
       code_url: "",
-      images: []
+      images: [
+        "./assets/PPA_stramlite_screen/PPA streamlit2.png",
+        "./assets/PPA_stramlite_screen/ppastreamlit1.png",
+        "./assets/PPA_stramlite_screen/ppastreamlit3.png"
+      ]
     },
     {
       title: "Secure E-commerce Platform",
@@ -234,7 +247,13 @@ window.PORTFOLIO_DATA = {
       tech_stack: "Django, DRF, React, PostgreSQL, OAuth2, JWT, Pillow, Bleach, Docker, Linux, SSL",
       live_url: "",
       code_url: "",
-      images: []
+      images: [
+        "./assets/secured_ecommerce_screns/card.png",
+        "./assets/secured_ecommerce_screns/chat.png",
+        "./assets/secured_ecommerce_screns/chat_chinamall.png",
+        "./assets/secured_ecommerce_screns/chinamall.png",
+        "./assets/secured_ecommerce_screns/footer.png"
+      ]
     },
     {
       title: "Local AI Agent Desktop App",
@@ -243,7 +262,9 @@ window.PORTFOLIO_DATA = {
       tech_stack: "Kivy, Python, Ollama, Local LLMs",
       live_url: "",
       code_url: "",
-      images: []
+      images: [
+        "./assets/localia_screen/Capture d'écran 2026-02-07 162142.png"
+      ]
     },
     {
       title: "Mobile E-commerce Extension",
@@ -252,7 +273,12 @@ window.PORTFOLIO_DATA = {
       tech_stack: "React Native, Expo Go, Django, REST APIs",
       live_url: "",
       code_url: "",
-      images: []
+      images: [
+        "./assets/expo_mobile_app_screens/expo_3.png",
+        "./assets/expo_mobile_app_screens/expo_mobile_app.png",
+        "./assets/expo_mobile_app_screens/expo_mobile_app2.png",
+        "./assets/expo_mobile_app_screens/expo_mobile_app3.png"
+      ]
     },
     {
       title: "Simple E-commerce Web App",
