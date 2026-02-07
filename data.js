@@ -12,10 +12,11 @@ window.PORTFOLIO_DATA = {
     github_url: "https://github.com/Fouja",
     projects_completed: 25,
     years_experience: 7,
-    organizations_worked: 5,
-    photo: "./assets/photomoi.jpg" 
-  },
-  experience: [
+      organizations_worked: 5,
+      photo: "./assets/photomoi.jpg",
+      resume_url: "./assets/Fouad_Hammani_Engineer_Canada_ATS.pdf"
+    },
+    experience: [
     {
       company: "Garden Algérie / ACI (Agro Consulting International)",
       role: "Full-Stack Developer",
@@ -287,6 +288,7 @@ window.PORTFOLIO_DATA = {
       tech_stack: "Django, HTML, CSS, JavaScript",
       live_url: "",
       code_url: "",
+      video: "./assets/ecommercesimplo.mp4",
       images: []
     }
   ],

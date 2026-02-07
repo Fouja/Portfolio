@@ -87,7 +87,20 @@
                 className: 'btn btn-outline',
               },
               'Get In Touch'
-            )
+            ),
+            profile?.resume_url
+              ? e.createElement(
+                  'a',
+                  {
+                    href: profile.resume_url,
+                    className: 'btn btn-outline',
+                    target: '_blank',
+                    rel: 'noopener noreferrer',
+                    download: true, // Hint to download
+                  },
+                  'Download Resume'
+                )
+              : null
           )
         ),
         e.createElement(HeroIllustration, { profile })
@@ -410,6 +423,7 @@
 
   function ProjectsSection({ projects }) {
     const [tab, setTab] = useState('all')
+    const [lightbox, setLightbox] = useState({ isOpen: false, images: [], index: 0 })
 
     const mapped =
       projects && projects.length
@@ -428,25 +442,36 @@
               code_url: '',
               project_type: 'personal',
             },
-            {
-              id: 2,
-              title: 'Secure E-commerce Platform',
-              subtitle: 'Django + React',
-              description:
-                'Full e-commerce platform with JWT/OAuth2 auth, admin analytics, live messaging, and hardened XSS protection deployed on a Linux VPS with SSL.',
-              tech_stack:
-                'Django, DRF, React, PostgreSQL, JWT, OAuth2, Docker, Nginx',
-              image_url: '',
-              live_url: '',
-              code_url: '',
-              project_type: 'personal',
-            },
           ]
 
     const filtered = mapped.filter(function (p) {
       if (tab === 'all') return true
       return p.project_type === tab
     })
+
+    const openLightbox = (images, index) => {
+      setLightbox({ isOpen: true, images, index })
+    }
+
+    const closeLightbox = () => {
+      setLightbox({ ...lightbox, isOpen: false })
+    }
+
+    const nextImage = (e) => {
+      e.stopPropagation()
+      setLightbox((prev) => ({
+        ...prev,
+        index: (prev.index + 1) % prev.images.length,
+      }))
+    }
+
+    const prevImage = (e) => {
+      e.stopPropagation()
+      setLightbox((prev) => ({
+        ...prev,
+        index: (prev.index - 1 + prev.images.length) % prev.images.length,
+      }))
+    }
 
     return e.createElement(
       'section',
@@ -515,20 +540,50 @@
                 return s.trim()
               })
               .filter(Boolean)
-            const imageUrl = p.image_url || (p.images && p.images.length > 0 ? p.images[0] : null)
+            
+            const projectImages = p.images && p.images.length > 0 ? p.images : (p.image_url ? [p.image_url] : [])
+            const mainImage = projectImages.length > 0 ? projectImages[0] : null
+
             return e.createElement(
               'article',
               { key: p.id || p.title, className: 'project-card' },
               e.createElement(
                 'div',
-                { className: 'project-image-wrap' },
-                imageUrl
-                  ? e.createElement('img', {
-                      src: imageUrl,
-                      alt: p.title,
-                      className: 'project-image',
+                { className: 'project-media-wrap' },
+                p.video 
+                  ? e.createElement('video', {
+                      src: p.video,
+                      controls: true,
+                      className: 'project-video',
+                      style: { width: '100%', borderRadius: '8px 8px 0 0' }
                     })
-                  : null
+                  : (mainImage
+                      ? e.createElement('div', {
+                          className: 'project-image-container',
+                          style: { cursor: 'pointer', position: 'relative' },
+                          onClick: () => openLightbox(projectImages, 0)
+                        },
+                        e.createElement('img', {
+                          src: mainImage,
+                          alt: p.title,
+                          className: 'project-image',
+                        }),
+                        projectImages.length > 1 
+                          ? e.createElement('div', {
+                              style: {
+                                position: 'absolute',
+                                bottom: '10px',
+                                right: '10px',
+                                background: 'rgba(0,0,0,0.7)',
+                                color: '#fff',
+                                padding: '4px 8px',
+                                borderRadius: '4px',
+                                fontSize: '0.8rem'
+                              }
+                            }, `+${projectImages.length - 1} more`)
+                          : null
+                        )
+                      : null)
               ),
               e.createElement(
                 'div',
@@ -590,6 +645,83 @@
               )
             )
           })
+        ),
+        lightbox.isOpen && e.createElement(
+          'div',
+          {
+            className: 'lightbox-overlay',
+            style: {
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'rgba(0,0,0,0.9)',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column'
+            },
+            onClick: closeLightbox
+          },
+          e.createElement('button', {
+            onClick: closeLightbox,
+            style: {
+              position: 'absolute',
+              top: '20px',
+              right: '30px',
+              background: 'transparent',
+              border: 'none',
+              color: '#fff',
+              fontSize: '2rem',
+              cursor: 'pointer'
+            }
+          }, '×'),
+          e.createElement('div', {
+            style: { position: 'relative', maxWidth: '90%', maxHeight: '80%' },
+            onClick: (e) => e.stopPropagation()
+          },
+            lightbox.images.length > 1 && e.createElement('button', {
+              onClick: prevImage,
+              style: {
+                position: 'absolute',
+                left: '-50px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255,255,255,0.1)',
+                border: 'none',
+                color: '#fff',
+                fontSize: '2rem',
+                cursor: 'pointer',
+                padding: '10px',
+                borderRadius: '50%'
+              }
+            }, '‹'),
+            e.createElement('img', {
+              src: lightbox.images[lightbox.index],
+              style: { maxWidth: '100%', maxHeight: '80vh', borderRadius: '4px' }
+            }),
+            lightbox.images.length > 1 && e.createElement('button', {
+              onClick: nextImage,
+              style: {
+                position: 'absolute',
+                right: '-50px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255,255,255,0.1)',
+                border: 'none',
+                color: '#fff',
+                fontSize: '2rem',
+                cursor: 'pointer',
+                padding: '10px',
+                borderRadius: '50%'
+              }
+            }, '›')
+          ),
+          e.createElement('div', {
+            style: { color: '#fff', marginTop: '10px' }
+          }, `${lightbox.index + 1} / ${lightbox.images.length}`)
         )
       )
     )
