@@ -864,7 +864,7 @@
           e.createElement(
             'div',
             { className: 'card about-text' },
-            'If you are looking for a full-stack engineer who can move from architecture and backend design to clean, production-ready frontends, I would be happy to talk. I am open to opportunities across Canada, with particular interest in Toronto, Vancouver, and Montreal.',
+            'If you are looking for a full-stack engineer who can move from architecture and backend design to clean, production-ready frontends,AI agents integration into your SaaS applications, I would be happy to talk.',
             e.createElement('br'),
             e.createElement('br'),
             'Feel free to reach out by email or LinkedIn—I’d love to hear about what you are building.'
