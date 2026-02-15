@@ -777,7 +777,7 @@
                 'div',
                 { className: 'contact-value' },
                 profile?.phone ||
-                  '+213797468501 (Available for Canadian relocation)'
+                  '+16133026686 (Ottawa, Ontario, Canada (available for relocation))'
               )
             ),
             e.createElement(
