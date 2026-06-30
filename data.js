@@ -14,7 +14,8 @@ window.PORTFOLIO_DATA = {
     projects_completed: 8,
     years_experience: 7,
       organizations_worked: 5,
-      photo: "./assets/linkedcover.png",
+      photo: "./assets/linked_cover.png",
+      logo: "./assets/foujalab.png",
       resume_url: "./assets/Fouad_Hammani_Engineer_Canada_ATS.pdf"
     },
     experience: [

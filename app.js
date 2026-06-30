@@ -132,6 +132,14 @@
     return e.createElement(
       'aside',
       { className: 'hero-illustration-card' },
+      profile?.logo
+        ? e.createElement('img', {
+            src: profile.logo,
+            alt: 'FoujeLab Logo',
+            className: 'logo-brand',
+            style: { cursor: 'default' }
+          })
+        : null,
       e.createElement(
         'div',
         { className: 'hero-illustration-avatar' },
