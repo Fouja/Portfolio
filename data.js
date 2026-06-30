@@ -1,143 +1,149 @@
 window.PORTFOLIO_DATA = {
   profile: {
     name: "FOUAD HAMMANI",
-    headline: "Software Developer",
-    hero_subtitle: "Solution-oriented Full-Stack Engineer · Python · Django · React · Laravel",
-    location: "Relocating to Anywhere in Canada",
-    availability: "Ottawa, Ontario, Canada | Open for relocation ",
-    summary: "Solution-oriented Software Engineer with 7+ years in full-stack development, data automation, and AI integration. Expertise in Python, React, Django, and Laravel, delivering scalable web/mobile apps in B2B/B2C environments. Proven in building ERPs, e-commerce platforms, and AI agents, with a focus on secure, efficient solutions. Eager to contribute to innovative teams in Canada.",
-    email: "fouadhammani94@gmail.com",
-    phone: "+16133026686 ",
-    linkedin_url: "https://linkedin.com/in/fouad-hammani-software-engineer",
+    headline: "AI Software Engineer",
+    hero_subtitle: "Full-Stack Developer · AI & Data Engineering · Python · Django · React · Langchain",
+    location: "Ontario",
+    availability: "Ontario | Open for opportunities",
+    summary: "AI Software Engineer with 7+ years of experience in IT environments, SaaS/IaC architecture. Expertise in Web development (back-end and front-end) using HTML5, CSS, JavaScript, React, Python, and PHP. Certified Multi-agent Builder using Langchain, Langraph, CrewAI, and AutoGen. Extensive experience in database administration (SQL, PostgreSQL, MySQL, KQL, Apache Spark, Kafka). Proficient in Agile methodologies and prompt engineering for LLMs/NLP personalization with RAG and LoRA Fine-tuning. Bilingual (French/English) with strong communication skills.",
+    email: "Fouadhammani94@gmail.com",
+    phone: "(613) 451-0031",
+    linkedin_url: "https://www.linkedin.com/in/fouad-hammani-software-engineer/",
     github_url: "https://github.com/Fouja",
+    portfolio_url: "https://fouja.github.io/Portfolio/",
     projects_completed: 8,
     years_experience: 7,
       organizations_worked: 5,
-      photo: "./assets/photomoi.jpg",
+      photo: "./assets/linkedcover.png",
       resume_url: "./assets/Fouad_Hammani_Engineer_Canada_ATS.pdf"
     },
     experience: [
     {
-      company: "Garden Algérie / ACI (Agro Consulting International)",
-      role: "Full-Stack Developer",
-      location: "Algeria",
+      company: "ACI (Agro Consulting International)",
+      role: "Full-Stack Developer / Product Owner",
+      location: "Algiers, Algeria",
       start: "Jan 2025",
-      end: "Present",
-      description: "Designed, developed, and deployed a full ERP and SharePoint solution using Laravel (backend), React (frontend), Inertia.js (API), MySQL (database), and Docker (containerization), improving operational efficiency by 30% in inventory management. Deployed monolithic app on company servers via XAMPP and integrated as microservices with HTTPS API endpoints. Managed modules for suppliers, inventory, purchase orders, analytics, and dashboards, and converted the web app to an installable desktop application using Electron JS.",
-      technologies: "Laravel, React, Inertia.js, MySQL, Docker, Electron JS, Microservices",
+      end: "April 2026",
+      description: "Designed and deployed a full ERP platform using Laravel, React/Typescript, Inertia.js, MySQL, and Docker. Improved inventory and supplier operations by 30% through automation and dashboards. Converted the web platform into a desktop application using Electron. Deployed secure HTTPS services and modularized monolithic architecture into APIs. Trained company employees on the new intuitive personalized software manager. Implemented an AI agent Chatbot with MCP to display business analytics dashboards.",
+      technologies: "Laravel, React, TypeScript, Inertia.js, MySQL, Docker, Electron, MCP, AI Agents",
       order: 1
     },
     {
-      company: "Freelance",
-      role: "Full-Stack Developer",
+      company: "FoujeLab",
+      role: "Full-Stack Developer / Product Owner",
       location: "Remote",
-      start: "Jan 2024",
+      start: "Jan 2023",
       end: "Present",
-      description: "Built an interactive global statistics web app with a world map using Streamlit, Pandas, and Python (ppaindicator.streamlit.app), handling data for 10K+ data points. Developed a secure e-commerce platform with Django and PostgreSQL, including OAuth2/JWT auth, admin dashboard, live messaging, automated marketing image generation (Pillow), XSS protection (Bleach), Dockerized deployment on a Linux VPS with SSH/SSL. Created local AI agents using Kivy and Ollama, extended the e-commerce app to mobile via React Native and Expo Go, and built additional Django-based e-commerce solutions.",
-      technologies: "Django, DRF, Streamlit, Pandas, PostgreSQL, SQLite, React Native, Expo, Kivy, Ollama, Pillow, Bleach, Docker, Nginx",
+      description: "Built a secure e-commerce platform with Django, OAuth2/JWT authentication, admin dashboards, and PostgreSQL with an LLM RAG chatbot connected to Gemini Flash 2.5 and database products deployed on Linux VPS with Docker. Developed a Streamlit global statistics app with Pandas that streams live statistics on interactive geographical cards. Created a local Multi-agent assistant that navigates the web, scrapes, and navigates through OS systems using Kivy UI and Ollama LLM with Playwright for scraping and crawling on Chromium navigator. Extended web platforms to mobile using React Native and Expo.",
+      technologies: "Django, PostgreSQL, React Native, Expo, Streamlit, Pandas, Kivy, Ollama, Playwright, Gemini, RAG, Docker",
       order: 2
     },
     {
-      company: "Samsung (Showroom)",
-      role: "Showroom Commercial Manager (B2B/B2C)",
-      location: "Algeria",
+      company: "Samsung (B2B/B2C)",
+      role: "Showroom Commercial and Users Trainer",
+      location: "Algiers, Algeria",
       start: "Jul 2023",
       end: "Jan 2024",
-      description: "Trained sales team on ERP (Odoo) and product demos, boosting team performance by 20% in sales conversions. Converted B2C clients into B2B partners, increasing partnerships by 15 clients.",
-      technologies: "Odoo, ERP, Customer Training, Sales",
+      description: "Trained and taught sales teams on ERP (Odoo) and product demos, increasing conversions by 20%. Expanded B2B partnerships by onboarding 15 new B2B clients.",
+      technologies: "Odoo, ERP, Sales Training, B2B/B2C",
       order: 3
     },
     {
       company: "Free Telecom / WebHelp / Concentrix",
       role: "Technical & Commercial Support",
-      location: "France",
+      location: "Algiers, Algeria",
       start: "Jul 2022",
       end: "Jul 2023",
-      description: "Managed customer complaints, CRM databases, and incident resolution while maintaining 95% satisfaction KPIs. Achieved commercial leader status for 8 months through effective upselling during technical support.",
-      technologies: "CRM, Customer Support, Troubleshooting",
+      description: "Managed CRM systems and technical incidents with 95% customer satisfaction KPIs. Ranked commercial leader for 8 consecutive months through upselling strategies. Managed customer contacts by analyzing, processing, directing, and following up on requests. Actively supported team development by assisting new employees and coaching advisors.",
+      technologies: "CRM, Adobe Experience Manager, Customer Support, Technical Support",
       order: 4
     },
     {
+      company: "Sonelgaz",
+      role: "Junior Full-Stack Web Developer - Internship",
+      location: "Algiers, Algeria",
+      start: "May 2021",
+      end: "November 2021",
+      description: "Internship focused on full-stack web development practices and enterprise systems.",
+      technologies: "Web Development, Full-Stack",
+      order: 5
+    },
+    {
       company: "Bouzar Pharma",
-      role: "Data Analyst Assistant and Stock Manager",
-      location: "Algeria",
+      role: "Junior Data Analyst",
+      location: "Algiers, Algeria",
       start: "May 2019",
       end: "Jun 2022",
-      description: "Managed stock flow and pharmaceutical data via CSV pipelines, Excel, and PowerBI, informing purchasing decisions and reducing shortages by 25%.",
-      technologies: "Excel, CSV Pipelines, PowerBI, Stock Management",
-      order: 5
+      description: "Managed pharmaceutical stock and analytics using Excel, CSV pipelines, and personalized PowerBI dashboards. Reduced supply shortages by 25% through data-driven purchasing insights. Managed ERP administration and user permissions for commercial staff.",
+      technologies: "Excel, CSV, PowerBI, ERP, Data Analysis",
+      order: 6
     }
   ],
   education: [
     {
-      institution: "GoMyCode School / Woolf University",
-      program: "MSc in Software Engineering",
-      start: "Online",
-      end: "Expected 2026",
-      description: "Masters focused on advanced software engineering practices."
+      institution: "WES",
+      program: "EDE - Diploma in Computer Science (Databases)",
+      start: "Nov 2024",
+      end: "Nov 2024",
+      description: "Educational Credential Evaluation for Computer Science with focus on Databases"
     },
     {
-      institution: "INSFPTB – Algeria",
-      program: "Bachelor in Computer Science - Relational Databases",
+      institution: "ADG Education",
+      program: "Bachelor Degree in Secure Infrastructure Administration",
+      start: "2021",
+      end: "2023",
+      location: "Paris, France",
+      description: "Focused on secure infrastructure administration and cloud security practices."
+    },
+    {
+      institution: "INSFPTB",
+      program: "College Diploma in Computer Science - Databases",
       start: "Sep 2018",
       end: "Nov 2021",
+      location: "Algiers, Algeria",
       description: "Focused on relational database design and development."
-    },
-    {
-      institution: "Houari Boumédiéne University – Algeria",
-      program: "L1 Science & Technology",
-      start: "2014",
-      end: "2017",
-      description: "Foundation in science and technology."
-    },
-    {
-      institution: "Ahmed El Birouni High School – Algeria",
-      program: "Double High School Diploma (Baccalauréat – Scientific Stream)",
-      start: "2013",
-      end: "2014",
-      description: "Scientific stream Baccalauréat (double diploma)."
     }
   ],
   awards: [
     {
-      title: "Python and Django Certification",
-      issuer: "W3Schools",
-      year: "2024"
+      title: "Big Data Foundations - Level 2",
+      issuer: "Big Data Foundations | Ontario",
+      year: "Expected Jul 2026"
     },
     {
-      title: "Full-Stack Web Developer Training (6 months)",
-      issuer: "Sonelgaz",
-      year: "2021"
+      title: "Azure and Microsoft Fabric Badge",
+      issuer: "Microsoft Learn | Montreal, QC",
+      year: "Jun 2026"
     },
     {
-      title: "Soft Skills and Canadian Workplace Culture Training",
-      issuer: "SOPA Pre-Arrival Canada Program",
-      year: ""
+      title: "Machine Learning Certification",
+      issuer: "Kaggle Data Science | Ottawa, ON",
+      year: "Jun 2026"
+    },
+    {
+      title: "AI Multi-agent Builder Certification",
+      issuer: "IBM SkillsBuild | Ottawa, ON",
+      year: "May 2026"
+    },
+    {
+      title: "Agile Management Certification",
+      issuer: "IBM SkillsBuild | Ottawa, ON",
+      year: "May 2026"
+    },
+    {
+      title: "Soft Skills & Canadian Workplace Culture",
+      issuer: "SOPA Pre-Arrival Program | Ottawa, ON",
+      year: "Feb 2026"
+    },
+    {
+      title: "Python & Django Certification",
+      issuer: "W3Schools | Sadnes, Norway",
+      year: "Jan 2024"
     },
     {
       title: "B2 English Certification",
-      issuer: "Islington Centre for English",
-      year: "2017"
-    },
-    {
-      title: "Customer Communication, Ethics, and Inclusive Workplace Practices",
-      issuer: "Webhelp University",
-      year: ""
-    },
-    {
-      title: "Playwright and Screenwriter Certification",
-      issuer: "Ministry of Culture and Art Algeria",
-      year: "2023"
-    },
-    {
-      title: "Classical Piano (3rd Year)",
-      issuer: "Algiers Conservatory",
-      year: "2014–2019"
-    },
-    {
-      title: "P1 Scuba Diving Certification",
-      issuer: "",
-      year: "2013"
+      issuer: "Islington Centre of English | London, UK",
+      year: "Sep 2017"
     }
   ],
   skills: {
@@ -145,64 +151,82 @@ window.PORTFOLIO_DATA = {
       "Python",
       "JavaScript",
       "TypeScript",
-      "PHP"
+      "PHP",
+      "ES6"
     ],
     "Frameworks & Libraries": [
-      "Django / DRF",
-      "React / Redux Toolkit / Axios",
+      "React",
+      "Django / Django REST",
       "Laravel",
+      "React Native",
+      "Electron",
+      "Inertia.js",
       "Next.js",
-      "React Native (basics)",
-      "Kivy",
-      "Electron JS",
-      "InertiaJS",
       "Streamlit",
       "Tailwind CSS",
-      "WebSockets"
+      "WCAG",
+      "Kivy"
     ],
-    "Databases & AI Tools": [
-      "MySQL",
+    "AI & Machine Learning": [
+      "Langchain",
+      "Langraph",
+      "CrewAI",
+      "AutoGen",
+      "Ollama (Local LLMs)",
+      "Hugging Face",
+      "RAG (Retrieval-Augmented Generation)",
+      "LoRA Fine-tuning",
+      "Scikit-Learn",
+      "TensorFlow",
+      "Transformers",
+      "IBM WatsonAI",
+      "NLP",
+      "Machine Learning"
+    ],
+    "Databases & Data": [
       "PostgreSQL",
+      "MySQL",
       "SQLite",
-      "MongoDB (NoSQL)",
+      "NoSQL",
       "SQLAlchemy",
-      "Selenium / Playwright",
-      "Ollama / Hugging Face (local LLMs)",
-      "Kafka",
       "Pandas",
-      "Web Scraping"
+      "Streamlit",
+      "Json",
+      "KQL",
+      "Kafka",
+      "RabbitMQ",
+      "Apache Spark"
     ],
-    "DevOps & Tools": [
+    "Web Scraping & Automation": [
+      "Selenium",
+      "Playwright",
+      "Web Scraping",
+      "Web Crawling"
+    ],
+    "DevOps & Cloud": [
+      "Docker",
+      "Git",
       "GitHub",
-      "Docker Compose",
-      "REST APIs",
-      "VS Code",
-      "Linux (Bash)",
+      "Linux",
+      "Bash",
       "Nginx",
       "Gunicorn",
-      "Kubernetes (basics)",
-      "AWS (basics)",
-      "Microsoft Azure (basics)",
-      "CI/CD Pipelines",
-      "HTTP/HTTPS Clients",
-      "Request Interceptors"
+      "CI/CD",
+      "REST APIs",
+      "AWS",
+      "Azure",
+      "Microsoft Fabric",
+      "Apache Spark"
     ],
-    "Cybersecurity": [
+    "Security & Architecture": [
       "JWT",
       "OAuth2",
       "OWASP",
-      "CSRF/XSS Protection"
-    ],
-    "Methodologies & Architectures": [
+      "CSRF/XSS Protection",
+      "MVC",
       "Microservices",
-      "Monolithic / MVC Architectures",
-      "ORM",
-      "Session Management",
       "Agile/Scrum",
-      "UI/UX Collaboration",
-      "Cross-Browser Compatibility",
-      "Debugging",
-      "Relational Databases"
+      "Jira"
     ]
   },
   projects: [
