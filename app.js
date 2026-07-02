@@ -41,7 +41,7 @@
     )
   }
 
-  function Hero({ profile, openLightbox, onPlayIntroVoice, isVoicePlaying }) {
+  function Hero({ profile, openLightbox }) {
     const subtitle =
       profile?.hero_subtitle ||
       'Full-Stack Engineer · Python · Django · React · Laravel'
@@ -141,15 +141,6 @@
             e.createElement(
               'div',
               { className: 'hero-actions' },
-              e.createElement(
-                'button',
-                {
-                  type: 'button',
-                  className: 'btn btn-outline',
-                  onClick: onPlayIntroVoice,
-                },
-                isVoicePlaying ? 'Stop Voice Intro' : 'Listen to Intro'
-              ),
               e.createElement(
                 'a',
                 {
@@ -1259,11 +1250,7 @@
     const [musicMuted, setMusicMuted] = useState(false)
     const [coursesOpen, setCoursesOpen] = useState(false)
     const [selectedCourse, setSelectedCourse] = useState(null)
-    const [isVoicePlaying, setIsVoicePlaying] = useState(false)
     const audioRef = React.useRef(null)
-    const utteranceRef = React.useRef(null)
-    const musicVolumeRef = React.useRef(0.3)
-    const hasVoiceStartedRef = React.useRef(false)
 
     useEffect(() => {
       if (!audioRef.current) {
@@ -1305,14 +1292,6 @@
     }, [musicMuted])
 
     useEffect(() => {
-      return () => {
-        if (window.speechSynthesis) {
-          window.speechSynthesis.cancel()
-        }
-      }
-    }, [])
-
-    useEffect(() => {
       // Expose global function for rpg-runner.js to open courses modal
       window.openCoursesModal = () => setCoursesOpen(true)
       return () => {
@@ -1346,129 +1325,10 @@
 
     const profile = data.profile || null
 
-    const buildIntroVoiceText = () => {
-      const highlights = profile?.highlights && profile.highlights.length
-        ? profile.highlights.join('. ')
-        : ''
-
-      return [
-        `Presentation. Hi, I'm ${profile?.name || 'Fouad Hammani'}.`,
-        profile?.headline || 'AI Software Engineer.',
-        profile?.summary || '',
-        'About me.',
-        highlights,
-      ]
-        .filter(Boolean)
-        .join(' ')
-    }
-
-    const restoreMusicVolume = () => {
-      if (audioRef.current) {
-        audioRef.current.volume = musicVolumeRef.current
-      }
-    }
-
-    const startIntroVoice = () => {
-      if (!window.speechSynthesis || isVoicePlaying) return false
-
-      const text = buildIntroVoiceText()
-      const utterance = new SpeechSynthesisUtterance(text)
-      const voices = window.speechSynthesis.getVoices()
-      const preferredVoice =
-        voices.find((voice) => /en(-|_)?(CA|US|GB)/i.test(voice.lang) && /(Google|Microsoft|Samantha|Daniel|Karen|Zira)/i.test(voice.name)) ||
-        voices.find((voice) => /en/i.test(voice.lang)) ||
-        voices[0]
-
-      if (preferredVoice) {
-        utterance.voice = preferredVoice
-        utterance.lang = preferredVoice.lang
-      } else {
-        utterance.lang = 'en-CA'
-      }
-
-      utterance.rate = 0.96
-      utterance.pitch = 1
-
-      utterance.onstart = () => {
-        hasVoiceStartedRef.current = true
-        if (audioRef.current) {
-          musicVolumeRef.current = audioRef.current.volume
-          audioRef.current.volume = Math.max(0.08, musicVolumeRef.current * 0.35)
-        }
-        setIsVoicePlaying(true)
-      }
-
-      utterance.onend = () => {
-        restoreMusicVolume()
-        setIsVoicePlaying(false)
-      }
-
-      utterance.onerror = () => {
-        restoreMusicVolume()
-        setIsVoicePlaying(false)
-      }
-
-      utteranceRef.current = utterance
-      window.speechSynthesis.cancel()
-      window.speechSynthesis.speak(utterance)
-      return true
-    }
-
-    const onPlayIntroVoice = () => {
-      if (!window.speechSynthesis) return
-
-      if (isVoicePlaying) {
-        window.speechSynthesis.cancel()
-        restoreMusicVolume()
-        setIsVoicePlaying(false)
-        return
-      }
-      startIntroVoice()
-    }
-
-    useEffect(() => {
-      if (!profile || !window.speechSynthesis) return undefined
-
-      const attemptAutoVoice = () => {
-        if (!hasVoiceStartedRef.current) {
-          startIntroVoice()
-        }
-      }
-
-      const timer = window.setTimeout(attemptAutoVoice, 900)
-      const onFirstInteraction = () => {
-        if (!hasVoiceStartedRef.current) {
-          startIntroVoice()
-        }
-        document.removeEventListener('click', onFirstInteraction)
-        document.removeEventListener('keydown', onFirstInteraction)
-        document.removeEventListener('touchstart', onFirstInteraction)
-      }
-
-      document.addEventListener('click', onFirstInteraction)
-      document.addEventListener('keydown', onFirstInteraction)
-      document.addEventListener('touchstart', onFirstInteraction)
-
-      const synth = window.speechSynthesis
-      if (typeof synth.addEventListener === 'function') {
-        synth.addEventListener('voiceschanged', attemptAutoVoice)
-      }
-
-      return () => {
-        window.clearTimeout(timer)
-        document.removeEventListener('click', onFirstInteraction)
-        document.removeEventListener('keydown', onFirstInteraction)
-        document.removeEventListener('touchstart', onFirstInteraction)
-        if (typeof synth.removeEventListener === 'function') {
-          synth.removeEventListener('voiceschanged', attemptAutoVoice)
-        }
-      }
-    }, [profile])
-
     return e.createElement(
       e.Fragment,
       null,
-      e.createElement(Hero, { profile, openLightbox, onPlayIntroVoice, isVoicePlaying }),
+      e.createElement(Hero, { profile, openLightbox }),
       e.createElement(
         'section',
         { className: 'section' },
