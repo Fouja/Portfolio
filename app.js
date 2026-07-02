@@ -85,9 +85,6 @@
           { className: 'container intro-grid' },
           e.createElement(
             'div',
-            'h1',
-            'p',
-            'div',
             { className: 'card presentation-card' },
             e.createElement(
               'div',

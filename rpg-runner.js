@@ -245,16 +245,22 @@
   ]
 
   const oreTypes = [
-    { id: 'iron' },
-    { id: 'obsidian' },
-    { id: 'kobalt' },
-    { id: 'gold' },
-    { id: 'emerald' },
+    { id: 'bookJeanJacquesRousseau', label: 'Rousseau', cover: '#7c3aed' },
+    { id: 'bookSpinoza', label: 'Spinoza', cover: '#2563eb' },
+    { id: 'bookKant', label: 'Kant', cover: '#0f766e' },
+    { id: 'bookHegel', label: 'Hegel', cover: '#be123c' },
+    { id: 'bookMarx', label: 'Marx', cover: '#b45309' },
+    { id: 'bookGramsci', label: 'Gramsci', cover: '#334155' },
+    { id: 'bookAlgorithms', label: 'Algorithms', cover: '#0891b2' },
+    { id: 'bookDatabases', label: 'Databases', cover: '#1d4ed8' },
+    { id: 'bookPython', label: 'Python', cover: '#ca8a04' },
+    { id: 'bookWebDev', label: 'Web Dev', cover: '#15803d' },
+    { id: 'bookMachineLearning', label: 'ML', cover: '#9333ea' },
   ]
 
   const sparks = []
   const ores = []
-  const targetOreCount = 10
+  const targetOreCount = 11
   let minedCount = 0
   let spawnedCount = 0
   let state = 'ready'
@@ -599,65 +605,32 @@
   }
 
   function drawOre(x, y, scale, ore) {
-    const oreScale = Math.round(scale * 1.2)
-    const type = ore.type
-    // Fallback points if not present (shouldn't happen with new spawn logic)
-    const points = ore.points || [
-      {x: -1, y: -1}, {x: 1, y: -1}, {x: 1, y: 1}, {x: -1, y: 1}
-    ]
-    
+    const bookWidth = scale * 2.6
+    const bookHeight = scale * 2
+    const coverColor = ore.type.cover || '#2563eb'
+
     ctx.save()
-    ctx.translate(x + oreScale * 1.5, y + oreScale * 1.5)
-    
-    // Main Brute Shape
-    const mainColor = palette[type.id] || palette.stone
-    const darkColor = palette[type.id + 'Dark'] || palette.stone
-    
-    // Draw outline
+    ctx.translate(x, y)
+
     ctx.fillStyle = palette.outline
-    ctx.beginPath()
-    points.forEach((p, i) => {
-        const px = p.x * oreScale * 1.2
-        const py = p.y * oreScale * 1.2
-        if (i === 0) ctx.moveTo(px, py)
-        else ctx.lineTo(px, py)
-    })
-    ctx.closePath()
-    ctx.fill()
-    
-    // Draw main body
-    ctx.fillStyle = mainColor
-    ctx.beginPath()
-    points.forEach((p, i) => {
-        const px = p.x * oreScale
-        const py = p.y * oreScale
-        if (i === 0) ctx.moveTo(px, py)
-        else ctx.lineTo(px, py)
-    })
-    ctx.closePath()
-    ctx.fill()
-    
-    // Add "facets" or rough texture (Jagged shadows)
-    ctx.fillStyle = darkColor
-    ctx.beginPath()
-    points.forEach((p, i) => {
-        if (i % 2 === 0) { 
-             ctx.moveTo(0, 0)
-             ctx.lineTo(points[i].x * oreScale, points[i].y * oreScale)
-             const next = points[(i+1)%points.length]
-             ctx.lineTo(next.x * oreScale, next.y * oreScale)
-        }
-    })
-    ctx.fill()
-    
-    // Highlights (Brute/Raw look - scattered jagged spots)
-    ctx.fillStyle = 'rgba(255,255,255,0.4)'
-    ctx.beginPath()
-    ctx.moveTo(-oreScale * 0.3, -oreScale * 0.3)
-    ctx.lineTo(-oreScale * 0.1, -oreScale * 0.5)
-    ctx.lineTo(oreScale * 0.1, -oreScale * 0.3)
-    ctx.fill()
-    
+    drawRoundedRect(-bookWidth * 0.55, -bookHeight * 0.5, bookWidth * 1.1, bookHeight * 1.1, scale * 0.25, palette.outline)
+
+    ctx.fillStyle = coverColor
+    drawRoundedRect(-bookWidth * 0.5, -bookHeight * 0.45, bookWidth, bookHeight, scale * 0.18, coverColor)
+
+    ctx.fillStyle = '#f8fafc'
+    ctx.fillRect(-bookWidth * 0.36, -bookHeight * 0.22, scale * 0.22, bookHeight * 0.78)
+
+    ctx.fillStyle = 'rgba(255,255,255,0.18)'
+    ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.26, bookWidth * 0.52, scale * 0.18)
+    ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.02, bookWidth * 0.46, scale * 0.12)
+    ctx.fillRect(-bookWidth * 0.18, bookHeight * 0.16, bookWidth * 0.38, scale * 0.12)
+
+    ctx.fillStyle = '#e2e8f0'
+    ctx.font = `${Math.max(8, Math.round(scale * 0.68))}px Arial, sans-serif`
+    ctx.textAlign = 'center'
+    ctx.fillText(ore.type.label, 0, -bookHeight * 0.8)
+
     ctx.restore()
   }
 
@@ -1061,7 +1034,7 @@
       ctx.font = 'bold 24px Arial, sans-serif'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.fillText('⛏️ Mine 10 ores to unlock the courses', width / 2, height / 3)
+      ctx.fillText('📚 Collect 11 books to unlock the courses', width / 2, height / 3)
       ctx.font = '16px Arial, sans-serif'
       ctx.fillStyle = '#9ca3af'
       ctx.fillText('Press Arrow Up or Arrow Down to start', width / 2, height / 3 + 40)
@@ -1090,7 +1063,7 @@
       ctx.fillStyle = '#e2e8f0'
       ctx.font = '600 15px Arial, sans-serif'
       ctx.textAlign = 'left'
-      ctx.fillText(`Ores: ${minedCount}/${targetOreCount}`, 18, 28)
+      ctx.fillText(`Books: ${minedCount}/${targetOreCount}`, 18, 28)
       ctx.restore()
     }
 
