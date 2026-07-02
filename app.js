@@ -1263,6 +1263,7 @@
     const audioRef = React.useRef(null)
     const utteranceRef = React.useRef(null)
     const musicVolumeRef = React.useRef(0.3)
+    const hasVoiceStartedRef = React.useRef(false)
 
     useEffect(() => {
       if (!audioRef.current) {
@@ -1367,15 +1368,8 @@
       }
     }
 
-    const onPlayIntroVoice = () => {
-      if (!window.speechSynthesis) return
-
-      if (isVoicePlaying) {
-        window.speechSynthesis.cancel()
-        restoreMusicVolume()
-        setIsVoicePlaying(false)
-        return
-      }
+    const startIntroVoice = () => {
+      if (!window.speechSynthesis || isVoicePlaying) return false
 
       const text = buildIntroVoiceText()
       const utterance = new SpeechSynthesisUtterance(text)
@@ -1396,6 +1390,7 @@
       utterance.pitch = 1
 
       utterance.onstart = () => {
+        hasVoiceStartedRef.current = true
         if (audioRef.current) {
           musicVolumeRef.current = audioRef.current.volume
           audioRef.current.volume = Math.max(0.08, musicVolumeRef.current * 0.35)
@@ -1416,7 +1411,59 @@
       utteranceRef.current = utterance
       window.speechSynthesis.cancel()
       window.speechSynthesis.speak(utterance)
+      return true
     }
+
+    const onPlayIntroVoice = () => {
+      if (!window.speechSynthesis) return
+
+      if (isVoicePlaying) {
+        window.speechSynthesis.cancel()
+        restoreMusicVolume()
+        setIsVoicePlaying(false)
+        return
+      }
+      startIntroVoice()
+    }
+
+    useEffect(() => {
+      if (!profile || !window.speechSynthesis) return undefined
+
+      const attemptAutoVoice = () => {
+        if (!hasVoiceStartedRef.current) {
+          startIntroVoice()
+        }
+      }
+
+      const timer = window.setTimeout(attemptAutoVoice, 900)
+      const onFirstInteraction = () => {
+        if (!hasVoiceStartedRef.current) {
+          startIntroVoice()
+        }
+        document.removeEventListener('click', onFirstInteraction)
+        document.removeEventListener('keydown', onFirstInteraction)
+        document.removeEventListener('touchstart', onFirstInteraction)
+      }
+
+      document.addEventListener('click', onFirstInteraction)
+      document.addEventListener('keydown', onFirstInteraction)
+      document.addEventListener('touchstart', onFirstInteraction)
+
+      const synth = window.speechSynthesis
+      if (typeof synth.addEventListener === 'function') {
+        synth.addEventListener('voiceschanged', attemptAutoVoice)
+      }
+
+      return () => {
+        window.clearTimeout(timer)
+        document.removeEventListener('click', onFirstInteraction)
+        document.removeEventListener('keydown', onFirstInteraction)
+        document.removeEventListener('touchstart', onFirstInteraction)
+        if (typeof synth.removeEventListener === 'function') {
+          synth.removeEventListener('voiceschanged', attemptAutoVoice)
+        }
+      }
+    }, [profile])
 
     return e.createElement(
       e.Fragment,
