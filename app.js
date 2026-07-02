@@ -67,11 +67,14 @@
       },
     ]
 
-    const aboutItems = [
-      'Full-stack engineer with strong foundations in Python, Django, React, and Laravel, building secure and scalable systems from ERP platforms to e-commerce and AI-powered agents.',
-      'Experienced in microservices and monolithic architectures, testable APIs, and clean data flows across relational and NoSQL databases.',
-      'Practical background in B2B/B2C environments, data analytics, and automation that improves operational efficiency and decision-making.',
-    ]
+    const aboutItems =
+      profile?.highlights && profile.highlights.length
+        ? profile.highlights
+        : [
+            'Full-stack engineer with strong foundations in Python, Django, React, and Laravel, building secure and scalable systems from ERP platforms to e-commerce and AI-powered agents.',
+            'Experienced in microservices and monolithic architectures, testable APIs, and clean data flows across relational and NoSQL databases.',
+            'Practical background in B2B/B2C environments, data analytics, and automation that improves operational efficiency and decision-making.',
+          ]
 
     return e.createElement(
       e.Fragment,
@@ -192,12 +195,6 @@
             e.createElement(
               'div',
               { className: 'card about-intro-card' },
-              e.createElement(
-                'p',
-                { className: 'about-text' },
-                profile?.summary ||
-                  "I’m Fouad, a solution-oriented software engineer with 7+ years of experience in full-stack development, data automation, and AI integration. I focus on crafting maintainable, secure solutions that bridge backend robustness with clean user experiences."
-              ),
               e.createElement(
                 'ul',
                 { className: 'about-bullets' },
@@ -520,6 +517,15 @@
               return s.trim()
             })
             .filter(Boolean)
+          const accomplishments =
+            exp.accomplishments && exp.accomplishments.length
+              ? exp.accomplishments
+              : (exp.description || '')
+                  .split('. ')
+                  .map(function (item) {
+                    return item.trim().replace(/\.$/, '')
+                  })
+                  .filter(Boolean)
           return e.createElement(
             'div',
             { key: exp.id || exp.company + exp.role, className: 'timeline-item' },
@@ -540,11 +546,13 @@
                 .filter(Boolean)
                 .join(' · ')
             ),
-            exp.description
+            accomplishments.length
               ? e.createElement(
-                  'div',
-                  { className: 'timeline-body' },
-                  exp.description
+                  'ul',
+                  { className: 'timeline-accomplishments' },
+                  accomplishments.map(function (item, index) {
+                    return e.createElement('li', { key: exp.role + index }, item)
+                  })
                 )
               : null,
             tech.length

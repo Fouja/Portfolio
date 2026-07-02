@@ -256,16 +256,16 @@
     { id: 'bookPython', label: 'Python', cover: '#ca8a04', image: './assets/books/python.png' },
     { id: 'bookWebDev', label: 'Web Dev', cover: '#15803d', image: './assets/books/webdev.png' },
     { id: 'bookMachineLearning', label: 'ML', cover: '#9333ea', image: './assets/books/ml.png' },
-    { id: 'bookReact', label: 'React', cover: '#06b6d4' },
-    { id: 'bookTypeScript', label: 'TS', cover: '#2563eb' },
-    { id: 'bookDocker', label: 'Docker', cover: '#0ea5e9' },
-    { id: 'bookLangChain', label: 'LangChain', cover: '#16a34a' },
-    { id: 'bookPostgreSQL', label: 'Postgres', cover: '#1d4ed8' },
-    { id: 'bookKafka', label: 'Kafka', cover: '#52525b' },
-    { id: 'bookSpark', label: 'Spark', cover: '#ea580c' },
-    { id: 'bookHuggingFace', label: 'HF', cover: '#eab308' },
-    { id: 'bookGit', label: 'Git', cover: '#f97316' },
-    { id: 'bookLinux', label: 'Linux', cover: '#111827' },
+    { id: 'bookReact', label: 'React', cover: '#06b6d4', image: './assets/books/react.png' },
+    { id: 'bookTypeScript', label: 'TS', cover: '#2563eb', image: './assets/books/typescript.png' },
+    { id: 'bookDocker', label: 'Docker', cover: '#0ea5e9', image: './assets/books/docker.png' },
+    { id: 'bookLangChain', label: 'LangChain', cover: '#16a34a', image: './assets/books/langchain.png' },
+    { id: 'bookPostgreSQL', label: 'Postgres', cover: '#1d4ed8', image: './assets/books/postgresql.png' },
+    { id: 'bookKafka', label: 'Kafka', cover: '#52525b', image: './assets/books/kafka.png' },
+    { id: 'bookSpark', label: 'Spark', cover: '#ea580c', image: './assets/books/spark.png' },
+    { id: 'bookHuggingFace', label: 'HF', cover: '#eab308', image: './assets/books/huggingface.png' },
+    { id: 'bookGit', label: 'Git', cover: '#f97316', image: './assets/books/git.png' },
+    { id: 'bookLinux', label: 'Linux', cover: '#111827', image: './assets/books/linux.png' },
   ]
 
   const hazardTypes = [
@@ -795,16 +795,51 @@
       const tilt = currentState === 'done' ? 0 : Math.sin(cycle) * (currentState === 'running' ? 0.06 : currentState === 'mining' ? 0.035 : 0.015)
       const squash = currentState === 'done' ? 1 : 1 - Math.abs(Math.sin(cycle)) * 0.035
       const stretch = currentState === 'done' ? 1 : 1 + Math.abs(Math.sin(cycle)) * 0.04
+      const stride = Math.sin(cycle)
+      const armSwing = stride * 0.28
+      const legSwing = stride * 0.18
       const imageX = x - scale * 1.6
       const imageY = y - scale * 2.1 + bounce
       const idleScale = currentState === 'ready' ? 1.02 : 1
       const imageWidth = spriteWidth * idleScale
       const imageHeight = spriteHeight * idleScale
+      const drawSpritePart = (sx, sy, sw, sh, dx, dy, dw, dh, pivotX, pivotY, rotation) => {
+        ctx.save()
+        ctx.translate(dx + pivotX, dy + pivotY)
+        ctx.rotate(rotation)
+        ctx.drawImage(runnerSprite, sx, sy, sw, sh, -pivotX, -pivotY, dw, dh)
+        ctx.restore()
+      }
+
+      ctx.save()
       ctx.translate(centerX, centerY)
       ctx.rotate(tilt)
       ctx.scale(stretch, squash)
       ctx.translate(-centerX, -centerY)
-      ctx.drawImage(runnerSprite, imageX, imageY, imageWidth, imageHeight)
+
+      const scaleX = imageWidth / 1080
+      const scaleY = imageHeight / 1080
+      const dest = (sx, sy, sw, sh) => ({
+        x: imageX + sx * scaleX,
+        y: imageY + sy * scaleY,
+        w: sw * scaleX,
+        h: sh * scaleY,
+      })
+
+      const companion = dest(120, 620, 300, 360)
+      const torso = dest(470, 20, 330, 620)
+      const leftArm = dest(405, 330, 170, 290)
+      const rightArm = dest(675, 330, 165, 285)
+      const leftLeg = dest(480, 620, 170, 360)
+      const rightLeg = dest(620, 620, 180, 360)
+
+      ctx.drawImage(runnerSprite, 120, 620, 300, 360, companion.x, companion.y + Math.cos(cycle * 0.7) * scale * 0.08, companion.w, companion.h)
+      drawSpritePart(480, 620, 170, 360, leftLeg.x, leftLeg.y, leftLeg.w, leftLeg.h, leftLeg.w * 0.42, leftLeg.h * 0.08, legSwing)
+      drawSpritePart(620, 620, 180, 360, rightLeg.x, rightLeg.y, rightLeg.w, rightLeg.h, rightLeg.w * 0.5, rightLeg.h * 0.08, -legSwing)
+      ctx.drawImage(runnerSprite, 470, 20, 330, 620, torso.x, torso.y, torso.w, torso.h)
+      drawSpritePart(405, 330, 170, 290, leftArm.x, leftArm.y, leftArm.w, leftArm.h, leftArm.w * 0.72, leftArm.h * 0.12, -armSwing)
+      drawSpritePart(675, 330, 165, 285, rightArm.x, rightArm.y, rightArm.w, rightArm.h, rightArm.w * 0.2, rightArm.h * 0.14, armSwing)
+      ctx.restore()
     } else {
       drawCharacterHead(x, y, scale)
       drawCharacterBody(x, y, scale)

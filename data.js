@@ -6,6 +6,12 @@ window.PORTFOLIO_DATA = {
     location: "Ontario",
     availability: "Ontario | Open for opportunities",
     summary: "AI Software Engineer with 7+ years of experience in IT environments, SaaS/IaC architecture. Expertise in Web development (back-end and front-end) using HTML5, CSS, JavaScript, React, Python, and PHP. Certified Multi-agent Builder using Langchain, Langraph, CrewAI, and AutoGen. Extensive experience in database administration (SQL, PostgreSQL, MySQL, KQL, Apache Spark, Kafka). Proficient in Agile methodologies and prompt engineering for LLMs/NLP personalization with RAG and LoRA Fine-tuning. Bilingual (French/English) with strong communication skills.",
+    highlights: [
+      "Delivered ERP, e-commerce, analytics, and AI products across SaaS, telecom, pharma, and retail environments.",
+      "Built production systems with Python, Django, React, Laravel, PostgreSQL, Docker, and AI orchestration stacks.",
+      "Turned operational problems into measurable outcomes through automation, dashboards, secure APIs, and data workflows.",
+      "Brings bilingual French-English communication, product ownership, and hands-on engineering across backend, frontend, and data layers."
+    ],
     email: "Fouadhammani94@gmail.com",
     phone: "(613) 451-0031",
     linkedin_url: "https://www.linkedin.com/in/fouad-hammani-software-engineer/",
@@ -27,6 +33,12 @@ window.PORTFOLIO_DATA = {
       start: "Jan 2025",
       end: "April 2026",
       description: "Designed and deployed a full ERP platform using Laravel, React/Typescript, Inertia.js, MySQL, and Docker. Improved inventory and supplier operations by 30% through automation and dashboards. Converted the web platform into a desktop application using Electron. Deployed secure HTTPS services and modularized monolithic architecture into APIs. Trained company employees on the new intuitive personalized software manager. Implemented an AI agent Chatbot with MCP to display business analytics dashboards.",
+      accomplishments: [
+        "Built and deployed a full ERP platform with Laravel, React, Inertia.js, MySQL, and Docker.",
+        "Improved inventory and supplier operations by 30% through automation and dashboard reporting.",
+        "Converted the platform into a desktop application with Electron for internal deployment.",
+        "Introduced secure HTTPS services, modular APIs, and an MCP-based AI analytics chatbot."
+      ],
       technologies: "Laravel, React, TypeScript, Inertia.js, MySQL, Docker, Electron, MCP, AI Agents",
       order: 1
     },
@@ -37,6 +49,12 @@ window.PORTFOLIO_DATA = {
       start: "Jan 2023",
       end: "Present",
       description: "Built a secure e-commerce platform with Django, OAuth2/JWT authentication, admin dashboards, and PostgreSQL with an LLM RAG chatbot connected to Gemini Flash 2.5 and database products deployed on Linux VPS with Docker. Developed a Streamlit global statistics app with Pandas that streams live statistics on interactive geographical cards. Created a local Multi-agent assistant that navigates the web, scrapes, and navigates through OS systems using Kivy UI and Ollama LLM with Playwright for scraping and crawling on Chromium navigator. Extended web platforms to mobile using React Native and Expo.",
+      accomplishments: [
+        "Built a secure Django e-commerce stack with OAuth2/JWT, PostgreSQL, Docker, and Linux VPS deployment.",
+        "Integrated a Gemini-powered RAG chatbot connected to product and database content.",
+        "Developed a Streamlit statistics platform streaming global indicators on interactive map views.",
+        "Created local multi-agent tooling with Kivy, Ollama, and Playwright, then extended products to mobile with React Native and Expo."
+      ],
       technologies: "Django, PostgreSQL, React Native, Expo, Streamlit, Pandas, Kivy, Ollama, Playwright, Gemini, RAG, Docker",
       order: 2
     },
@@ -47,6 +65,11 @@ window.PORTFOLIO_DATA = {
       start: "Jul 2023",
       end: "Jan 2024",
       description: "Trained and taught sales teams on ERP (Odoo) and product demos, increasing conversions by 20%. Expanded B2B partnerships by onboarding 15 new B2B clients.",
+      accomplishments: [
+        "Trained sales teams on Odoo ERP workflows and product demos.",
+        "Improved conversions by 20% through clearer product education and sales enablement.",
+        "Expanded B2B activity by onboarding 15 new business clients."
+      ],
       technologies: "Odoo, ERP, Sales Training, B2B/B2C",
       order: 3
     },
@@ -57,6 +80,11 @@ window.PORTFOLIO_DATA = {
       start: "Jul 2022",
       end: "Jul 2023",
       description: "Managed CRM systems and technical incidents with 95% customer satisfaction KPIs. Ranked commercial leader for 8 consecutive months through upselling strategies. Managed customer contacts by analyzing, processing, directing, and following up on requests. Actively supported team development by assisting new employees and coaching advisors.",
+      accomplishments: [
+        "Handled CRM workflows and technical incidents while maintaining 95% customer satisfaction KPIs.",
+        "Ranked commercial leader for 8 consecutive months through upselling execution.",
+        "Supported team ramp-up by coaching advisors and helping onboard new employees."
+      ],
       technologies: "CRM, Adobe Experience Manager, Customer Support, Technical Support",
       order: 4
     },
@@ -67,6 +95,10 @@ window.PORTFOLIO_DATA = {
       start: "May 2021",
       end: "November 2021",
       description: "Internship focused on full-stack web development practices and enterprise systems.",
+      accomplishments: [
+        "Worked on full-stack web development tasks within an enterprise environment.",
+        "Strengthened implementation skills across backend, frontend, and deployment basics."
+      ],
       technologies: "Web Development, Full-Stack",
       order: 5
     },
@@ -77,6 +109,11 @@ window.PORTFOLIO_DATA = {
       start: "May 2019",
       end: "Jun 2022",
       description: "Managed pharmaceutical stock and analytics using Excel, CSV pipelines, and personalized PowerBI dashboards. Reduced supply shortages by 25% through data-driven purchasing insights. Managed ERP administration and user permissions for commercial staff.",
+      accomplishments: [
+        "Managed stock analytics with Excel, CSV pipelines, and custom Power BI dashboards.",
+        "Reduced supply shortages by 25% through data-driven purchasing insights.",
+        "Handled ERP administration and user permissions for commercial teams."
+      ],
       technologies: "Excel, CSV, PowerBI, ERP, Data Analysis",
       order: 6
     }
