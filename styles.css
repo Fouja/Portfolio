@@ -433,6 +433,14 @@ main {
   gap: 2.25rem;
 }
 
+.paired-section-grid {
+  align-items: start;
+}
+
+.section-pane {
+  min-width: 0;
+}
+
 .card {
   border-radius: 1.1rem;
   border: 1px solid var(--border);

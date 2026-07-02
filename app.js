@@ -338,14 +338,20 @@
     )
   }
 
-  function AboutSection({ profile, awards }) {
+  function AboutSection({ awards, embedded }) {
+    const content = e.createElement(AboutAwards, { awards })
+
+    if (embedded) {
+      return e.createElement('div', { className: 'section-pane' }, content)
+    }
+
     return e.createElement(
       'section',
       { className: 'section' },
       e.createElement(
         'div',
         { className: 'container' },
-        e.createElement(AboutAwards, { awards })
+        content
       )
     )
   }
@@ -392,7 +398,7 @@
     )
   }
 
-  function EducationSection({ education }) {
+  function EducationSection({ education, embedded }) {
     const list =
       education && education.length
         ? education
@@ -415,47 +421,57 @@
             },
           ]
 
+    const content = e.createElement(
+      e.Fragment,
+      null,
+      e.createElement(
+        'div',
+        { className: 'section-header' },
+        e.createElement('h2', { className: 'section-title' }, 'Education')
+      ),
+      e.createElement(
+        'div',
+        { className: 'card timeline' },
+        list.map(function (edu) {
+          return e.createElement(
+            'div',
+            { key: edu.id || edu.program, className: 'timeline-item' },
+            e.createElement(
+              'div',
+              { className: 'timeline-title' },
+              edu.program
+            ),
+            e.createElement(
+              'div',
+              { className: 'timeline-sub' },
+              edu.institution
+            ),
+            e.createElement(
+              'div',
+              { className: 'timeline-meta' },
+              [edu.start, edu.end].filter(Boolean).join(' – ')
+            )
+          )
+        })
+      )
+    )
+
+    if (embedded) {
+      return e.createElement('div', { className: 'section-pane' }, content)
+    }
+
     return e.createElement(
       'section',
       { id: 'education', className: 'section' },
       e.createElement(
         'div',
         { className: 'container' },
-        e.createElement(
-          'div',
-          { className: 'section-header' },
-          e.createElement('h2', { className: 'section-title' }, 'Education')
-        ),
-        e.createElement(
-          'div',
-          { className: 'card timeline' },
-          list.map(function (edu) {
-            return e.createElement(
-              'div',
-              { key: edu.id || edu.program, className: 'timeline-item' },
-              e.createElement(
-                'div',
-                { className: 'timeline-title' },
-                edu.program
-              ),
-              e.createElement(
-                'div',
-                { className: 'timeline-sub' },
-                edu.institution
-              ),
-              e.createElement(
-                'div',
-                { className: 'timeline-meta' },
-                [edu.start, edu.end].filter(Boolean).join(' – ')
-              )
-            )
-          })
-        )
+        content
       )
     )
   }
 
-  function ExperienceSection({ experiences }) {
+  function ExperienceSection({ experiences, embedded }) {
     const list =
       experiences && experiences.length
         ? experiences
@@ -486,70 +502,80 @@
             },
           ]
 
+    const content = e.createElement(
+      e.Fragment,
+      null,
+      e.createElement(
+        'div',
+        { className: 'section-header' },
+        e.createElement('h2', { className: 'section-title' }, 'Experience')
+      ),
+      e.createElement(
+        'div',
+        { className: 'card timeline' },
+        list.map(function (exp) {
+          const tech = (exp.technologies || '')
+            .split(',')
+            .map(function (s) {
+              return s.trim()
+            })
+            .filter(Boolean)
+          return e.createElement(
+            'div',
+            { key: exp.id || exp.company + exp.role, className: 'timeline-item' },
+            e.createElement(
+              'div',
+              { className: 'timeline-title' },
+              exp.role
+            ),
+            e.createElement(
+              'div',
+              { className: 'timeline-sub' },
+              exp.company
+            ),
+            e.createElement(
+              'div',
+              { className: 'timeline-meta' },
+              [exp.location, [exp.start, exp.end].filter(Boolean).join(' – ')]
+                .filter(Boolean)
+                .join(' · ')
+            ),
+            exp.description
+              ? e.createElement(
+                  'div',
+                  { className: 'timeline-body' },
+                  exp.description
+                )
+              : null,
+            tech.length
+              ? e.createElement(
+                  'div',
+                  { className: 'badge-row' },
+                  tech.map(function (t) {
+                    return e.createElement(
+                      'span',
+                      { key: t, className: 'badge' },
+                      t
+                    )
+                  })
+                )
+              : null
+          )
+        })
+      )
+    )
+
+    if (embedded) {
+      return e.createElement('div', { className: 'section-pane' }, content)
+    }
+
     return e.createElement(
       'section',
       { id: 'experience', className: 'section' },
       e.createElement(
         'div',
         { className: 'container' },
-        e.createElement(
-          'div',
-          { className: 'section-header' },
-          e.createElement('h2', { className: 'section-title' }, 'Experience')
-        ),
-        e.createElement(
-          'div',
-          { className: 'card timeline' },
-          list.map(function (exp) {
-            const tech = (exp.technologies || '')
-              .split(',')
-              .map(function (s) {
-                return s.trim()
-              })
-              .filter(Boolean)
-            return e.createElement(
-              'div',
-              { key: exp.id || exp.company + exp.role, className: 'timeline-item' },
-              e.createElement(
-                'div',
-                { className: 'timeline-title' },
-                exp.role
-              ),
-              e.createElement(
-                'div',
-                { className: 'timeline-sub' },
-                exp.company
-              ),
-              e.createElement(
-                'div',
-                { className: 'timeline-meta' },
-                [exp.location, [exp.start, exp.end].filter(Boolean).join(' – ')]
-                  .filter(Boolean)
-                  .join(' · ')
-              ),
-              exp.description
-                ? e.createElement(
-                    'div',
-                    { className: 'timeline-body' },
-                    exp.description
-                  )
-                : null,
-              tech.length
-                ? e.createElement(
-                    'div',
-                    { className: 'badge-row' },
-                    tech.map(function (t) {
-                      return e.createElement(
-                        'span',
-                        { key: t, className: 'badge' },
-                        t
-                      )
-                    })
-                  )
-                : null
-            )
-          })
-        )
+        content
       )
     )
   }
@@ -769,7 +795,7 @@
     )
   }
 
-  function SkillsSection({ skills }) {
+  function SkillsSection({ skills, embedded }) {
     let groups = []
     if (skills && !Array.isArray(skills)) {
       // Handle object format from data.js
@@ -800,39 +826,49 @@
         ]
     }
 
+    const content = e.createElement(
+      e.Fragment,
+      null,
+      e.createElement(
+        'div',
+        { className: 'section-header' },
+        e.createElement('h2', { className: 'section-title' }, 'Skills')
+      ),
+      e.createElement(
+        'div',
+        { className: 'card skills-groups' },
+        groups.map(function (g) {
+          return e.createElement(
+            'div',
+            { key: g.name },
+            e.createElement(
+              'div',
+              { className: 'skills-group-title' },
+              g.name
+            ),
+            e.createElement(
+              'div',
+              { className: 'skills-chips' },
+              g.skills.map(function (s) {
+                return e.createElement('span', { key: g.name + s }, s)
+              })
+            )
+          )
+        })
+      )
+    )
+
+    if (embedded) {
+      return e.createElement('div', { className: 'section-pane' }, content)
+    }
+
     return e.createElement(
       'section',
       { id: 'skills', className: 'section' },
       e.createElement(
         'div',
         { className: 'container' },
-        e.createElement(
-          'div',
-          { className: 'section-header' },
-          e.createElement('h2', { className: 'section-title' }, 'Skills')
-        ),
-        e.createElement(
-          'div',
-          { className: 'card skills-groups' },
-          groups.map(function (g) {
-            return e.createElement(
-              'div',
-              { key: g.name },
-              e.createElement(
-                'div',
-                { className: 'skills-group-title' },
-                g.name
-              ),
-              e.createElement(
-                'div',
-                { className: 'skills-chips' },
-                g.skills.map(function (s) {
-                  return e.createElement('span', { key: g.name + s }, s)
-                })
-              )
-            )
-          })
-        )
+        content
       )
     )
   }
@@ -1284,11 +1320,27 @@
       e.Fragment,
       null,
       e.createElement(Hero, { profile, openLightbox }),
-      e.createElement(AboutSection, { profile, awards: data.awards }),
-      e.createElement(EducationSection, { education: data.education }),
-      e.createElement(ExperienceSection, { experiences: data.experience }),
+      e.createElement(
+        'section',
+        { className: 'section' },
+        e.createElement(
+          'div',
+          { className: 'container section-grid-two paired-section-grid' },
+          e.createElement(EducationSection, { education: data.education, embedded: true }),
+          e.createElement(AboutSection, { awards: data.awards, embedded: true })
+        )
+      ),
+      e.createElement(
+        'section',
+        { className: 'section' },
+        e.createElement(
+          'div',
+          { className: 'container section-grid-two paired-section-grid' },
+          e.createElement(ExperienceSection, { experiences: data.experience, embedded: true }),
+          e.createElement(SkillsSection, { skills: data.skills, embedded: true })
+        )
+      ),
       e.createElement(ProjectsSection, { projects: data.projects, openLightbox }),
-      e.createElement(SkillsSection, { skills: data.skills }),
       e.createElement(ContactSection, {
         profile,
         languages: data.languages,

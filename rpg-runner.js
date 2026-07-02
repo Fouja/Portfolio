@@ -245,17 +245,17 @@
   ]
 
   const oreTypes = [
-    { id: 'bookJeanJacquesRousseau', label: 'Rousseau', cover: '#7c3aed' },
-    { id: 'bookSpinoza', label: 'Spinoza', cover: '#2563eb' },
-    { id: 'bookKant', label: 'Kant', cover: '#0f766e' },
-    { id: 'bookHegel', label: 'Hegel', cover: '#be123c' },
-    { id: 'bookMarx', label: 'Marx', cover: '#b45309' },
-    { id: 'bookGramsci', label: 'Gramsci', cover: '#334155' },
-    { id: 'bookAlgorithms', label: 'Algorithms', cover: '#0891b2' },
-    { id: 'bookDatabases', label: 'Databases', cover: '#1d4ed8' },
-    { id: 'bookPython', label: 'Python', cover: '#ca8a04' },
-    { id: 'bookWebDev', label: 'Web Dev', cover: '#15803d' },
-    { id: 'bookMachineLearning', label: 'ML', cover: '#9333ea' },
+    { id: 'bookJeanJacquesRousseau', label: 'Rousseau', cover: '#7c3aed', image: './assets/books/rousseau.png' },
+    { id: 'bookSpinoza', label: 'Spinoza', cover: '#2563eb', image: './assets/books/spinoza.png' },
+    { id: 'bookKant', label: 'Kant', cover: '#0f766e', image: './assets/books/kant.png' },
+    { id: 'bookHegel', label: 'Hegel', cover: '#be123c', image: './assets/books/hegel.png' },
+    { id: 'bookMarx', label: 'Marx', cover: '#b45309', image: './assets/books/marx.png' },
+    { id: 'bookGramsci', label: 'Gramsci', cover: '#334155', image: './assets/books/gramsci.png' },
+    { id: 'bookAlgorithms', label: 'Algorithms', cover: '#0891b2', image: './assets/books/algorithms.png' },
+    { id: 'bookDatabases', label: 'Databases', cover: '#1d4ed8', image: './assets/books/databases.png' },
+    { id: 'bookPython', label: 'Python', cover: '#ca8a04', image: './assets/books/python.png' },
+    { id: 'bookWebDev', label: 'Web Dev', cover: '#15803d', image: './assets/books/webdev.png' },
+    { id: 'bookMachineLearning', label: 'ML', cover: '#9333ea', image: './assets/books/ml.png' },
   ]
 
   const sparks = []
@@ -273,11 +273,20 @@
   let facingRight = true
   const runnerSprite = new Image()
   let runnerSpriteLoaded = false
+  const bookSprites = Object.create(null)
 
   runnerSprite.onload = () => {
     runnerSpriteLoaded = true
   }
   runnerSprite.src = './assets/game-runner.png'
+
+  oreTypes.forEach((type) => {
+    const image = new Image()
+    image.onload = () => {
+      bookSprites[type.id] = image
+    }
+    image.src = type.image
+  })
   
   // Keyboard input for arrow keys
   const keys = {
@@ -605,12 +614,15 @@
   }
 
   function drawOre(x, y, scale, ore) {
-    const bookWidth = scale * 2.6
-    const bookHeight = scale * 2
+    const bookWidth = scale * 3.2
+    const bookHeight = scale * 2.5
     const coverColor = ore.type.cover || '#2563eb'
+    const bookImage = bookSprites[ore.type.id]
+    const wobble = Math.sin((ore.x + ore.y) * 0.06) * 0.12
 
     ctx.save()
     ctx.translate(x, y)
+    ctx.rotate(wobble)
 
     ctx.fillStyle = palette.outline
     drawRoundedRect(-bookWidth * 0.55, -bookHeight * 0.5, bookWidth * 1.1, bookHeight * 1.1, scale * 0.25, palette.outline)
@@ -618,13 +630,21 @@
     ctx.fillStyle = coverColor
     drawRoundedRect(-bookWidth * 0.5, -bookHeight * 0.45, bookWidth, bookHeight, scale * 0.18, coverColor)
 
-    ctx.fillStyle = '#f8fafc'
-    ctx.fillRect(-bookWidth * 0.36, -bookHeight * 0.22, scale * 0.22, bookHeight * 0.78)
-
-    ctx.fillStyle = 'rgba(255,255,255,0.18)'
-    ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.26, bookWidth * 0.52, scale * 0.18)
-    ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.02, bookWidth * 0.46, scale * 0.12)
-    ctx.fillRect(-bookWidth * 0.18, bookHeight * 0.16, bookWidth * 0.38, scale * 0.12)
+    if (bookImage) {
+      ctx.save()
+      ctx.beginPath()
+      drawRoundedRect(-bookWidth * 0.44, -bookHeight * 0.4, bookWidth * 0.88, bookHeight * 0.82, scale * 0.12, coverColor)
+      ctx.clip()
+      ctx.drawImage(bookImage, -bookWidth * 0.44, -bookHeight * 0.4, bookWidth * 0.88, bookHeight * 0.82)
+      ctx.restore()
+    } else {
+      ctx.fillStyle = '#f8fafc'
+      ctx.fillRect(-bookWidth * 0.36, -bookHeight * 0.22, scale * 0.22, bookHeight * 0.78)
+      ctx.fillStyle = 'rgba(255,255,255,0.18)'
+      ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.26, bookWidth * 0.52, scale * 0.18)
+      ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.02, bookWidth * 0.46, scale * 0.12)
+      ctx.fillRect(-bookWidth * 0.18, bookHeight * 0.16, bookWidth * 0.38, scale * 0.12)
+    }
 
     ctx.fillStyle = '#e2e8f0'
     ctx.font = `${Math.max(8, Math.round(scale * 0.68))}px Arial, sans-serif`
