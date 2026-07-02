@@ -24,95 +24,192 @@
     return value
   }
 
+  function HeroMedia({ profile }) {
+    return e.createElement(
+      'section',
+      { id: 'hero', className: 'media-hero-section' },
+      e.createElement(
+        'div',
+        { className: 'hero-media-frame' },
+        profile?.photo
+          ? e.createElement(MediaCarousel, {
+              videoSrc: './assets/linked_video.mp4',
+              imageSrc: profile.photo,
+            })
+          : null
+      )
+    )
+  }
+
   function Hero({ profile, openLightbox }) {
     const subtitle =
       profile?.hero_subtitle ||
       'Full-Stack Engineer · Python · Django · React · Laravel'
     const typed = typedTextHook(subtitle)
 
+    const stats = [
+      {
+        label: 'Projects Completed',
+        value:
+          profile?.projects_completed != null ? profile.projects_completed : 25,
+      },
+      {
+        label: 'Years of Experience',
+        value:
+          profile?.years_experience != null ? profile.years_experience : 7,
+      },
+      {
+        label: 'Organizations Worked',
+        value:
+          profile?.organizations_worked != null
+            ? profile.organizations_worked
+            : 5,
+      },
+    ]
+
+    const aboutItems = [
+      'Full-stack engineer with strong foundations in Python, Django, React, and Laravel, building secure and scalable systems from ERP platforms to e-commerce and AI-powered agents.',
+      'Experienced in microservices and monolithic architectures, testable APIs, and clean data flows across relational and NoSQL databases.',
+      'Practical background in B2B/B2C environments, data analytics, and automation that improves operational efficiency and decision-making.',
+    ]
+
     return e.createElement(
-      'section',
-      { id: 'hero', className: 'hero-section' },
+      e.Fragment,
+      null,
+      e.createElement(HeroMedia, { profile }),
       e.createElement(
-        'div',
-        { className: 'container hero-grid' },
+        'section',
+        { id: 'about', className: 'section intro-section' },
         e.createElement(
           'div',
-          { className: 'hero-copy' },
+          { className: 'container intro-grid' },
           e.createElement(
             'div',
-            { className: 'hero-eyebrow' },
-            profile?.badge_photo
-              ? e.createElement('img', {
-                  src: profile.badge_photo,
-                  alt: profile?.name || 'Fouad Hammani',
-                  className: 'hero-badge-photo',
-                })
-              : '</> CodeCrafted'
-          ),
-          e.createElement(
             'h1',
-            { className: 'hero-title' },
-            "Hi, I'm ",
-            profile?.name || 'Fouad Hammani'
-          ),
-          e.createElement(
-            'div',
-            { className: 'hero-typed-line' },
-            e.createElement('span', null, '$'),
-            e.createElement('span', null, typed),
-            e.createElement('span', { className: 'hero-typed-cursor' })
-          ),
-          e.createElement(
             'p',
-            { className: 'hero-summary' },
-            profile?.summary ||
-              'Solution-oriented Software Engineer with 7+ years in full-stack development, data automation, and AI integration. I build secure, scalable web and mobile solutions across B2B/B2C environments, from ERPs and e-commerce to AI-powered agents.'
-          ),
-          e.createElement(
             'div',
-            { className: 'hero-meta' },
+            { className: 'card presentation-card' },
             e.createElement(
-              'span',
-              null,
-              profile?.availability ||
-                'Relocating to Anywhere in Canada · Open to Opportunities in Toronto/Vancouver/Montreal'
+              'div',
+              { className: 'presentation-header' },
+              profile?.badge_photo
+                ? e.createElement('img', {
+                    src: profile.badge_photo,
+                    alt: profile?.name || 'Fouad Hammani',
+                    className: 'hero-badge-photo presentation-photo',
+                  })
+                : null,
+              e.createElement(
+                'div',
+                { className: 'presentation-copy' },
+                e.createElement(
+                  'div',
+                  { className: 'hero-eyebrow' },
+                  'Presentation'
+                ),
+                e.createElement(
+                  'h1',
+                  { className: 'hero-title' },
+                  "Hi, I'm ",
+                  profile?.name || 'Fouad Hammani'
+                ),
+                e.createElement(
+                  'div',
+                  { className: 'hero-typed-line' },
+                  e.createElement('span', null, '$'),
+                  e.createElement('span', null, typed),
+                  e.createElement('span', { className: 'hero-typed-cursor' })
+                )
+              )
+            ),
+            e.createElement(
+              'p',
+              { className: 'hero-summary' },
+              profile?.summary ||
+                'Solution-oriented Software Engineer with 7+ years in full-stack development, data automation, and AI integration. I build secure, scalable web and mobile solutions across B2B/B2C environments, from ERPs and e-commerce to AI-powered agents.'
+            ),
+            e.createElement(
+              'div',
+              { className: 'hero-meta' },
+              e.createElement(
+                'span',
+                null,
+                profile?.availability ||
+                  'Relocating to Anywhere in Canada · Open to Opportunities in Toronto/Vancouver/Montreal'
+              )
+            ),
+            e.createElement(
+              'div',
+              { className: 'hero-actions' },
+              e.createElement(
+                'a',
+                {
+                  href: '#projects',
+                  className: 'btn btn-primary',
+                },
+                'View Projects'
+              ),
+              e.createElement(
+                'a',
+                {
+                  href: '#contact',
+                  className: 'btn btn-outline',
+                },
+                'Get In Touch'
+              ),
+              profile?.resume_url
+                ? e.createElement(
+                    'a',
+                    {
+                      href: profile.resume_url,
+                      className: 'btn btn-outline',
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                      download: true,
+                    },
+                    'Download Resume'
+                  )
+                : null
+            ),
+            e.createElement(
+              'div',
+              { className: 'hero-stats compact-stats' },
+              stats.map(function (s, i) {
+                return e.createElement(
+                  'div',
+                  { key: i, className: 'hero-stat' },
+                  e.createElement('div', { className: 'hero-stat-value' }, s.value, '+'),
+                  e.createElement('div', { className: 'hero-stat-label' }, s.label)
+                )
+              })
             )
           ),
           e.createElement(
             'div',
-            { className: 'hero-actions' },
+            null,
             e.createElement(
-              'a',
-              {
-                href: '#projects',
-                className: 'btn btn-primary',
-              },
-              'View Projects'
+              'div',
+              { className: 'section-header' },
+              e.createElement('h2', { className: 'section-title' }, 'About Me')
             ),
             e.createElement(
-              'a',
-              {
-                href: '#contact',
-                className: 'btn btn-outline',
-              },
-              'Get In Touch'
-            ),
-            profile?.resume_url
-              ? e.createElement(
-                  'a',
-                  {
-                    href: profile.resume_url,
-                    className: 'btn btn-outline',
-                    target: '_blank',
-                    rel: 'noopener noreferrer',
-                    download: true, // Hint to download
-                  },
-                  'Download Resume'
-                )
-              : null
-          ),
-          e.createElement(HeroIllustration, { profile, openLightbox })
+              'div',
+              { className: 'card about-intro-card' },
+              e.createElement(
+                'p',
+                { className: 'about-text' },
+                profile?.summary ||
+                  "I’m Fouad, a solution-oriented software engineer with 7+ years of experience in full-stack development, data automation, and AI integration. I focus on crafting maintainable, secure solutions that bridge backend robustness with clean user experiences."
+              ),
+              e.createElement(
+                'ul',
+                { className: 'about-bullets' },
+                aboutItems.map(function (item, i) {
+                  return e.createElement('li', { key: i }, item)
+                })
+              )
+            )
+          )
         )
       )
     )
@@ -245,44 +342,12 @@
   }
 
   function AboutSection({ profile, awards }) {
-    const items = [
-      'Full-stack engineer with strong foundations in Python, Django, React, and Laravel, building secure and scalable systems from ERP platforms to e-commerce and AI-powered agents.',
-      'Experienced in microservices and monolithic architectures, testable APIs, and clean data flows across relational and NoSQL databases.',
-      'Practical background in B2B/B2C environments, data analytics, and automation—delivering solutions that improve operational efficiency and decision-making.',
-    ]
-
     return e.createElement(
       'section',
-      { id: 'about', className: 'section' },
+      { className: 'section' },
       e.createElement(
         'div',
-        { className: 'container section-grid-two' },
-        e.createElement(
-          'div',
-          null,
-          e.createElement(
-            'div',
-            { className: 'section-header' },
-            e.createElement('h2', { className: 'section-title' }, 'About Me')
-          ),
-          e.createElement(
-            'div',
-            { className: 'card' },
-            e.createElement(
-              'p',
-              { className: 'about-text' },
-              profile?.summary ||
-                "I’m Fouad, a solution-oriented software engineer with 7+ years of experience in full-stack development, data automation, and AI integration. I focus on crafting maintainable, secure solutions that bridge backend robustness with clean user experiences."
-            ),
-            e.createElement(
-              'ul',
-              { className: 'about-bullets' },
-              items.map(function (item, i) {
-                return e.createElement('li', { key: i }, item)
-              })
-            )
-          )
-        ),
+        { className: 'container' },
         e.createElement(AboutAwards, { awards })
       )
     )
