@@ -40,7 +40,17 @@
         e.createElement(
           'div',
           null,
-          e.createElement('div', { className: 'hero-eyebrow' }, '</> CodeCrafted'),
+          e.createElement(
+            'div',
+            { className: 'hero-eyebrow' },
+            profile?.logo
+              ? e.createElement('img', {
+                  src: profile.logo,
+                  alt: 'FoujeLab Logo',
+                  style: { height: '30px', width: 'auto', cursor: 'default' }
+                })
+              : '</> CodeCrafted'
+          ),
           e.createElement(
             'h1',
             { className: 'hero-title' },
@@ -108,6 +118,50 @@
     )
   }
 
+  function MediaCarousel({ videoSrc, imageSrc }) {
+    const [showVideo, setShowVideo] = useState(true)
+    const videoRef = React.useRef(null)
+
+    useEffect(() => {
+      if (showVideo) {
+        const video = videoRef.current
+        if (video) {
+          video.play().catch(() => {})
+          const handleVideoEnd = () => {
+            setShowVideo(false)
+            const imageTimer = setTimeout(() => {
+              setShowVideo(true)
+            }, 15000)
+            return () => clearTimeout(imageTimer)
+          }
+          video.addEventListener('ended', handleVideoEnd)
+          return () => video.removeEventListener('ended', handleVideoEnd)
+        }
+      }
+    }, [showVideo])
+
+    return e.createElement(
+      'div',
+      { className: 'media-carousel' },
+      showVideo
+        ? e.createElement('video', {
+            ref: videoRef,
+            src: videoSrc,
+            className: 'carousel-video active',
+            controls: false,
+            autoPlay: true,
+            muted: true,
+            style: { cursor: 'default' }
+          })
+        : e.createElement('img', {
+            src: imageSrc,
+            alt: 'Profile',
+            className: 'carousel-image active',
+            style: { cursor: 'default' }
+          })
+    )
+  }
+
   function HeroIllustration({ profile, openLightbox }) {
     const stats = [
       {
@@ -132,23 +186,13 @@
     return e.createElement(
       'aside',
       { className: 'hero-illustration-card' },
-      profile?.logo
-        ? e.createElement('img', {
-            src: profile.logo,
-            alt: 'FoujeLab Logo',
-            className: 'logo-brand',
-            style: { cursor: 'default' }
-          })
-        : null,
       e.createElement(
         'div',
         { className: 'hero-illustration-avatar' },
         profile?.photo 
-          ? e.createElement('img', { 
-              src: profile.photo, 
-              alt: profile.name, 
-              className: 'profile-photo',
-              style: { cursor: 'default' }
+          ? e.createElement(MediaCarousel, { 
+              videoSrc: './assets/linked_video.mp4',
+              imageSrc: profile.photo
             })
           : 'FH'
       ),
@@ -882,9 +926,195 @@
     )
   }
 
+  function MusicButton({ isMuted, onToggle }) {
+    return e.createElement(
+      'button',
+      {
+        onClick: onToggle,
+        className: 'music-button',
+        title: isMuted ? 'Unmute Music' : 'Mute Music',
+        style: {
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          width: '50px',
+          height: '50px',
+          borderRadius: '50%',
+          background: isMuted ? '#ef4444' : '#22c55e',
+          border: 'none',
+          color: '#fff',
+          fontSize: '24px',
+          cursor: 'pointer',
+          zIndex: 100,
+          boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+          transition: 'all 0.3s ease'
+        }
+      },
+      isMuted ? '🔇' : '🎵'
+    )
+  }
+
+  function CoursesModal({ isOpen, onClose, selectedCourse, onSelectCourse }) {
+    const courses = [
+      { id: 'html', name: 'HTML Basics', file: './courses/html-basics.html' },
+      { id: 'css', name: 'CSS Styling', file: './courses/css-styling.html' },
+      { id: 'js', name: 'JavaScript Fundamentals', file: './courses/javascript-fundamentals.html' }
+    ]
+
+    if (!isOpen) return null
+
+    return e.createElement(
+      'div',
+      {
+        style: {
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0,0,0,0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 200
+        },
+        onClick: (evt) => {
+          if (evt.target === evt.currentTarget) onClose()
+        }
+      },
+      e.createElement(
+        'div',
+        {
+          style: {
+            background: '#0b1120',
+            borderRadius: '12px',
+            padding: '2rem',
+            maxWidth: '800px',
+            maxHeight: '80vh',
+            overflow: 'auto',
+            border: '1px solid #38bdf8',
+            color: '#e5e7eb'
+          }
+        },
+        selectedCourse
+          ? e.createElement(
+              e.Fragment,
+              null,
+              e.createElement(
+                'button',
+                {
+                  onClick: () => onSelectCourse(null),
+                  style: {
+                    background: 'none',
+                    border: 'none',
+                    color: '#38bdf8',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    marginBottom: '1rem'
+                  }
+                },
+                '← Back to Courses'
+              ),
+              e.createElement('iframe', {
+                src: selectedCourse.file,
+                style: {
+                  width: '100%',
+                  height: '500px',
+                  border: 'none',
+                  borderRadius: '8px'
+                }
+              })
+            )
+          : e.createElement(
+              e.Fragment,
+              null,
+              e.createElement(
+                'h2',
+                { style: { color: '#38bdf8', marginBottom: '1.5rem' } },
+                '🎓 Available Courses'
+              ),
+              e.createElement(
+                'div',
+                { style: { display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' } },
+                courses.map((course) =>
+                  e.createElement(
+                    'button',
+                    {
+                      onClick: () => onSelectCourse(course),
+                      style: {
+                        background: '#1a1f2e',
+                        border: '1px solid #38bdf8',
+                        color: '#e5e7eb',
+                        padding: '1rem',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        textAlign: 'left'
+                      },
+                      onMouseEnter: (e) => {
+                        e.target.style.background = '#38bdf8'
+                        e.target.style.color = '#000'
+                      },
+                      onMouseLeave: (e) => {
+                        e.target.style.background = '#1a1f2e'
+                        e.target.style.color = '#e5e7eb'
+                      }
+                    },
+                    course.name
+                  )
+                )
+              ),
+              e.createElement(
+                'button',
+                {
+                  onClick: onClose,
+                  style: {
+                    background: '#ef4444',
+                    border: 'none',
+                    color: '#fff',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    marginTop: '1.5rem',
+                    width: '100%'
+                  }
+                },
+                'Close'
+              )
+            )
+      )
+    )
+  }
+
   function App() {
     const [data] = useState(window.PORTFOLIO_DATA || {})
     const [lightbox, setLightbox] = useState({ isOpen: false, images: [], index: 0 })
+    const [musicMuted, setMusicMuted] = useState(false)
+    const [coursesOpen, setCoursesOpen] = useState(false)
+    const [selectedCourse, setSelectedCourse] = useState(null)
+    const audioRef = React.useRef(null)
+
+    useEffect(() => {
+      // Create and play background music
+      if (!audioRef.current) {
+        const audio = new Audio('./assets/Ayla.mpga')
+        audio.loop = true
+        audio.volume = 0.3
+        audio.muted = musicMuted
+        audioRef.current = audio
+        audio.play().catch(() => {})
+      } else {
+        audioRef.current.muted = musicMuted
+      }
+    }, [musicMuted])
+
+    useEffect(() => {
+      // Expose global function for rpg-runner.js to open courses modal
+      window.openCoursesModal = () => setCoursesOpen(true)
+      return () => {
+        delete window.openCoursesModal
+      }
+    }, [])
 
     const openLightbox = (images, index) => {
       setLightbox({ isOpen: true, images, index })
@@ -924,6 +1154,13 @@
         profile,
         languages: data.languages,
         interests: data.interests,
+      }),
+      e.createElement(MusicButton, { isMuted: musicMuted, onToggle: () => setMusicMuted(!musicMuted) }),
+      e.createElement(CoursesModal, { 
+        isOpen: coursesOpen, 
+        onClose: () => setCoursesOpen(false),
+        selectedCourse,
+        onSelectCourse: setSelectedCourse
       }),
       lightbox.isOpen && e.createElement(
           'div',

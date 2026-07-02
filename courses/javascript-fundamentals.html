@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Fundamentals</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #050816;
+            color: #e5e7eb;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 { color: #38bdf8; }
+        h2 { color: #22c55e; margin-top: 2rem; }
+        code { background: #0b1220; padding: 0.25rem 0.5rem; border-radius: 4px; color: #fbbf24; }
+        pre { background: #0b1220; padding: 1rem; border-radius: 8px; overflow-x: auto; border-left: 3px solid #38bdf8; }
+        .lesson { background: #0b1120; padding: 1.5rem; margin: 1rem 0; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>⚡ JavaScript Fundamentals</h1>
+    
+    <div class="lesson">
+        <h2>What is JavaScript?</h2>
+        <p>JavaScript is a programming language that brings interactivity to web pages. It runs in browsers and enables dynamic content.</p>
+    </div>
+    
+    <div class="lesson">
+        <h2>Variables & Data Types</h2>
+        <pre><code>// Variable declaration
+const name = 'Fouad';  // String
+let age = 28;          // Number
+var active = true;     // Boolean
+
+// Arrays
+const skills = ['Python', 'JavaScript', 'React'];
+
+// Objects
+const person = {
+    name: 'Fouad',
+    age: 28,
+    skills: ['Python', 'JavaScript']
+};</code></pre>
+    </div>
+    
+    <div class="lesson">
+        <h2>Functions & Callbacks</h2>
+        <pre><code>// Function declaration
+function greet(name) {
+    return `Hello, ${name}!`;
+}
+
+// Arrow function
+const multiply = (a, b) => a * b;
+
+// Callback
+array.map(item => item * 2);</code></pre>
+    </div>
+    
+    <div class="lesson">
+        <h2>Async & Promises</h2>
+        <p><code>async/await</code> and <code>Promises</code> help handle asynchronous operations like API calls and file reading.</p>
+    </div>
+</body>
+</html>

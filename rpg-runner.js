@@ -259,10 +259,33 @@
   let state = 'mining'
   let stateTime = 0
   let spawnTimer = 0
+  let showIntro = true
+  let introTimer = 0
 
   let runnerPos = { x: 0, y: 0 }
   let mousePos = { x: 0, y: 0 }
   let facingRight = true
+  
+  // Keyboard input for arrow keys
+  const keys = {
+    ArrowLeft: false,
+    ArrowRight: false,
+    ArrowUp: false,
+    ArrowDown: false,
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key in keys) {
+      keys[e.key] = true
+      e.preventDefault()
+    }
+  })
+
+  window.addEventListener('keyup', (e) => {
+    if (e.key in keys) {
+      keys[e.key] = false
+    }
+  })
 
   canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect()
@@ -1024,6 +1047,27 @@
     gradient.addColorStop(1, '#0b1220')
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, width, height)
+    
+    // Draw intro text if showing
+    if (showIntro && state === 'mining') {
+      introTimer += 1 / 60
+      if (introTimer > 5) {
+        showIntro = false
+      }
+      
+      ctx.save()
+      ctx.globalAlpha = Math.min(1, (5 - introTimer) / 2)
+      ctx.fillStyle = '#38bdf8'
+      ctx.font = 'bold 24px Arial, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText('⛏️ Play this 30 funny seconds game to deblock courses :D', width / 2, height / 3)
+      ctx.font = '16px Arial, sans-serif'
+      ctx.fillStyle = '#9ca3af'
+      ctx.fillText('Use arrow keys ↑↓ to mine | Collect 10 ores to craft', width / 2, height / 3 + 40)
+      ctx.restore()
+    }
+    
     clouds.forEach((cloud) => drawCloud(cloud))
     const { groundY, scale } = getMetrics()
     drawGround(t)
@@ -1100,10 +1144,22 @@
           ores.splice(i, 1)
         }
       }
-      if (minedCount >= 5) {
+      if (minedCount >= 10) {
         state = 'crafting'
         stateTime = 0
       }
+      
+      // Keyboard controls for mining - move up/down with arrow keys
+      const moveSpeed = 80
+      if (keys.ArrowUp) {
+        runnerPos.y -= dt * moveSpeed
+      }
+      if (keys.ArrowDown) {
+        runnerPos.y += dt * moveSpeed
+      }
+      const { groundY: miningGroundY, scale: miningScale } = getMetrics()
+      const spriteHeight = 10.5 * miningScale
+      runnerPos.y = Math.max(miningGroundY - spriteHeight - miningScale * 8, Math.min(miningGroundY - miningScale * 0.5, runnerPos.y))
     } else {
       stateTime += dt
       if (state === 'crafting' && stateTime >= 2.4) {
@@ -1130,6 +1186,12 @@
               runnerPos.y += (dy / dist) * moveSpeed * dt
               
               if (Math.abs(dx) > 1) facingRight = dx > 0
+          } else {
+              // Reached the computer - open courses modal
+              if (window.openCoursesModal) {
+                  window.openCoursesModal()
+              }
+              state = 'done'
           }
           
           // Clamp
