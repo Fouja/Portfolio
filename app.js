@@ -41,7 +41,7 @@
     )
   }
 
-  function Hero({ profile, openLightbox }) {
+  function Hero({ profile, openLightbox, onPlayIntroVoice, isVoicePlaying }) {
     const subtitle =
       profile?.hero_subtitle ||
       'Full-Stack Engineer · Python · Django · React · Laravel'
@@ -141,6 +141,15 @@
             e.createElement(
               'div',
               { className: 'hero-actions' },
+              e.createElement(
+                'button',
+                {
+                  type: 'button',
+                  className: 'btn btn-outline',
+                  onClick: onPlayIntroVoice,
+                },
+                isVoicePlaying ? 'Stop Voice Intro' : 'Listen to Intro'
+              ),
               e.createElement(
                 'a',
                 {
@@ -1250,7 +1259,10 @@
     const [musicMuted, setMusicMuted] = useState(false)
     const [coursesOpen, setCoursesOpen] = useState(false)
     const [selectedCourse, setSelectedCourse] = useState(null)
+    const [isVoicePlaying, setIsVoicePlaying] = useState(false)
     const audioRef = React.useRef(null)
+    const utteranceRef = React.useRef(null)
+    const musicVolumeRef = React.useRef(0.3)
 
     useEffect(() => {
       if (!audioRef.current) {
@@ -1292,6 +1304,14 @@
     }, [musicMuted])
 
     useEffect(() => {
+      return () => {
+        if (window.speechSynthesis) {
+          window.speechSynthesis.cancel()
+        }
+      }
+    }, [])
+
+    useEffect(() => {
       // Expose global function for rpg-runner.js to open courses modal
       window.openCoursesModal = () => setCoursesOpen(true)
       return () => {
@@ -1324,10 +1344,84 @@
     }
 
     const profile = data.profile || null
+
+    const buildIntroVoiceText = () => {
+      const highlights = profile?.highlights && profile.highlights.length
+        ? profile.highlights.join('. ')
+        : ''
+
+      return [
+        `Presentation. Hi, I'm ${profile?.name || 'Fouad Hammani'}.`,
+        profile?.headline || 'AI Software Engineer.',
+        profile?.summary || '',
+        'About me.',
+        highlights,
+      ]
+        .filter(Boolean)
+        .join(' ')
+    }
+
+    const restoreMusicVolume = () => {
+      if (audioRef.current) {
+        audioRef.current.volume = musicVolumeRef.current
+      }
+    }
+
+    const onPlayIntroVoice = () => {
+      if (!window.speechSynthesis) return
+
+      if (isVoicePlaying) {
+        window.speechSynthesis.cancel()
+        restoreMusicVolume()
+        setIsVoicePlaying(false)
+        return
+      }
+
+      const text = buildIntroVoiceText()
+      const utterance = new SpeechSynthesisUtterance(text)
+      const voices = window.speechSynthesis.getVoices()
+      const preferredVoice =
+        voices.find((voice) => /en(-|_)?(CA|US|GB)/i.test(voice.lang) && /(Google|Microsoft|Samantha|Daniel|Karen|Zira)/i.test(voice.name)) ||
+        voices.find((voice) => /en/i.test(voice.lang)) ||
+        voices[0]
+
+      if (preferredVoice) {
+        utterance.voice = preferredVoice
+        utterance.lang = preferredVoice.lang
+      } else {
+        utterance.lang = 'en-CA'
+      }
+
+      utterance.rate = 0.96
+      utterance.pitch = 1
+
+      utterance.onstart = () => {
+        if (audioRef.current) {
+          musicVolumeRef.current = audioRef.current.volume
+          audioRef.current.volume = Math.max(0.08, musicVolumeRef.current * 0.35)
+        }
+        setIsVoicePlaying(true)
+      }
+
+      utterance.onend = () => {
+        restoreMusicVolume()
+        setIsVoicePlaying(false)
+      }
+
+      utterance.onerror = () => {
+        restoreMusicVolume()
+        setIsVoicePlaying(false)
+      }
+
+      utteranceRef.current = utterance
+      window.speechSynthesis.cancel()
+      window.speechSynthesis.speak(utterance)
+    }
+
     return e.createElement(
       e.Fragment,
       null,
-      e.createElement(Hero, { profile, openLightbox }),
+      e.createElement(Hero, { profile, openLightbox, onPlayIntroVoice, isVoicePlaying }),
       e.createElement(
         'section',
         { className: 'section' },
