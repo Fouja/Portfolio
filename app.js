@@ -33,6 +33,7 @@
     return e.createElement(
       'section',
       { id: 'hero', className: 'hero-section' },
+      e.createElement(HeroIllustration, { profile, openLightbox }),
       e.createElement(
         'div',
         { className: 'container hero-grid' },
@@ -102,8 +103,7 @@
                 )
               : null
           )
-        ),
-        e.createElement(HeroIllustration, { profile, openLightbox })
+        )
       )
     )
   }
