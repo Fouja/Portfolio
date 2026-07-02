@@ -265,6 +265,13 @@
   let mousePos = { x: 0, y: 0 }
   let coursesModalOpened = false
   let facingRight = true
+  const runnerSprite = new Image()
+  let runnerSpriteLoaded = false
+
+  runnerSprite.onload = () => {
+    runnerSpriteLoaded = true
+  }
+  runnerSprite.src = './assets/game-runner.png'
   
   // Keyboard input for arrow keys
   const keys = {
@@ -723,8 +730,8 @@
     const { groundY, scale } = getMetrics()
     const frameIndex = Math.floor(t * 10) % legsFrames.length
     
-    const spriteHeight = 10.5 * scale 
-    const spriteWidth = 11 * scale
+    const spriteHeight = 13 * scale
+    const spriteWidth = 13 * scale
     
     // Determine position and bob based on state
     let x, y, bob
@@ -754,80 +761,81 @@
        ctx.translate(-centerX, -centerY)
     }
 
-    // Draw detailed character instead of pixel blocks
-    drawCharacterHead(x, y, scale)
-    drawCharacterBody(x, y, scale)
-    
-    if (currentState === 'done') {
-      drawCharacterLegs(x, y, scale, frameIndex, true)
-      drawCharacterBoots(x, y, scale, frameIndex, true)
-
-      ctx.fillStyle = palette.outline
-      ctx.beginPath()
-      ctx.ellipse(x + scale * 2.8, y + scale * 5.4, scale * 0.7, scale * 1.2, -0.45, 0, Math.PI * 2)
-      ctx.fill()
-      ctx.beginPath()
-      ctx.ellipse(x + scale * 7.2, y + scale * 5.4, scale * 0.7, scale * 1.2, 0.45, 0, Math.PI * 2)
-      ctx.fill()
+    if (runnerSpriteLoaded) {
+      const imageX = x - scale * 1.6
+      const imageY = y - scale * 2.1
+      const idleScale = currentState === 'ready' ? 1.02 : 1
+      const imageWidth = spriteWidth * idleScale
+      const imageHeight = spriteHeight * idleScale
+      ctx.drawImage(runnerSprite, imageX, imageY, imageWidth, imageHeight)
     } else {
-      drawCharacterLegs(x, y, scale, frameIndex, false)
-      drawCharacterBoots(x, y, scale, frameIndex, false)
+      drawCharacterHead(x, y, scale)
+      drawCharacterBody(x, y, scale)
       
-      if (currentState === 'mining') {
-        // Draw detailed pickaxe
-        const pickFrame = Math.floor(t * 6) % 2
-        const pickX = x + scale * 8 + Math.sin(t * 6) * scale * 0.5
-        const pickY = y + scale * 3 + Math.cos(t * 6) * scale * 0.3
-        drawPickaxe(pickX, pickY, scale, pickFrame)
-        
-        // Mining arm
+      if (currentState === 'done') {
+        drawCharacterLegs(x, y, scale, frameIndex, true)
+        drawCharacterBoots(x, y, scale, frameIndex, true)
+
         ctx.fillStyle = palette.outline
         ctx.beginPath()
-        ctx.ellipse(x + scale * 8, y + scale * 4, scale * 0.9, scale * 1.6, 0.5, 0, Math.PI * 2)
+        ctx.ellipse(x + scale * 2.8, y + scale * 5.4, scale * 0.7, scale * 1.2, -0.45, 0, Math.PI * 2)
         ctx.fill()
-        
-        // Sleeve
-        ctx.fillStyle = palette.coat
         ctx.beginPath()
-        ctx.ellipse(x + scale * 8, y + scale * 3.6, scale * 0.6, scale * 0.9, 0.5, 0, Math.PI * 2)
-        ctx.fill()
-        
-        // Glove
-        ctx.fillStyle = palette.gloves
-        ctx.beginPath()
-        ctx.ellipse(x + scale * 8, y + scale * 4.4, scale * 0.6, scale * 0.7, 0.5, 0, Math.PI * 2)
+        ctx.ellipse(x + scale * 7.2, y + scale * 5.4, scale * 0.7, scale * 1.2, 0.45, 0, Math.PI * 2)
         ctx.fill()
       } else {
-        // Walking arms (idle at sides)
-        const armSwing = Math.sin(t * 10) * scale * 0.5
+        drawCharacterLegs(x, y, scale, frameIndex, false)
+        drawCharacterBoots(x, y, scale, frameIndex, false)
         
-        // Left arm
-        ctx.fillStyle = palette.outline
-        ctx.beginPath()
-        ctx.ellipse(x + scale * 3.5, y + scale * 4.5 + armSwing, scale * 0.7, scale * 1.5, 0.1, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = palette.coat
-        ctx.beginPath()
-        ctx.ellipse(x + scale * 3.5, y + scale * 4.2 + armSwing, scale * 0.5, scale * 0.8, 0.1, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = palette.gloves
-        ctx.beginPath()
-        ctx.ellipse(x + scale * 3.5, y + scale * 5.2 + armSwing, scale * 0.5, scale * 0.6, 0.1, 0, Math.PI * 2)
-        ctx.fill()
-        
-        // Right arm
-        ctx.fillStyle = palette.outline
-        ctx.beginPath()
-        ctx.ellipse(x + scale * 7.5, y + scale * 4.5 - armSwing, scale * 0.7, scale * 1.5, -0.1, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = palette.coat
-        ctx.beginPath()
-        ctx.ellipse(x + scale * 7.5, y + scale * 4.2 - armSwing, scale * 0.5, scale * 0.8, -0.1, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = palette.gloves
-        ctx.beginPath()
-        ctx.ellipse(x + scale * 7.5, y + scale * 5.2 - armSwing, scale * 0.5, scale * 0.6, -0.1, 0, Math.PI * 2)
-        ctx.fill()
+        if (currentState === 'mining') {
+          const pickFrame = Math.floor(t * 6) % 2
+          const pickX = x + scale * 8 + Math.sin(t * 6) * scale * 0.5
+          const pickY = y + scale * 3 + Math.cos(t * 6) * scale * 0.3
+          drawPickaxe(pickX, pickY, scale, pickFrame)
+          
+          ctx.fillStyle = palette.outline
+          ctx.beginPath()
+          ctx.ellipse(x + scale * 8, y + scale * 4, scale * 0.9, scale * 1.6, 0.5, 0, Math.PI * 2)
+          ctx.fill()
+          
+          ctx.fillStyle = palette.coat
+          ctx.beginPath()
+          ctx.ellipse(x + scale * 8, y + scale * 3.6, scale * 0.6, scale * 0.9, 0.5, 0, Math.PI * 2)
+          ctx.fill()
+          
+          ctx.fillStyle = palette.gloves
+          ctx.beginPath()
+          ctx.ellipse(x + scale * 8, y + scale * 4.4, scale * 0.6, scale * 0.7, 0.5, 0, Math.PI * 2)
+          ctx.fill()
+        } else {
+          const armSwing = Math.sin(t * 10) * scale * 0.5
+          
+          ctx.fillStyle = palette.outline
+          ctx.beginPath()
+          ctx.ellipse(x + scale * 3.5, y + scale * 4.5 + armSwing, scale * 0.7, scale * 1.5, 0.1, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.fillStyle = palette.coat
+          ctx.beginPath()
+          ctx.ellipse(x + scale * 3.5, y + scale * 4.2 + armSwing, scale * 0.5, scale * 0.8, 0.1, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.fillStyle = palette.gloves
+          ctx.beginPath()
+          ctx.ellipse(x + scale * 3.5, y + scale * 5.2 + armSwing, scale * 0.5, scale * 0.6, 0.1, 0, Math.PI * 2)
+          ctx.fill()
+          
+          ctx.fillStyle = palette.outline
+          ctx.beginPath()
+          ctx.ellipse(x + scale * 7.5, y + scale * 4.5 - armSwing, scale * 0.7, scale * 1.5, -0.1, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.fillStyle = palette.coat
+          ctx.beginPath()
+          ctx.ellipse(x + scale * 7.5, y + scale * 4.2 - armSwing, scale * 0.5, scale * 0.8, -0.1, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.fillStyle = palette.gloves
+          ctx.beginPath()
+          ctx.ellipse(x + scale * 7.5, y + scale * 5.2 - armSwing, scale * 0.5, scale * 0.6, -0.1, 0, Math.PI * 2)
+          ctx.fill()
+        }
       }
     }
     
