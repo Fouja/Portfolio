@@ -121,22 +121,34 @@
   function MediaCarousel({ videoSrc, imageSrc }) {
     const [showVideo, setShowVideo] = useState(true)
     const videoRef = React.useRef(null)
+    const imageTimerRef = React.useRef(null)
 
     useEffect(() => {
-      if (showVideo) {
-        const video = videoRef.current
-        if (video) {
-          video.play().catch(() => {})
-          const handleVideoEnd = () => {
-            setShowVideo(false)
-            const imageTimer = setTimeout(() => {
-              setShowVideo(true)
-            }, 15000)
-            return () => clearTimeout(imageTimer)
+      if (!showVideo) {
+        imageTimerRef.current = window.setTimeout(() => {
+          setShowVideo(true)
+        }, 15000)
+        return () => {
+          if (imageTimerRef.current) {
+            window.clearTimeout(imageTimerRef.current)
+            imageTimerRef.current = null
           }
-          video.addEventListener('ended', handleVideoEnd)
-          return () => video.removeEventListener('ended', handleVideoEnd)
         }
+      }
+
+      const video = videoRef.current
+      if (!video) return undefined
+
+      const handleVideoEnd = () => {
+        setShowVideo(false)
+      }
+
+      video.currentTime = 0
+      video.play().catch(() => {})
+      video.addEventListener('ended', handleVideoEnd)
+
+      return () => {
+        video.removeEventListener('ended', handleVideoEnd)
       }
     }, [showVideo])
 
@@ -151,6 +163,8 @@
             controls: false,
             autoPlay: true,
             muted: true,
+            playsInline: true,
+            preload: 'auto',
             style: { cursor: 'default' }
           })
         : e.createElement('img', {
@@ -955,11 +969,49 @@
   }
 
   function CoursesModal({ isOpen, onClose, selectedCourse, onSelectCourse }) {
-    const courses = [
-      { id: 'html', name: 'HTML Basics', file: './courses/html-basics.html' },
-      { id: 'css', name: 'CSS Styling', file: './courses/css-styling.html' },
-      { id: 'js', name: 'JavaScript Fundamentals', file: './courses/javascript-fundamentals.html' }
+    const fallbackCourses = [
+      { id: 'html-basics', name: 'HTML Basics', file: './courses/html-basics.html' },
+      { id: 'css-styling', name: 'CSS Styling', file: './courses/css-styling.html' },
+      { id: 'javascript-fundamentals', name: 'JavaScript Fundamentals', file: './courses/javascript-fundamentals.html' },
     ]
+    const [courses, setCourses] = useState(fallbackCourses)
+
+    useEffect(() => {
+      if (!isOpen) return undefined
+
+      let cancelled = false
+      fetch('https://api.github.com/repos/Fouja/Portfolio/contents/courses')
+        .then((response) => {
+          if (!response.ok) throw new Error('Unable to load courses')
+          return response.json()
+        })
+        .then((items) => {
+          if (cancelled || !Array.isArray(items)) return
+          const htmlCourses = items
+            .filter((item) => item && item.type === 'file' && /\.html?$/i.test(item.name))
+            .map((item) => ({
+              id: item.name,
+              name: item.name
+                .replace(/\.html?$/i, '')
+                .replace(/[-_]+/g, ' ')
+                .replace(/\b\w/g, (char) => char.toUpperCase()),
+              file: `./courses/${item.name}`,
+            }))
+
+          if (htmlCourses.length > 0) {
+            setCourses(htmlCourses)
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setCourses(fallbackCourses)
+          }
+        })
+
+      return () => {
+        cancelled = true
+      }
+    }, [isOpen])
 
     if (!isOpen) return null
 
@@ -1095,15 +1147,40 @@
     const audioRef = React.useRef(null)
 
     useEffect(() => {
-      // Create and play background music
       if (!audioRef.current) {
         const audio = new Audio('./assets/Ayla.mpga')
         audio.loop = true
         audio.volume = 0.3
         audio.muted = musicMuted
         audioRef.current = audio
+
+        const playAudio = () => {
+          audio.play().catch(() => {})
+          document.removeEventListener('click', playAudio)
+          document.removeEventListener('keydown', playAudio)
+          document.removeEventListener('touchstart', playAudio)
+        }
+
+        document.addEventListener('click', playAudio)
+        document.addEventListener('keydown', playAudio)
+        document.addEventListener('touchstart', playAudio)
+
         audio.play().catch(() => {})
+
+        return () => {
+          document.removeEventListener('click', playAudio)
+          document.removeEventListener('keydown', playAudio)
+          document.removeEventListener('touchstart', playAudio)
+          audio.pause()
+        }
       } else {
+        audioRef.current.muted = musicMuted
+      }
+      return undefined
+    }, [])
+
+    useEffect(() => {
+      if (audioRef.current) {
         audioRef.current.muted = musicMuted
       }
     }, [musicMuted])

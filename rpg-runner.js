@@ -264,6 +264,7 @@
 
   let runnerPos = { x: 0, y: 0 }
   let mousePos = { x: 0, y: 0 }
+  let coursesModalOpened = false
   let facingRight = true
   
   // Keyboard input for arrow keys
@@ -1074,7 +1075,7 @@
     if (state === 'mining') {
       ores.forEach((ore) => drawOre(ore.x, ore.y, scale, ore))
     }
-    if (state === 'crafting' || state === 'coding') {
+    if (state === 'crafting' || state === 'coding' || state === 'following' || state === 'done') {
       const computerX = width * 0.42
       const computerY = groundY - scale * 7
       const phase = state === 'crafting' ? Math.min(1, stateTime / 2) : 1
@@ -1101,10 +1102,11 @@
     })
     if (state === 'mining') {
       spawnTimer -= dt
-      if (spawnTimer <= 0 && spawnedCount < 5) {
+      if (spawnTimer <= 0 && spawnedCount < 10) {
         spawnTimer = 0.8 + Math.random() * 1.2
         const typeIndex = spawnedCount % oreTypes.length
         spawnedCount += 1
+        const laneOffset = (Math.random() * 6 - 4) * scale
         
         // Generate brute shape points
         const numPoints = 6 + Math.floor(Math.random() * 4) // 6-9 points
@@ -1120,17 +1122,19 @@
         
         ores.push({
           x: width + Math.random() * width * 0.2,
-          y: groundY - scale * 3,
+          y: groundY - scale * 3 + laneOffset,
           collected: false,
           type: oreTypes[typeIndex],
           points: points,
         })
       }
       const runnerX = width * 0.18 + scale * 6
+      const runnerY = runnerPos.y + spriteHeight * 0.55
       for (let i = ores.length - 1; i >= 0; i -= 1) {
         const ore = ores[i]
         ore.x -= dt * 80
-        if (!ore.collected && ore.x <= runnerX) {
+        const isAligned = Math.abs(ore.y - runnerY) <= scale * 1.8
+        if (!ore.collected && ore.x <= runnerX && isAligned) {
           ore.collected = true
           minedCount += 1
           sparks.push({
@@ -1162,16 +1166,17 @@
       runnerPos.y = Math.max(miningGroundY - spriteHeight - miningScale * 8, Math.min(miningGroundY - miningScale * 0.5, runnerPos.y))
     } else {
       stateTime += dt
+      const { groundY: stateGroundY, scale: stateScale } = getMetrics()
+      const stateSpriteHeight = 10.5 * stateScale
+      
       if (state === 'crafting' && stateTime >= 2.4) {
         state = 'coding'
         stateTime = 0
       } else if (state === 'coding' && stateTime >= 5.0) {
         state = 'following'
         stateTime = 0
-        if (mousePos.x === 0 && mousePos.y === 0) {
-            mousePos.x = runnerPos.x
-            mousePos.y = runnerPos.y
-        }
+        mousePos.x = width * 0.42 + stateScale * 3
+        mousePos.y = stateGroundY - stateScale * 7 + stateScale * 4
       }
       
       if (state === 'following') {
@@ -1179,7 +1184,7 @@
           const dy = mousePos.y - runnerPos.y
           const dist = Math.sqrt(dx*dx + dy*dy)
           
-          if (dist > scale) {
+          if (dist > scale * 2) {
               const moveSpeed = scale * 15
               
               runnerPos.x += (dx / dist) * moveSpeed * dt
@@ -1188,8 +1193,9 @@
               if (Math.abs(dx) > 1) facingRight = dx > 0
           } else {
               // Reached the computer - open courses modal
-              if (window.openCoursesModal) {
+              if (window.openCoursesModal && !coursesModalOpened) {
                   window.openCoursesModal()
+                  coursesModalOpened = true
               }
               state = 'done'
           }
