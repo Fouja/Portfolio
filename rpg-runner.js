@@ -256,16 +256,34 @@
     { id: 'bookPython', label: 'Python', cover: '#ca8a04', image: './assets/books/python.png' },
     { id: 'bookWebDev', label: 'Web Dev', cover: '#15803d', image: './assets/books/webdev.png' },
     { id: 'bookMachineLearning', label: 'ML', cover: '#9333ea', image: './assets/books/ml.png' },
+    { id: 'bookReact', label: 'React', cover: '#06b6d4' },
+    { id: 'bookTypeScript', label: 'TS', cover: '#2563eb' },
+    { id: 'bookDocker', label: 'Docker', cover: '#0ea5e9' },
+    { id: 'bookLangChain', label: 'LangChain', cover: '#16a34a' },
+    { id: 'bookPostgreSQL', label: 'Postgres', cover: '#1d4ed8' },
+    { id: 'bookKafka', label: 'Kafka', cover: '#52525b' },
+    { id: 'bookSpark', label: 'Spark', cover: '#ea580c' },
+    { id: 'bookHuggingFace', label: 'HF', cover: '#eab308' },
+    { id: 'bookGit', label: 'Git', cover: '#f97316' },
+    { id: 'bookLinux', label: 'Linux', cover: '#111827' },
+  ]
+
+  const hazardTypes = [
+    { id: 'bug', label: 'Bug', cover: '#dc2626' },
+    { id: 'loop', label: 'Loop', cover: '#7f1d1d' },
+    { id: 'null', label: 'Null', cover: '#991b1b' },
   ]
 
   const sparks = []
   const ores = []
-  const targetOreCount = 11
+  const targetOreCount = oreTypes.length
   let minedCount = 0
   let spawnedCount = 0
   let state = 'ready'
   let stateTime = 0
   let spawnTimer = 0
+  let stunTimer = 0
+  let comboCount = 0
 
   let runnerPos = { x: 0, y: 0 }
   let mousePos = { x: 0, y: 0 }
@@ -327,6 +345,8 @@
     state = 'ready'
     stateTime = 0
     spawnTimer = 0
+    stunTimer = 0
+    comboCount = 0
     coursesModalOpened = false
     facingRight = true
     ores.length = 0
@@ -619,6 +639,7 @@
     const coverColor = ore.type.cover || '#2563eb'
     const bookImage = bookSprites[ore.type.id]
     const wobble = Math.sin((ore.x + ore.y) * 0.06) * 0.12
+    const isHazard = ore.kind === 'hazard'
 
     ctx.save()
     ctx.translate(x, y)
@@ -630,7 +651,7 @@
     ctx.fillStyle = coverColor
     drawRoundedRect(-bookWidth * 0.5, -bookHeight * 0.45, bookWidth, bookHeight, scale * 0.18, coverColor)
 
-    if (bookImage) {
+    if (bookImage && !isHazard) {
       ctx.save()
       ctx.beginPath()
       drawRoundedRect(-bookWidth * 0.44, -bookHeight * 0.4, bookWidth * 0.88, bookHeight * 0.82, scale * 0.12, coverColor)
@@ -638,15 +659,26 @@
       ctx.drawImage(bookImage, -bookWidth * 0.44, -bookHeight * 0.4, bookWidth * 0.88, bookHeight * 0.82)
       ctx.restore()
     } else {
-      ctx.fillStyle = '#f8fafc'
-      ctx.fillRect(-bookWidth * 0.36, -bookHeight * 0.22, scale * 0.22, bookHeight * 0.78)
-      ctx.fillStyle = 'rgba(255,255,255,0.18)'
-      ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.26, bookWidth * 0.52, scale * 0.18)
-      ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.02, bookWidth * 0.46, scale * 0.12)
-      ctx.fillRect(-bookWidth * 0.18, bookHeight * 0.16, bookWidth * 0.38, scale * 0.12)
+      if (isHazard) {
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)'
+        ctx.lineWidth = Math.max(1, scale * 0.12)
+        ctx.beginPath()
+        ctx.moveTo(-bookWidth * 0.24, -bookHeight * 0.2)
+        ctx.lineTo(bookWidth * 0.24, bookHeight * 0.2)
+        ctx.moveTo(bookWidth * 0.24, -bookHeight * 0.2)
+        ctx.lineTo(-bookWidth * 0.24, bookHeight * 0.2)
+        ctx.stroke()
+      } else {
+        ctx.fillStyle = '#f8fafc'
+        ctx.fillRect(-bookWidth * 0.36, -bookHeight * 0.22, scale * 0.22, bookHeight * 0.78)
+        ctx.fillStyle = 'rgba(255,255,255,0.18)'
+        ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.26, bookWidth * 0.52, scale * 0.18)
+        ctx.fillRect(-bookWidth * 0.18, -bookHeight * 0.02, bookWidth * 0.46, scale * 0.12)
+        ctx.fillRect(-bookWidth * 0.18, bookHeight * 0.16, bookWidth * 0.38, scale * 0.12)
+      }
     }
 
-    ctx.fillStyle = '#e2e8f0'
+    ctx.fillStyle = isHazard ? '#fecaca' : '#e2e8f0'
     ctx.font = `${Math.max(8, Math.round(scale * 0.68))}px Arial, sans-serif`
     ctx.textAlign = 'center'
     ctx.fillText(ore.type.label, 0, -bookHeight * 0.8)
@@ -755,11 +787,23 @@
     }
 
     if (runnerSpriteLoaded) {
+      const cycleSpeed = currentState === 'running' ? 10 : currentState === 'mining' ? 7 : 3
+      const cycle = t * cycleSpeed
+      const centerX = x + spriteWidth * 0.5
+      const centerY = y + spriteHeight * 0.58
+      const bounce = currentState === 'done' ? 0 : Math.sin(cycle) * scale * (currentState === 'running' ? 0.38 : currentState === 'mining' ? 0.24 : 0.08)
+      const tilt = currentState === 'done' ? 0 : Math.sin(cycle) * (currentState === 'running' ? 0.06 : currentState === 'mining' ? 0.035 : 0.015)
+      const squash = currentState === 'done' ? 1 : 1 - Math.abs(Math.sin(cycle)) * 0.035
+      const stretch = currentState === 'done' ? 1 : 1 + Math.abs(Math.sin(cycle)) * 0.04
       const imageX = x - scale * 1.6
-      const imageY = y - scale * 2.1
+      const imageY = y - scale * 2.1 + bounce
       const idleScale = currentState === 'ready' ? 1.02 : 1
       const imageWidth = spriteWidth * idleScale
       const imageHeight = spriteHeight * idleScale
+      ctx.translate(centerX, centerY)
+      ctx.rotate(tilt)
+      ctx.scale(stretch, squash)
+      ctx.translate(-centerX, -centerY)
       ctx.drawImage(runnerSprite, imageX, imageY, imageWidth, imageHeight)
     } else {
       drawCharacterHead(x, y, scale)
@@ -1054,10 +1098,10 @@
       ctx.font = 'bold 24px Arial, sans-serif'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.fillText('📚 Collect 11 books to unlock the courses', width / 2, height / 3)
+      ctx.fillText(`📚 Collect ${targetOreCount} books to unlock the courses`, width / 2, height / 3)
       ctx.font = '16px Arial, sans-serif'
       ctx.fillStyle = '#9ca3af'
-      ctx.fillText('Press Arrow Up or Arrow Down to start', width / 2, height / 3 + 40)
+      ctx.fillText('Use wider lanes, dodge bugs, and ride your combo streak', width / 2, height / 3 + 40)
       ctx.restore()
     }
     
@@ -1084,6 +1128,21 @@
       ctx.font = '600 15px Arial, sans-serif'
       ctx.textAlign = 'left'
       ctx.fillText(`Books: ${minedCount}/${targetOreCount}`, 18, 28)
+      ctx.fillText(`Combo: x${Math.max(1, comboCount)}`, 18, 48)
+      if (state === 'mining') {
+        ctx.fillText(`Speed: ${Math.min(10, 1 + Math.floor(minedCount / 3))}`, 18, 68)
+      }
+      ctx.restore()
+    }
+
+    if (stunTimer > 0) {
+      ctx.save()
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.12)'
+      ctx.fillRect(0, 0, width, height)
+      ctx.fillStyle = '#fecaca'
+      ctx.font = 'bold 18px Arial, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillText('Bug hit! Lose momentum and recover...', width / 2, 28)
       ctx.restore()
     }
 
@@ -1127,64 +1186,88 @@
     }
 
     if (state === 'mining') {
+      if (stunTimer > 0) {
+        stunTimer = Math.max(0, stunTimer - dt)
+      }
       spawnTimer -= dt
       if (spawnTimer <= 0 && minedCount < targetOreCount) {
-        spawnTimer = 0.55 + Math.random() * 0.5
-        const typeIndex = spawnedCount % oreTypes.length
-        spawnedCount += 1
-        const laneIndex = Math.floor(Math.random() * 5) - 2
-        const laneOffset = laneIndex * scale * 1.65
-        
-        // Generate brute shape points
-        const numPoints = 6 + Math.floor(Math.random() * 4) // 6-9 points
-        const points = []
-        for (let j = 0; j < numPoints; j++) {
-            const angle = (j / numPoints) * Math.PI * 2
-            const r = 1.0 + Math.random() * 0.6 // Radius variation for jaggedness
-            points.push({
-                x: Math.cos(angle) * r,
-                y: Math.sin(angle) * r
-            })
+        const speedTier = 1 + Math.floor(minedCount / 3)
+        spawnTimer = Math.max(0.32, 0.74 - speedTier * 0.04) + Math.random() * 0.28
+        const laneIndex = Math.floor(Math.random() * 7) - 3
+        const laneOffset = laneIndex * scale * 2.2
+        const shouldSpawnHazard = minedCount > 2 && Math.random() < Math.min(0.34, 0.12 + minedCount * 0.01)
+
+        if (shouldSpawnHazard) {
+          const hazardType = hazardTypes[(spawnedCount + minedCount) % hazardTypes.length]
+          ores.push({
+            x: width + Math.random() * width * 0.18,
+            y: groundY - scale * 3 + laneOffset,
+            collected: false,
+            kind: 'hazard',
+            type: hazardType,
+          })
+        } else {
+          const typeIndex = spawnedCount % oreTypes.length
+          spawnedCount += 1
+          ores.push({
+            x: width + Math.random() * width * 0.18,
+            y: groundY - scale * 3 + laneOffset,
+            collected: false,
+            kind: 'collectible',
+            type: oreTypes[typeIndex],
+          })
         }
-        
-        ores.push({
-          x: width + Math.random() * width * 0.2,
-          y: groundY - scale * 3 + laneOffset,
-          collected: false,
-          type: oreTypes[typeIndex],
-          points: points,
-        })
       }
 
-      const moveSpeed = 140
+      const moveSpeed = 155
       const { groundY: miningGroundY, scale: miningScale } = getMetrics()
       const miningSpriteHeight = 10.5 * miningScale
-      if (keys.ArrowUp) {
+      if (stunTimer <= 0 && keys.ArrowUp) {
         runnerPos.y -= dt * moveSpeed
       }
-      if (keys.ArrowDown) {
+      if (stunTimer <= 0 && keys.ArrowDown) {
         runnerPos.y += dt * moveSpeed
       }
       runnerPos.x = width * 0.14
-      runnerPos.y = Math.max(miningGroundY - miningSpriteHeight - miningScale * 6.2, Math.min(miningGroundY - miningScale * 1.2, runnerPos.y))
+      runnerPos.y = Math.max(miningGroundY - miningSpriteHeight - miningScale * 8.2, Math.min(miningGroundY - miningScale * 0.8, runnerPos.y))
 
       const runnerX = width * 0.18 + scale * 6
       const runnerY = runnerPos.y + miningSpriteHeight * 0.55
       for (let i = ores.length - 1; i >= 0; i -= 1) {
         const ore = ores[i]
-        ore.x -= dt * 145
-        const isAligned = Math.abs(ore.y - runnerY) <= scale * 1.8
+        const speedTier = 1 + Math.floor(minedCount / 3)
+        ore.x -= dt * (130 + speedTier * 10)
+        const alignmentWindow = ore.kind === 'hazard' ? scale * 1.55 : scale * 1.8
+        const isAligned = Math.abs(ore.y - runnerY) <= alignmentWindow
         if (!ore.collected && ore.x <= runnerX && isAligned) {
           ore.collected = true
-          minedCount += 1
-          sparks.push({
-            x: ore.x,
-            y: ore.y,
-            life: 0.4,
-            max: 0.4,
-          })
+          if (ore.kind === 'hazard') {
+            comboCount = 0
+            minedCount = Math.max(0, minedCount - 1)
+            stunTimer = 0.75
+            sparks.push({
+              x: ore.x,
+              y: ore.y,
+              life: 0.55,
+              max: 0.55,
+            })
+          } else {
+            minedCount += 1
+            comboCount += 1
+            sparks.push({
+              x: ore.x,
+              y: ore.y,
+              life: 0.4,
+              max: 0.4,
+            })
+          }
         }
-        if (ore.x < -scale * 10 || ore.collected) {
+        if (ore.x < -scale * 10) {
+          if (ore.kind === 'collectible') {
+            comboCount = 0
+          }
+          ores.splice(i, 1)
+        } else if (ore.collected) {
           ores.splice(i, 1)
         }
       }
