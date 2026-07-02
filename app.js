@@ -33,21 +33,20 @@
     return e.createElement(
       'section',
       { id: 'hero', className: 'hero-section' },
-      e.createElement(HeroIllustration, { profile, openLightbox }),
       e.createElement(
         'div',
         { className: 'container hero-grid' },
         e.createElement(
           'div',
-          null,
+          { className: 'hero-copy' },
           e.createElement(
             'div',
             { className: 'hero-eyebrow' },
-            profile?.logo
+            profile?.badge_photo
               ? e.createElement('img', {
-                  src: profile.logo,
-                  alt: 'FoujeLab Logo',
-                  style: { height: '30px', width: 'auto', cursor: 'default' }
+                  src: profile.badge_photo,
+                  alt: profile?.name || 'Fouad Hammani',
+                  className: 'hero-badge-photo',
                 })
               : '</> CodeCrafted'
           ),
@@ -112,7 +111,8 @@
                   'Download Resume'
                 )
               : null
-          )
+          ),
+          e.createElement(HeroIllustration, { profile, openLightbox })
         )
       )
     )

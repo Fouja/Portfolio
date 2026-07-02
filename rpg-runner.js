@@ -254,13 +254,12 @@
 
   const sparks = []
   const ores = []
+  const targetOreCount = 10
   let minedCount = 0
   let spawnedCount = 0
-  let state = 'mining'
+  let state = 'ready'
   let stateTime = 0
   let spawnTimer = 0
-  let showIntro = true
-  let introTimer = 0
 
   let runnerPos = { x: 0, y: 0 }
   let mousePos = { x: 0, y: 0 }
@@ -276,6 +275,18 @@
   }
 
   window.addEventListener('keydown', (e) => {
+    if ((e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') && state === 'ready') {
+      state = 'mining'
+      stateTime = 0
+      spawnTimer = 0.45
+      e.preventDefault()
+    }
+
+    if ((e.key === 'Enter' || e.key === ' ') && state === 'done') {
+      resetGame()
+      e.preventDefault()
+    }
+
     if (e.key in keys) {
       keys[e.key] = true
       e.preventDefault()
@@ -287,6 +298,25 @@
       keys[e.key] = false
     }
   })
+
+  function resetGame() {
+    minedCount = 0
+    spawnedCount = 0
+    state = 'ready'
+    stateTime = 0
+    spawnTimer = 0
+    coursesModalOpened = false
+    facingRight = true
+    ores.length = 0
+    sparks.length = 0
+    const { groundY, scale } = getMetrics()
+    const spriteHeight = 10.5 * scale
+    runnerPos = {
+      x: width * 0.14,
+      y: groundY - spriteHeight - scale * 3.5,
+    }
+    mousePos = { x: 0, y: 0 }
+  }
 
   canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect()
@@ -698,15 +728,15 @@
     
     // Determine position and bob based on state
     let x, y, bob
-    if (currentState === 'following') {
+    if (currentState === 'running' || currentState === 'done') {
         bob = Math.sin(t * 12) * scale * 0.15
         x = runnerPos.x
         y = runnerPos.y + bob
     } else {
-        bob = currentState === 'mining' ? Math.sin(t * 6) * scale * 0.25 : Math.sin(t * 10) * scale * 0.1
-        x = width * 0.18
-        const baseY = groundY - spriteHeight - scale * 0.2
-        y = currentState === 'coding' ? baseY + scale * 1.2 + bob : baseY + bob
+      bob = currentState === 'mining' ? Math.sin(t * 6) * scale * 0.25 : Math.sin(t * 3) * scale * 0.08
+      x = width * 0.14
+      const baseY = runnerPos.y || (groundY - spriteHeight - scale * 3.5)
+      y = baseY + bob
         
         // Keep runnerPos synced for smooth transition
         runnerPos.x = x
@@ -716,7 +746,7 @@
     ctx.save()
     
     // Flip character if facing left
-    if (currentState === 'following' && !facingRight) {
+    if ((currentState === 'running' || currentState === 'done') && !facingRight) {
        const centerX = x + spriteWidth * 0.5
        const centerY = y + spriteHeight * 0.5
        ctx.translate(centerX, centerY)
@@ -728,48 +758,16 @@
     drawCharacterHead(x, y, scale)
     drawCharacterBody(x, y, scale)
     
-    if (currentState === 'coding') {
+    if (currentState === 'done') {
       drawCharacterLegs(x, y, scale, frameIndex, true)
       drawCharacterBoots(x, y, scale, frameIndex, true)
-      
-      // Coding arms animation
-      const armFrame = Math.floor(t * 8) % 2
-      const armBob = Math.sin(t * 4) * scale * 0.1
-      
-      // Left arm typing
+
       ctx.fillStyle = palette.outline
       ctx.beginPath()
-      ctx.ellipse(x + scale * 2.5, y + scale * 5.5 + armBob, scale * 0.7, scale * 1.3, -0.3, 0, Math.PI * 2)
+      ctx.ellipse(x + scale * 2.8, y + scale * 5.4, scale * 0.7, scale * 1.2, -0.45, 0, Math.PI * 2)
       ctx.fill()
-      
-      // Sleeve
-      ctx.fillStyle = palette.coat
       ctx.beginPath()
-      ctx.ellipse(x + scale * 2.5, y + scale * 5 + armBob, scale * 0.5, scale * 0.8, -0.3, 0, Math.PI * 2)
-      ctx.fill()
-      
-      // Glove
-      ctx.fillStyle = palette.gloves
-      ctx.beginPath()
-      ctx.ellipse(x + scale * 2.5, y + scale * 6 + armBob, scale * 0.5, scale * 0.6, -0.3, 0, Math.PI * 2)
-      ctx.fill()
-      
-      // Right arm typing
-      ctx.fillStyle = palette.outline
-      ctx.beginPath()
-      ctx.ellipse(x + scale * 7.5, y + scale * 5.8 - armBob, scale * 0.7, scale * 1.3, 0.3, 0, Math.PI * 2)
-      ctx.fill()
-      
-      // Sleeve
-      ctx.fillStyle = palette.coat
-      ctx.beginPath()
-      ctx.ellipse(x + scale * 7.5, y + scale * 5.3 - armBob, scale * 0.5, scale * 0.8, 0.3, 0, Math.PI * 2)
-      ctx.fill()
-      
-      // Glove
-      ctx.fillStyle = palette.gloves
-      ctx.beginPath()
-      ctx.ellipse(x + scale * 7.5, y + scale * 6.3 - armBob, scale * 0.5, scale * 0.6, 0.3, 0, Math.PI * 2)
+      ctx.ellipse(x + scale * 7.2, y + scale * 5.4, scale * 0.7, scale * 1.2, 0.45, 0, Math.PI * 2)
       ctx.fill()
     } else {
       drawCharacterLegs(x, y, scale, frameIndex, false)
@@ -836,7 +834,7 @@
     ctx.restore()
 
     // Enhanced shadow
-    const shadowY = currentState === 'following' ? runnerPos.y + spriteHeight + scale * 0.4 : groundY + scale * 0.4
+    const shadowY = currentState === 'running' || currentState === 'done' ? runnerPos.y + spriteHeight + scale * 0.4 : groundY + scale * 0.4
     ctx.fillStyle = 'rgba(15, 23, 42, 0.35)'
     ctx.beginPath()
     ctx.ellipse(
@@ -1049,23 +1047,16 @@
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, width, height)
     
-    // Draw intro text if showing
-    if (showIntro && state === 'mining') {
-      introTimer += 1 / 60
-      if (introTimer > 5) {
-        showIntro = false
-      }
-      
+    if (state === 'ready') {
       ctx.save()
-      ctx.globalAlpha = Math.min(1, (5 - introTimer) / 2)
       ctx.fillStyle = '#38bdf8'
       ctx.font = 'bold 24px Arial, sans-serif'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.fillText('⛏️ Play this 30 funny seconds game to deblock courses :D', width / 2, height / 3)
+      ctx.fillText('⛏️ Mine 10 ores to unlock the courses', width / 2, height / 3)
       ctx.font = '16px Arial, sans-serif'
       ctx.fillStyle = '#9ca3af'
-      ctx.fillText('Use arrow keys ↑↓ to mine | Collect 10 ores to craft', width / 2, height / 3 + 40)
+      ctx.fillText('Press Arrow Up or Arrow Down to start', width / 2, height / 3 + 40)
       ctx.restore()
     }
     
@@ -1075,17 +1066,43 @@
     if (state === 'mining') {
       ores.forEach((ore) => drawOre(ore.x, ore.y, scale, ore))
     }
-    if (state === 'crafting' || state === 'coding' || state === 'following' || state === 'done') {
-      const computerX = width * 0.42
+    if (state === 'running' || state === 'done') {
+      const computerX = width * 0.68
       const computerY = groundY - scale * 7
-      const phase = state === 'crafting' ? Math.min(1, stateTime / 2) : 1
-      drawComputer(computerX, computerY, scale, phase, t)
+      drawComputer(computerX, computerY, scale, 1, t)
     }
     sparks.forEach((spark) => {
       const alpha = Math.max(0, spark.life / spark.max)
       ctx.fillStyle = `rgba(250, 204, 21, ${alpha})`
       ctx.fillRect(spark.x, spark.y, scale * 0.6, scale * 0.6)
     })
+
+    if (state === 'mining' || state === 'running' || state === 'done') {
+      ctx.save()
+      ctx.fillStyle = '#e2e8f0'
+      ctx.font = '600 15px Arial, sans-serif'
+      ctx.textAlign = 'left'
+      ctx.fillText(`Ores: ${minedCount}/${targetOreCount}`, 18, 28)
+      ctx.restore()
+    }
+
+    if (state === 'done') {
+      ctx.save()
+      ctx.fillStyle = 'rgba(2, 6, 23, 0.72)'
+      ctx.fillRect(width * 0.24, height * 0.14, width * 0.52, height * 0.22)
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.8)'
+      ctx.lineWidth = 2
+      ctx.strokeRect(width * 0.24, height * 0.14, width * 0.52, height * 0.22)
+      ctx.fillStyle = '#38bdf8'
+      ctx.font = 'bold 22px Arial, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillText('Courses unlocked', width / 2, height * 0.23)
+      ctx.fillStyle = '#cbd5e1'
+      ctx.font = '15px Arial, sans-serif'
+      ctx.fillText('Press Enter to play again', width / 2, height * 0.30)
+      ctx.restore()
+    }
+
     drawRunner(t, state)
   }
 
@@ -1100,13 +1117,22 @@
         cloud.s = 0.08 + Math.random() * 0.16
       }
     })
+
+    if (state === 'ready') {
+      const idleSpriteHeight = 10.5 * scale
+      runnerPos.x = width * 0.14
+      runnerPos.y = groundY - idleSpriteHeight - scale * 3.5
+      return
+    }
+
     if (state === 'mining') {
       spawnTimer -= dt
-      if (spawnTimer <= 0 && spawnedCount < 10) {
-        spawnTimer = 0.8 + Math.random() * 1.2
+      if (spawnTimer <= 0 && minedCount < targetOreCount) {
+        spawnTimer = 0.55 + Math.random() * 0.5
         const typeIndex = spawnedCount % oreTypes.length
         spawnedCount += 1
-        const laneOffset = (Math.random() * 6 - 4) * scale
+        const laneIndex = Math.floor(Math.random() * 5) - 2
+        const laneOffset = laneIndex * scale * 1.65
         
         // Generate brute shape points
         const numPoints = 6 + Math.floor(Math.random() * 4) // 6-9 points
@@ -1128,11 +1154,24 @@
           points: points,
         })
       }
+
+      const moveSpeed = 140
+      const { groundY: miningGroundY, scale: miningScale } = getMetrics()
+      const miningSpriteHeight = 10.5 * miningScale
+      if (keys.ArrowUp) {
+        runnerPos.y -= dt * moveSpeed
+      }
+      if (keys.ArrowDown) {
+        runnerPos.y += dt * moveSpeed
+      }
+      runnerPos.x = width * 0.14
+      runnerPos.y = Math.max(miningGroundY - miningSpriteHeight - miningScale * 6.2, Math.min(miningGroundY - miningScale * 1.2, runnerPos.y))
+
       const runnerX = width * 0.18 + scale * 6
-      const runnerY = runnerPos.y + spriteHeight * 0.55
+      const runnerY = runnerPos.y + miningSpriteHeight * 0.55
       for (let i = ores.length - 1; i >= 0; i -= 1) {
         const ore = ores[i]
-        ore.x -= dt * 80
+        ore.x -= dt * 145
         const isAligned = Math.abs(ore.y - runnerY) <= scale * 1.8
         if (!ore.collected && ore.x <= runnerX && isAligned) {
           ore.collected = true
@@ -1148,38 +1187,16 @@
           ores.splice(i, 1)
         }
       }
-      if (minedCount >= 10) {
-        state = 'crafting'
+      if (minedCount >= targetOreCount) {
+        state = 'running'
         stateTime = 0
+        mousePos.x = width * 0.68 + scale * 3
+        mousePos.y = groundY - scale * 3.2
       }
-      
-      // Keyboard controls for mining - move up/down with arrow keys
-      const moveSpeed = 80
-      if (keys.ArrowUp) {
-        runnerPos.y -= dt * moveSpeed
-      }
-      if (keys.ArrowDown) {
-        runnerPos.y += dt * moveSpeed
-      }
-      const { groundY: miningGroundY, scale: miningScale } = getMetrics()
-      const spriteHeight = 10.5 * miningScale
-      runnerPos.y = Math.max(miningGroundY - spriteHeight - miningScale * 8, Math.min(miningGroundY - miningScale * 0.5, runnerPos.y))
     } else {
       stateTime += dt
-      const { groundY: stateGroundY, scale: stateScale } = getMetrics()
-      const stateSpriteHeight = 10.5 * stateScale
-      
-      if (state === 'crafting' && stateTime >= 2.4) {
-        state = 'coding'
-        stateTime = 0
-      } else if (state === 'coding' && stateTime >= 5.0) {
-        state = 'following'
-        stateTime = 0
-        mousePos.x = width * 0.42 + stateScale * 3
-        mousePos.y = stateGroundY - stateScale * 7 + stateScale * 4
-      }
-      
-      if (state === 'following') {
+
+      if (state === 'running') {
           const dx = mousePos.x - runnerPos.x
           const dy = mousePos.y - runnerPos.y
           const dist = Math.sqrt(dx*dx + dy*dy)
@@ -1205,7 +1222,7 @@
           const spriteWidth = 11 * scale
           
           runnerPos.x = Math.max(-spriteWidth * 0.2, Math.min(width - spriteWidth * 0.8, runnerPos.x))
-          runnerPos.y = Math.max(groundY - spriteHeight - scale * 0.5, Math.min(height - spriteHeight + scale * 0.5, runnerPos.y))
+          runnerPos.y = Math.max(groundY - spriteHeight - scale * 6.2, Math.min(groundY - scale * 1.2, runnerPos.y))
       }
     }
     for (let i = sparks.length - 1; i >= 0; i -= 1) {
@@ -1227,5 +1244,6 @@
     requestAnimationFrame(tick)
   }
 
+  resetGame()
   requestAnimationFrame(tick)
 })()
