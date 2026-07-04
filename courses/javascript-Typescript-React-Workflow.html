@@ -2,13 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CSS + Tailwind + Figma Flow</title>
+<title>JS + TS + React Ecosystem Flow</title>
 
 <style>
-
-/* =========================
-   BASE
-========================= */
 
 *{
 margin:0;
@@ -118,7 +114,7 @@ align-items:center;
 }
 
 #modalBox{
-width:420px;
+width:450px;
 background:#0b1020;
 border:1px solid rgba(0,255,255,0.3);
 border-radius:12px;
@@ -168,7 +164,7 @@ transition:0.3s;
 
 <body>
 
-<div id="header">🎨 CSS + TAILWIND CSS + FIGMA ARCHITECTURE FLOW</div>
+<div id="header">⚛️ JS + TS + REACT ECOSYSTEM (2026 FRONTEND MAP)</div>
 
 <img id="logo" src="file:///home/dell/Desktop/Big_data/Portfolio/assets/foujalab.png">
 
@@ -195,109 +191,100 @@ transition:0.3s;
 <script>
 
 /* =========================
-   ARCHITECTURE DATA
+   FRONTEND ECOSYSTEM 2026
 ========================= */
 
 const nodes = [
 
 {
-title:"CSS Core 🎨",
-desc:"Base styling system of the web",
-detail:"CSS controls layout, colors, spacing, animations, and responsive design.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS",
-code:`body {
-  margin:0;
-  background:#111;
-  color:white;
+title:"JavaScript ⚡",
+desc:"Core language of the web",
+detail:"JavaScript powers interactivity, APIs, DOM manipulation and full-stack apps via Node.js.",
+link:"https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+code:`document.querySelector("h1")
+.innerText = "Hello JS";`
+},
+
+{
+title:"ES Modules 📦",
+desc:"Modern JS module system",
+detail:"ESM allows modular imports/exports in modern JavaScript apps.",
+link:"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules",
+code:`export const sum = (a,b)=>a+b;
+import {sum} from './math.js';`
+},
+
+{
+title:"TypeScript 🟦",
+desc:"Typed JavaScript superset",
+detail:"TypeScript adds static typing, interfaces, and safer development for large apps.",
+link:"https://www.typescriptlang.org/docs/",
+code:`type User = {
+  name: string;
+  age: number;
+};`
+},
+
+{
+title:"React ⚛️",
+desc:"UI component library",
+detail:"React builds UI using reusable components and virtual DOM diffing.",
+link:"https://react.dev",
+code:`function App(){
+  return <h1>Hello React</h1>
 }`
 },
 
 {
-title:"Selectors 🎯",
-desc:"Target HTML elements",
-detail:"Selectors define which HTML elements CSS rules apply to.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors",
-code:`h1 {
-  color:red;
-}
+title:"React Hooks 🪝",
+desc:"State & lifecycle management",
+detail:"Hooks like useState and useEffect manage state and side effects.",
+link:"https://react.dev/reference/react",
+code:`const [count,setCount]=useState(0);`
+},
 
-.class {
-  padding:10px;
+{
+title:"Next.js 🚀",
+desc:"Full-stack React framework",
+detail:"Next.js adds SSR, routing, API routes and performance optimization.",
+link:"https://nextjs.org/docs",
+code:`export default function Page(){
+  return <h1>Next App</h1>
 }`
 },
 
 {
-title:"Layout 📐",
-desc:"Flexbox & Grid systems",
-detail:"CSS layout systems control structure and positioning.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout",
-code:`display:flex;
-justify-content:center;
-align-items:center;`
+title:"State Management 🧠",
+desc:"Zustand / Redux / Jotai",
+detail:"Modern state tools simplify global app state management.",
+link:"https://zustand-demo.pmnd.rs/",
+code:`const useStore = create(set => ({
+  count: 0
+}));`
 },
 
 {
-title:"Responsive 📱",
-desc:"Adapt UI to all screens",
-detail:"Media queries allow layouts to adapt to devices.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Media_queries",
-code:`@media (max-width:600px){
-  body{font-size:12px;}
-}`
+title:"React Query 🔄",
+desc:"Server state management",
+detail:"Handles API caching, fetching and synchronization.",
+link:"https://tanstack.com/query/latest",
+code:`useQuery(['todos'], fetchTodos);`
 },
 
 {
-title:"Tailwind ⚡",
-desc:"Utility-first CSS framework",
-detail:"Tailwind uses utility classes instead of writing custom CSS.",
+title:"UI Libraries 🎨",
+desc:"MUI / Chakra / Ant Design",
+detail:"Prebuilt UI components for faster development.",
+link:"https://mui.com/",
+code:`<Button variant="contained">Click</Button>`
+},
+
+{
+title:"Tailwind CSS ⚡",
+desc:"Utility-first styling",
+detail:"Used heavily with React for modern UI systems.",
 link:"https://tailwindcss.com/docs",
-code:`<div class="flex items-center justify-center p-4">
-  Hello Tailwind
-</div>`
-},
-
-{
-title:"Tailwind Layout 🧩",
-desc:"Prebuilt spacing & grid utilities",
-detail:"Tailwind provides fast layout construction using utility classes.",
-link:"https://tailwindcss.com/docs/flexbox",
-code:`<div class="grid grid-cols-3 gap-4">
-  <div>Box</div>
-</div>`
-},
-
-{
-title:"Tailwind Styling 🎨",
-desc:"Colors, shadows, typography",
-detail:"Tailwind provides design tokens via class utilities.",
-link:"https://tailwindcss.com/docs/customizing-colors",
-code:`<div class="bg-blue-500 text-white p-4 shadow-lg">
-  Styled box
-</div>`
-},
-
-{
-title:"Figma UI Design 🧠",
-desc:"Design system & prototyping",
-detail:"Figma is used to design UI layouts before coding.",
-link:"https://www.figma.com/resources/learn-design/",
-code:`Frame → AutoLayout → Components → Variants`
-},
-
-{
-title:"Design System 🧱",
-desc:"Reusable UI components",
-detail:"Design systems ensure consistency across apps.",
-link:"https://www.figma.com/design-systems/",
-code:`Button / Card / Navbar / Input`
-},
-
-{
-title:"Dev Handoff 🚀",
-desc:"Design to code workflow",
-detail:"Figma designs are converted into CSS or Tailwind implementations.",
-link:"https://www.figma.com/developers/api",
-code:`Figma → Inspect → CSS → Tailwind`
+code:`<div className="p-4 bg-blue-500">Box</div>`
 }
 
 ];
@@ -341,7 +328,7 @@ cards.push(div);
 
 render();
 
-/* POSITION */
+/* POS */
 function pos(el){
 const r=el.getBoundingClientRect();
 return {x:r.left+r.width/2,y:r.top+r.height/2};
@@ -390,7 +377,7 @@ setTimeout(()=>line.remove(),300);
 
 }
 
-/* FLOW RUN */
+/* RUN */
 function run(){
 
 if(index>0){

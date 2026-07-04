@@ -2,13 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CSS + Tailwind + Figma Flow</title>
+<title>Django Ecosystem Flow 2026</title>
 
 <style>
-
-/* =========================
-   BASE
-========================= */
 
 *{
 margin:0;
@@ -50,7 +46,7 @@ background:black;
 /* GRID */
 #grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:12px;
 padding:12px;
 height:calc(100vh - 90px);
@@ -76,6 +72,16 @@ border-color:#00f5ff;
 .card.active{
 box-shadow:0 0 15px #00f5ff;
 border-color:#00f5ff;
+}
+
+/* IMAGE */
+.nodeImg{
+width:42px;
+height:42px;
+object-fit:contain;
+border-radius:6px;
+background:#000;
+padding:3px;
 }
 
 /* FLOW */
@@ -118,11 +124,21 @@ align-items:center;
 }
 
 #modalBox{
-width:420px;
+width:450px;
 background:#0b1020;
 border:1px solid rgba(0,255,255,0.3);
 border-radius:12px;
 padding:20px;
+}
+
+pre{
+background:#000;
+padding:10px;
+border-radius:8px;
+overflow:auto;
+color:#00f5ff;
+font-size:12px;
+margin-top:10px;
 }
 
 #learnBtn{
@@ -136,16 +152,6 @@ border-radius:8px;
 font-weight:bold;
 }
 
-pre{
-background:#000;
-padding:10px;
-border-radius:8px;
-overflow:auto;
-color:#00f5ff;
-font-size:12px;
-margin-top:10px;
-}
-
 #close{
 margin-top:10px;
 background:red;
@@ -156,23 +162,14 @@ cursor:pointer;
 border-radius:6px;
 }
 
-#bar{
-height:5px;
-width:0%;
-background:#00f5ff;
-transition:0.3s;
-}
-
 </style>
 </head>
 
 <body>
 
-<div id="header">🎨 CSS + TAILWIND CSS + FIGMA ARCHITECTURE FLOW</div>
+<div id="header">🟢 DJANGO ECOSYSTEM ARCHITECTURE FLOW (2026)</div>
 
 <img id="logo" src="file:///home/dell/Desktop/Big_data/Portfolio/assets/foujalab.png">
-
-<div id="bar"></div>
 
 <div id="grid"></div>
 <div id="flowLayer"></div>
@@ -195,117 +192,102 @@ transition:0.3s;
 <script>
 
 /* =========================
-   ARCHITECTURE DATA
+   DJANGO ECOSYSTEM 2026
 ========================= */
 
 const nodes = [
 
 {
-title:"CSS Core 🎨",
-desc:"Base styling system of the web",
-detail:"CSS controls layout, colors, spacing, animations, and responsive design.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS",
-code:`body {
-  margin:0;
-  background:#111;
-  color:white;
-}`
+title:"Django Core 🟢",
+desc:"High-level Python web framework",
+img:"https://static.djangoproject.com/img/logos/django-logo-positive.png",
+detail:"Django provides ORM, routing, templates, auth and admin out of the box.",
+link:"https://docs.djangoproject.com/",
+code:`django-admin startproject myproject`
 },
 
 {
-title:"Selectors 🎯",
-desc:"Target HTML elements",
-detail:"Selectors define which HTML elements CSS rules apply to.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors",
-code:`h1 {
-  color:red;
-}
-
-.class {
-  padding:10px;
-}`
+title:"Django ORM 🧠",
+desc:"Database abstraction layer",
+img:"https://cdn-icons-png.flaticon.com/512/4248/4248443.png",
+detail:"ORM lets you interact with DB using Python models instead of SQL.",
+link:"https://docs.djangoproject.com/en/stable/topics/db/models/",
+code:`class User(models.Model):
+    name = models.CharField(max_length=100)`
 },
 
 {
-title:"Layout 📐",
-desc:"Flexbox & Grid systems",
-detail:"CSS layout systems control structure and positioning.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout",
-code:`display:flex;
-justify-content:center;
-align-items:center;`
+title:"Django REST Framework 🔌",
+desc:"API building toolkit",
+img:"https://www.django-rest-framework.org/img/logo.png",
+detail:"DRF builds REST APIs with serializers, views and authentication.",
+link:"https://www.django-rest-framework.org/",
+code:`class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'`
 },
 
 {
-title:"Responsive 📱",
-desc:"Adapt UI to all screens",
-detail:"Media queries allow layouts to adapt to devices.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Media_queries",
-code:`@media (max-width:600px){
-  body{font-size:12px;}
-}`
+title:"Django Auth 🔐",
+desc:"Authentication system",
+img:"https://cdn-icons-png.flaticon.com/512/3064/3064155.png",
+detail:"Built-in system for login, permissions, sessions and security.",
+link:"https://docs.djangoproject.com/en/stable/topics/auth/",
+code:`from django.contrib.auth.models import User`
 },
 
 {
-title:"Tailwind ⚡",
-desc:"Utility-first CSS framework",
-detail:"Tailwind uses utility classes instead of writing custom CSS.",
-link:"https://tailwindcss.com/docs",
-code:`<div class="flex items-center justify-center p-4">
-  Hello Tailwind
-</div>`
+title:"Django Admin ⚙️",
+desc:"Auto-generated admin panel",
+img:"https://cdn-icons-png.flaticon.com/512/2092/2092663.png",
+detail:"Auto UI for managing models and database content.",
+link:"https://docs.djangoproject.com/en/stable/ref/contrib/admin/",
+code:`admin.site.register(User)`
 },
 
 {
-title:"Tailwind Layout 🧩",
-desc:"Prebuilt spacing & grid utilities",
-detail:"Tailwind provides fast layout construction using utility classes.",
-link:"https://tailwindcss.com/docs/flexbox",
-code:`<div class="grid grid-cols-3 gap-4">
-  <div>Box</div>
-</div>`
+title:"Celery 🚀",
+desc:"Async task queue",
+img:"https://cdn-icons-png.flaticon.com/512/919/919853.png",
+detail:"Handles background tasks like emails, scraping, jobs.",
+link:"https://docs.celeryq.dev/",
+code:`@shared_task
+def send_email():
+    pass`
 },
 
 {
-title:"Tailwind Styling 🎨",
-desc:"Colors, shadows, typography",
-detail:"Tailwind provides design tokens via class utilities.",
-link:"https://tailwindcss.com/docs/customizing-colors",
-code:`<div class="bg-blue-500 text-white p-4 shadow-lg">
-  Styled box
-</div>`
+title:"Channels ⚡",
+desc:"WebSockets support",
+img:"https://cdn-icons-png.flaticon.com/512/5968/5968350.png",
+detail:"Enables real-time features like chat and notifications.",
+link:"https://channels.readthedocs.io/",
+code:`from channels.generic.websocket import AsyncWebsocketConsumer`
 },
 
 {
-title:"Figma UI Design 🧠",
-desc:"Design system & prototyping",
-detail:"Figma is used to design UI layouts before coding.",
-link:"https://www.figma.com/resources/learn-design/",
-code:`Frame → AutoLayout → Components → Variants`
+title:"Django Security 🛡️",
+desc:"CSRF, XSS protection",
+img:"https://cdn-icons-png.flaticon.com/512/3064/3064197.png",
+detail:"Built-in protections against web vulnerabilities.",
+link:"https://docs.djangoproject.com/en/stable/topics/security/",
+code:`CSRF_COOKIE_SECURE = True`
 },
 
 {
-title:"Design System 🧱",
-desc:"Reusable UI components",
-detail:"Design systems ensure consistency across apps.",
-link:"https://www.figma.com/design-systems/",
-code:`Button / Card / Navbar / Input`
-},
-
-{
-title:"Dev Handoff 🚀",
-desc:"Design to code workflow",
-detail:"Figma designs are converted into CSS or Tailwind implementations.",
-link:"https://www.figma.com/developers/api",
-code:`Figma → Inspect → CSS → Tailwind`
+title:"Django Deploy 🚀",
+desc:"Production deployment stack",
+img:"https://cdn-icons-png.flaticon.com/512/919/919825.png",
+detail:"Deploy using Gunicorn, Nginx, Docker.",
+link:"https://docs.djangoproject.com/en/stable/howto/deployment/",
+code:`gunicorn myproject.wsgi:application`
 }
 
 ];
 
 const grid=document.getElementById("grid");
 const flowLayer=document.getElementById("flowLayer");
-const bar=document.getElementById("bar");
-
 const modal=document.getElementById("modal");
 const mTitle=document.getElementById("mTitle");
 const mDesc=document.getElementById("mDesc");
@@ -326,8 +308,13 @@ const div=document.createElement("div");
 div.className="card";
 
 div.innerHTML=`
-<div><b>${n.title}</b></div>
-<div style="font-size:12px;opacity:0.7">${n.desc}</div>
+<div style="display:flex;gap:10px;align-items:center">
+  <img class="nodeImg" src="${n.img}">
+  <div>
+    <div><b>${n.title}</b></div>
+    <div style="font-size:12px;opacity:0.7">${n.desc}</div>
+  </div>
+</div>
 `;
 
 div.onclick=()=>openModal(i);
@@ -341,7 +328,7 @@ cards.push(div);
 
 render();
 
-/* POSITION */
+/* POS */
 function pos(el){
 const r=el.getBoundingClientRect();
 return {x:r.left+r.width/2,y:r.top+r.height/2};
@@ -355,7 +342,6 @@ const p2=pos(cards[b]);
 
 const dx=p2.x-p1.x;
 const dy=p2.y-p1.y;
-
 const dist=Math.sqrt(dx*dx+dy*dy);
 
 const line=document.createElement("div");
@@ -390,7 +376,7 @@ setTimeout(()=>line.remove(),300);
 
 }
 
-/* FLOW RUN */
+/* RUN */
 function run(){
 
 if(index>0){
@@ -401,8 +387,6 @@ drawFlow(index-1,index);
 if(index>=cards.length)return;
 
 cards[index].classList.add("active");
-
-bar.style.width=((index+1)/cards.length)*100+"%";
 
 index++;
 

@@ -2,13 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CSS + Tailwind + Figma Flow</title>
+<title>Agile Scrum Jira Workflow 2026</title>
 
 <style>
-
-/* =========================
-   BASE
-========================= */
 
 *{
 margin:0;
@@ -50,7 +46,7 @@ background:black;
 /* GRID */
 #grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:12px;
 padding:12px;
 height:calc(100vh - 90px);
@@ -76,6 +72,16 @@ border-color:#00f5ff;
 .card.active{
 box-shadow:0 0 15px #00f5ff;
 border-color:#00f5ff;
+}
+
+/* IMAGE */
+.nodeImg{
+width:42px;
+height:42px;
+object-fit:contain;
+border-radius:6px;
+background:#000;
+padding:3px;
 }
 
 /* FLOW */
@@ -118,11 +124,21 @@ align-items:center;
 }
 
 #modalBox{
-width:420px;
+width:520px;
 background:#0b1020;
 border:1px solid rgba(0,255,255,0.3);
 border-radius:12px;
 padding:20px;
+}
+
+pre{
+background:#000;
+padding:10px;
+border-radius:8px;
+overflow:auto;
+color:#00f5ff;
+font-size:12px;
+margin-top:10px;
 }
 
 #learnBtn{
@@ -136,16 +152,6 @@ border-radius:8px;
 font-weight:bold;
 }
 
-pre{
-background:#000;
-padding:10px;
-border-radius:8px;
-overflow:auto;
-color:#00f5ff;
-font-size:12px;
-margin-top:10px;
-}
-
 #close{
 margin-top:10px;
 background:red;
@@ -156,23 +162,14 @@ cursor:pointer;
 border-radius:6px;
 }
 
-#bar{
-height:5px;
-width:0%;
-background:#00f5ff;
-transition:0.3s;
-}
-
 </style>
 </head>
 
 <body>
 
-<div id="header">🎨 CSS + TAILWIND CSS + FIGMA ARCHITECTURE FLOW</div>
+<div id="header">🧩 AGILE • SCRUM • JIRA • DEVOPS WORKFLOW (2026)</div>
 
 <img id="logo" src="file:///home/dell/Desktop/Big_data/Portfolio/assets/foujalab.png">
-
-<div id="bar"></div>
 
 <div id="grid"></div>
 <div id="flowLayer"></div>
@@ -195,117 +192,105 @@ transition:0.3s;
 <script>
 
 /* =========================
-   ARCHITECTURE DATA
+   AGILE / SCRUM STACK
 ========================= */
 
 const nodes = [
 
 {
-title:"CSS Core 🎨",
-desc:"Base styling system of the web",
-detail:"CSS controls layout, colors, spacing, animations, and responsive design.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS",
-code:`body {
-  margin:0;
-  background:#111;
-  color:white;
-}`
+title:"Product Backlog 📋",
+desc:"All tasks & requirements",
+img:"https://cdn-icons-png.flaticon.com/512/906/906334.png",
+detail:"Central list of features, bugs, and tasks prioritized by product owner.",
+link:"https://www.atlassian.com/agile/product-management/backlog",
+code:`User stories → Epics → Tasks`
 },
 
 {
-title:"Selectors 🎯",
-desc:"Target HTML elements",
-detail:"Selectors define which HTML elements CSS rules apply to.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors",
-code:`h1 {
-  color:red;
-}
-
-.class {
-  padding:10px;
-}`
+title:"Sprint Planning 🏁",
+desc:"Plan iteration work",
+img:"https://cdn-icons-png.flaticon.com/512/1995/1995574.png",
+detail:"Team selects backlog items for the sprint cycle.",
+link:"https://www.atlassian.com/agile/scrum/sprint-planning",
+code:`velocity → capacity → tasks`
 },
 
 {
-title:"Layout 📐",
-desc:"Flexbox & Grid systems",
-detail:"CSS layout systems control structure and positioning.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout",
-code:`display:flex;
-justify-content:center;
-align-items:center;`
+title:"Jira Board 🟦",
+desc:"Task tracking system",
+img:"https://cdn-icons-png.flaticon.com/512/5968/5968875.png",
+detail:"Kanban/Scrum board for tracking progress.",
+link:"https://www.atlassian.com/software/jira",
+code:`To Do → In Progress → Done`
 },
 
 {
-title:"Responsive 📱",
-desc:"Adapt UI to all screens",
-detail:"Media queries allow layouts to adapt to devices.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Media_queries",
-code:`@media (max-width:600px){
-  body{font-size:12px;}
-}`
+title:"User Stories 👤",
+desc:"Feature requirements",
+img:"https://cdn-icons-png.flaticon.com/512/1077/1077012.png",
+detail:"Describes features from user perspective.",
+link:"https://www.atlassian.com/agile/project-management/user-stories",
+code:`As a user, I want...`
 },
 
 {
-title:"Tailwind ⚡",
-desc:"Utility-first CSS framework",
-detail:"Tailwind uses utility classes instead of writing custom CSS.",
-link:"https://tailwindcss.com/docs",
-code:`<div class="flex items-center justify-center p-4">
-  Hello Tailwind
-</div>`
+title:"Daily Standup ☕",
+desc:"Team synchronization",
+img:"https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+detail:"Short daily meeting to update progress and blockers.",
+link:"https://www.atlassian.com/agile/scrum/standups",
+code:`What did I do? What next? Blockers?`
 },
 
 {
-title:"Tailwind Layout 🧩",
-desc:"Prebuilt spacing & grid utilities",
-detail:"Tailwind provides fast layout construction using utility classes.",
-link:"https://tailwindcss.com/docs/flexbox",
-code:`<div class="grid grid-cols-3 gap-4">
-  <div>Box</div>
-</div>`
+title:"Sprint Execution ⚡",
+desc:"Development phase",
+img:"https://cdn-icons-png.flaticon.com/512/1055/1055687.png",
+detail:"Team implements tasks during sprint cycle.",
+link:"https://scrumguides.org/",
+code:`git commit → build → test`
 },
 
 {
-title:"Tailwind Styling 🎨",
-desc:"Colors, shadows, typography",
-detail:"Tailwind provides design tokens via class utilities.",
-link:"https://tailwindcss.com/docs/customizing-colors",
-code:`<div class="bg-blue-500 text-white p-4 shadow-lg">
-  Styled box
-</div>`
+title:"Testing QA 🧪",
+desc:"Quality assurance",
+img:"https://cdn-icons-png.flaticon.com/512/3003/3003984.png",
+detail:"Ensures features meet requirements and are bug-free.",
+link:"https://www.atlassian.com/continuous-delivery/software-testing",
+code:`unit tests + integration tests`
 },
 
 {
-title:"Figma UI Design 🧠",
-desc:"Design system & prototyping",
-detail:"Figma is used to design UI layouts before coding.",
-link:"https://www.figma.com/resources/learn-design/",
-code:`Frame → AutoLayout → Components → Variants`
+title:"CI/CD 🚀",
+desc:"Automation pipeline",
+img:"https://cdn-icons-png.flaticon.com/512/5968/5968870.png",
+detail:"Automates build, test and deployment.",
+link:"https://www.redhat.com/en/topics/devops/what-is-ci-cd",
+code:`git push → pipeline → deploy`
 },
 
 {
-title:"Design System 🧱",
-desc:"Reusable UI components",
-detail:"Design systems ensure consistency across apps.",
-link:"https://www.figma.com/design-systems/",
-code:`Button / Card / Navbar / Input`
+title:"Sprint Review 📊",
+desc:"Demo completed work",
+img:"https://cdn-icons-png.flaticon.com/512/1828/1828884.png",
+detail:"Team presents completed work to stakeholders.",
+link:"https://www.atlassian.com/agile/scrum/sprint-reviews",
+code:`demo → feedback → adjust`
 },
 
 {
-title:"Dev Handoff 🚀",
-desc:"Design to code workflow",
-detail:"Figma designs are converted into CSS or Tailwind implementations.",
-link:"https://www.figma.com/developers/api",
-code:`Figma → Inspect → CSS → Tailwind`
+title:"Retrospective 🔁",
+desc:"Process improvement",
+img:"https://cdn-icons-png.flaticon.com/512/860/860790.png",
+detail:"Analyze what went well and what to improve.",
+link:"https://www.atlassian.com/agile/scrum/retrospectives",
+code:`start / stop / continue`
 }
 
 ];
 
 const grid=document.getElementById("grid");
 const flowLayer=document.getElementById("flowLayer");
-const bar=document.getElementById("bar");
-
 const modal=document.getElementById("modal");
 const mTitle=document.getElementById("mTitle");
 const mDesc=document.getElementById("mDesc");
@@ -326,8 +311,13 @@ const div=document.createElement("div");
 div.className="card";
 
 div.innerHTML=`
-<div><b>${n.title}</b></div>
-<div style="font-size:12px;opacity:0.7">${n.desc}</div>
+<div style="display:flex;gap:10px;align-items:center">
+  <img class="nodeImg" src="${n.img}">
+  <div>
+    <div><b>${n.title}</b></div>
+    <div style="font-size:12px;opacity:0.7">${n.desc}</div>
+  </div>
+</div>
 `;
 
 div.onclick=()=>openModal(i);
@@ -355,7 +345,6 @@ const p2=pos(cards[b]);
 
 const dx=p2.x-p1.x;
 const dy=p2.y-p1.y;
-
 const dist=Math.sqrt(dx*dx+dy*dy);
 
 const line=document.createElement("div");
@@ -390,7 +379,7 @@ setTimeout(()=>line.remove(),300);
 
 }
 
-/* FLOW RUN */
+/* RUN */
 function run(){
 
 if(index>0){
@@ -401,8 +390,6 @@ drawFlow(index-1,index);
 if(index>=cards.length)return;
 
 cards[index].classList.add("active");
-
-bar.style.width=((index+1)/cards.length)*100+"%";
 
 index++;
 

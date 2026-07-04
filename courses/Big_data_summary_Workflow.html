@@ -2,13 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CSS + Tailwind + Figma Flow</title>
+<title>Big Data Ecosystem Flow 2026</title>
 
 <style>
-
-/* =========================
-   BASE
-========================= */
 
 *{
 margin:0;
@@ -50,7 +46,7 @@ background:black;
 /* GRID */
 #grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:12px;
 padding:12px;
 height:calc(100vh - 90px);
@@ -76,6 +72,16 @@ border-color:#00f5ff;
 .card.active{
 box-shadow:0 0 15px #00f5ff;
 border-color:#00f5ff;
+}
+
+/* IMAGE */
+.nodeImg{
+width:42px;
+height:42px;
+object-fit:contain;
+border-radius:6px;
+background:#000;
+padding:3px;
 }
 
 /* FLOW */
@@ -118,11 +124,21 @@ align-items:center;
 }
 
 #modalBox{
-width:420px;
+width:520px;
 background:#0b1020;
 border:1px solid rgba(0,255,255,0.3);
 border-radius:12px;
 padding:20px;
+}
+
+pre{
+background:#000;
+padding:10px;
+border-radius:8px;
+overflow:auto;
+color:#00f5ff;
+font-size:12px;
+margin-top:10px;
 }
 
 #learnBtn{
@@ -136,16 +152,6 @@ border-radius:8px;
 font-weight:bold;
 }
 
-pre{
-background:#000;
-padding:10px;
-border-radius:8px;
-overflow:auto;
-color:#00f5ff;
-font-size:12px;
-margin-top:10px;
-}
-
 #close{
 margin-top:10px;
 background:red;
@@ -156,23 +162,14 @@ cursor:pointer;
 border-radius:6px;
 }
 
-#bar{
-height:5px;
-width:0%;
-background:#00f5ff;
-transition:0.3s;
-}
-
 </style>
 </head>
 
 <body>
 
-<div id="header">🎨 CSS + TAILWIND CSS + FIGMA ARCHITECTURE FLOW</div>
+<div id="header">🌐 BIG DATA ECOSYSTEM FLOW (Kafka • Spark • Fabric • Streaming)</div>
 
 <img id="logo" src="file:///home/dell/Desktop/Big_data/Portfolio/assets/foujalab.png">
-
-<div id="bar"></div>
 
 <div id="grid"></div>
 <div id="flowLayer"></div>
@@ -195,117 +192,105 @@ transition:0.3s;
 <script>
 
 /* =========================
-   ARCHITECTURE DATA
+   BIG DATA STACK 2026
 ========================= */
 
 const nodes = [
 
 {
-title:"CSS Core 🎨",
-desc:"Base styling system of the web",
-detail:"CSS controls layout, colors, spacing, animations, and responsive design.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS",
-code:`body {
-  margin:0;
-  background:#111;
-  color:white;
-}`
+title:"Data Sources 📡",
+desc:"Apps, sensors, logs",
+img:"https://cdn-icons-png.flaticon.com/512/4712/4712109.png",
+detail:"Raw data originates from applications, IoT devices, logs and APIs.",
+link:"https://en.wikipedia.org/wiki/Data_source",
+code:`API → Logs → Events → Sensors`
 },
 
 {
-title:"Selectors 🎯",
-desc:"Target HTML elements",
-detail:"Selectors define which HTML elements CSS rules apply to.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors",
-code:`h1 {
-  color:red;
-}
-
-.class {
-  padding:10px;
-}`
+title:"Kafka 📨",
+desc:"Streaming message broker",
+img:"https://cdn-icons-png.flaticon.com/512/2111/2111615.png",
+detail:"Kafka handles real-time event streaming at massive scale.",
+link:"https://kafka.apache.org/documentation/",
+code:`producer.send("topic", message)`
 },
 
 {
-title:"Layout 📐",
-desc:"Flexbox & Grid systems",
-detail:"CSS layout systems control structure and positioning.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout",
-code:`display:flex;
-justify-content:center;
-align-items:center;`
+title:"Spark ⚡",
+desc:"Distributed processing engine",
+img:"https://upload.wikimedia.org/wikipedia/commons/f/f3/Apache_Spark_logo.svg",
+detail:"Spark processes large-scale data in parallel.",
+link:"https://spark.apache.org/docs/latest/",
+code:`df = spark.read.csv("data.csv")`
 },
 
 {
-title:"Responsive 📱",
-desc:"Adapt UI to all screens",
-detail:"Media queries allow layouts to adapt to devices.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Media_queries",
-code:`@media (max-width:600px){
-  body{font-size:12px;}
-}`
+title:"ETL / ELT 🔄",
+desc:"Data transformation pipelines",
+img:"https://cdn-icons-png.flaticon.com/512/906/906324.png",
+detail:"Extract, Transform, Load / Load then Transform workflows.",
+link:"https://en.wikipedia.org/wiki/Extract,_transform,_load",
+code:`transform(data) → clean → enrich`
 },
 
 {
-title:"Tailwind ⚡",
-desc:"Utility-first CSS framework",
-detail:"Tailwind uses utility classes instead of writing custom CSS.",
-link:"https://tailwindcss.com/docs",
-code:`<div class="flex items-center justify-center p-4">
-  Hello Tailwind
-</div>`
+title:"Data Lake 🏞️",
+desc:"Raw storage system",
+img:"https://cdn-icons-png.flaticon.com/512/4149/4149674.png",
+detail:"Stores raw structured and unstructured data at scale.",
+link:"https://aws.amazon.com/big-data/datalakes-and-analytics/",
+code:`S3 / ADLS / HDFS`
 },
 
 {
-title:"Tailwind Layout 🧩",
-desc:"Prebuilt spacing & grid utilities",
-detail:"Tailwind provides fast layout construction using utility classes.",
-link:"https://tailwindcss.com/docs/flexbox",
-code:`<div class="grid grid-cols-3 gap-4">
-  <div>Box</div>
-</div>`
+title:"Data Warehouse 🏢",
+desc:"Structured analytics storage",
+img:"https://cdn-icons-png.flaticon.com/512/2920/2920244.png",
+detail:"Optimized storage for analytics and BI queries.",
+link:"https://en.wikipedia.org/wiki/Data_warehouse",
+code:`SELECT * FROM sales`
 },
 
 {
-title:"Tailwind Styling 🎨",
-desc:"Colors, shadows, typography",
-detail:"Tailwind provides design tokens via class utilities.",
-link:"https://tailwindcss.com/docs/customizing-colors",
-code:`<div class="bg-blue-500 text-white p-4 shadow-lg">
-  Styled box
-</div>`
+title:"Microsoft Fabric 🟣",
+desc:"Unified data platform",
+img:"https://upload.wikimedia.org/wikipedia/commons/0/0d/Microsoft_Fabric_Logo.svg",
+detail:"Integrates data engineering, analytics, and BI in one platform.",
+link:"https://learn.microsoft.com/en-us/fabric/",
+code:`OneLake + Pipelines + Power BI`
 },
 
 {
-title:"Figma UI Design 🧠",
-desc:"Design system & prototyping",
-detail:"Figma is used to design UI layouts before coding.",
-link:"https://www.figma.com/resources/learn-design/",
-code:`Frame → AutoLayout → Components → Variants`
+title:"Databricks 🔥",
+desc:"Lakehouse platform",
+img:"https://upload.wikimedia.org/wikipedia/commons/6/63/Databricks_Logo.png",
+detail:"Combines data lake + warehouse + AI workloads.",
+link:"https://docs.databricks.com/",
+code:`spark.sql("SELECT *")`
 },
 
 {
-title:"Design System 🧱",
-desc:"Reusable UI components",
-detail:"Design systems ensure consistency across apps.",
-link:"https://www.figma.com/design-systems/",
-code:`Button / Card / Navbar / Input`
+title:"BI Layer 📊",
+desc:"Dashboards & reporting",
+img:"https://cdn-icons-png.flaticon.com/512/1828/1828884.png",
+detail:"Power BI / Tableau visual analytics layer.",
+link:"https://learn.microsoft.com/power-bi/",
+code:`Dashboard → KPI → Reports`
 },
 
 {
-title:"Dev Handoff 🚀",
-desc:"Design to code workflow",
-detail:"Figma designs are converted into CSS or Tailwind implementations.",
-link:"https://www.figma.com/developers/api",
-code:`Figma → Inspect → CSS → Tailwind`
+title:"AI Layer 🤖",
+desc:"ML on big data",
+img:"https://cdn-icons-png.flaticon.com/512/4712/4712109.png",
+detail:"Machine learning models trained on large datasets.",
+link:"https://spark.apache.org/mllib/",
+code:`model.fit(big_data)`
 }
 
 ];
 
 const grid=document.getElementById("grid");
 const flowLayer=document.getElementById("flowLayer");
-const bar=document.getElementById("bar");
-
 const modal=document.getElementById("modal");
 const mTitle=document.getElementById("mTitle");
 const mDesc=document.getElementById("mDesc");
@@ -326,8 +311,13 @@ const div=document.createElement("div");
 div.className="card";
 
 div.innerHTML=`
-<div><b>${n.title}</b></div>
-<div style="font-size:12px;opacity:0.7">${n.desc}</div>
+<div style="display:flex;gap:10px;align-items:center">
+  <img class="nodeImg" src="${n.img}">
+  <div>
+    <div><b>${n.title}</b></div>
+    <div style="font-size:12px;opacity:0.7">${n.desc}</div>
+  </div>
+</div>
 `;
 
 div.onclick=()=>openModal(i);
@@ -355,7 +345,6 @@ const p2=pos(cards[b]);
 
 const dx=p2.x-p1.x;
 const dy=p2.y-p1.y;
-
 const dist=Math.sqrt(dx*dx+dy*dy);
 
 const line=document.createElement("div");
@@ -390,7 +379,7 @@ setTimeout(()=>line.remove(),300);
 
 }
 
-/* FLOW RUN */
+/* RUN */
 function run(){
 
 if(index>0){
@@ -401,8 +390,6 @@ drawFlow(index-1,index);
 if(index>=cards.length)return;
 
 cards[index].classList.add("active");
-
-bar.style.width=((index+1)/cards.length)*100+"%";
 
 index++;
 

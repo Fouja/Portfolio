@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CSS + Tailwind + Figma Flow</title>
+<title>HTML Architecture Flow</title>
 
 <style>
 
@@ -32,21 +32,6 @@ background:rgba(0,0,0,0.7);
 border-bottom:1px solid rgba(0,255,255,0.2);
 }
 
-/* LOGO */
-#logo{
-position:fixed;
-top:10px;
-right:15px;
-width:45px;
-height:45px;
-object-fit:contain;
-border-radius:8px;
-border:1px solid rgba(0,255,255,0.3);
-box-shadow:0 0 10px rgba(0,255,255,0.3);
-z-index:999;
-background:black;
-}
-
 /* GRID */
 #grid{
 display:grid;
@@ -66,6 +51,7 @@ border-radius:10px;
 padding:12px;
 cursor:pointer;
 transition:0.3s;
+position:relative;
 }
 
 .card:hover{
@@ -78,7 +64,18 @@ box-shadow:0 0 15px #00f5ff;
 border-color:#00f5ff;
 }
 
-/* FLOW */
+/* TITLE */
+.title{
+font-weight:bold;
+}
+
+.desc{
+font-size:12px;
+opacity:0.7;
+margin-top:5px;
+}
+
+/* FLOW LAYER */
 #flowLayer{
 position:absolute;
 top:0;
@@ -88,6 +85,7 @@ bottom:0;
 pointer-events:none;
 }
 
+/* DOT */
 .dot{
 position:absolute;
 width:6px;
@@ -97,6 +95,7 @@ background:#00f5ff;
 box-shadow:0 0 10px #00f5ff;
 }
 
+/* LINE */
 .line{
 position:absolute;
 height:2px;
@@ -125,6 +124,11 @@ border-radius:12px;
 padding:20px;
 }
 
+#modalBox h2{
+color:#00f5ff;
+margin-bottom:5px;
+}
+
 #learnBtn{
 display:inline-block;
 margin-top:10px;
@@ -134,16 +138,6 @@ color:black;
 text-decoration:none;
 border-radius:8px;
 font-weight:bold;
-}
-
-pre{
-background:#000;
-padding:10px;
-border-radius:8px;
-overflow:auto;
-color:#00f5ff;
-font-size:12px;
-margin-top:10px;
 }
 
 #close{
@@ -156,148 +150,177 @@ cursor:pointer;
 border-radius:6px;
 }
 
-#bar{
+/* CODE BLOCK */
+pre{
+background:#000;
+padding:10px;
+border-radius:8px;
+overflow:auto;
+color:#00f5ff;
+font-size:12px;
+margin-top:10px;
+}
+
+#progress{
 height:5px;
+background:#111;
+width:100%;
+}
+
+#bar{
+height:100%;
 width:0%;
 background:#00f5ff;
 transition:0.3s;
 }
-
+#logo{
+position:fixed;
+top:10px;
+right:15px;
+width:45px;
+height:45px;
+object-fit:contain;
+border-radius:8px;
+border:1px solid rgba(0,255,255,0.3);
+box-shadow:0 0 10px rgba(0,255,255,0.3);
+z-index:999;
+background:black;
+}
 </style>
 </head>
 
 <body>
+<img id="logo" src="file:///home/dell/Desktop/Big_data/Portfolio/assets/foujalab.png" />
+<div id="header">🌐 HTML ARCHITECTURE FLOW</div>
 
-<div id="header">🎨 CSS + TAILWIND CSS + FIGMA ARCHITECTURE FLOW</div>
-
-<img id="logo" src="file:///home/dell/Desktop/Big_data/Portfolio/assets/foujalab.png">
-
-<div id="bar"></div>
+<div id="progress"><div id="bar"></div></div>
 
 <div id="grid"></div>
 <div id="flowLayer"></div>
 
 <!-- MODAL -->
 <div id="modal">
-<div id="modalBox">
+  <div id="modalBox">
+    <h2 id="mTitle"></h2>
+    <p id="mDesc"></p>
 
-<h2 id="mTitle"></h2>
-<p id="mDesc"></p>
+    <div id="detailContent"></div>
 
-<div id="detailContent"></div>
-
-<a id="learnBtn" target="_blank">Learn more</a><br>
-<button id="close">Close</button>
-
-</div>
+    <a id="learnBtn" target="_blank">Learn more</a><br>
+    <button id="close">Close</button>
+  </div>
 </div>
 
 <script>
 
 /* =========================
-   ARCHITECTURE DATA
+   DATA
 ========================= */
 
 const nodes = [
 
 {
-title:"CSS Core 🎨",
-desc:"Base styling system of the web",
-detail:"CSS controls layout, colors, spacing, animations, and responsive design.",
+title:"HTML Core 🌐",
+desc:"Structure foundation of the web",
+detail:"HTML defines the structure of web pages and builds the DOM tree.",
+link:"https://developer.mozilla.org/en-US/docs/Web/HTML",
+code:`<!DOCTYPE html>
+<html>
+<body>
+<h1>Hello</h1>
+</body>
+</html>`
+},
+
+{
+title:"DOCTYPE 📄",
+desc:"HTML5 document declaration",
+detail:"Ensures browser uses modern rendering mode.",
+link:"https://developer.mozilla.org/en-US/docs/Glossary/Doctype",
+code:`<!DOCTYPE html>`
+},
+
+{
+title:"HEAD 🧠",
+desc:"Metadata & configuration layer",
+detail:"Contains meta, CSS links, scripts, SEO data.",
+link:"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/head",
+code:`<head>
+<meta charset="UTF-8">
+<title>Page</title>
+</head>`
+},
+
+{
+title:"BODY 📦",
+desc:"Visible UI content",
+detail:"Everything rendered on screen lives here.",
+link:"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/body",
+code:`<body>
+<h1>Content</h1>
+</body>`
+},
+
+{
+title:"TEXT 📝",
+desc:"Headings, paragraphs, inline text",
+detail:"Used to structure readable content.",
+link:"https://developer.mozilla.org/en-US/docs/Web/HTML/Element",
+code:`<h1>Title</h1>
+<p>Paragraph</p>`
+},
+
+{
+title:"MEDIA 🖼️",
+desc:"Images, video, audio",
+detail:"Embeds multimedia into web pages.",
+link:"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img",
+code:`<img src="img.jpg">
+<video controls></video>`
+},
+
+{
+title:"LINKS 🔗",
+desc:"Navigation system",
+detail:"Connect pages and resources.",
+link:"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a",
+code:`<a href="#">Click</a>`
+},
+
+{
+title:"FORMS 📋",
+desc:"User input system",
+detail:"Collects data from users.",
+link:"https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form",
+code:`<form>
+<input type="text">
+</form>`
+},
+
+{
+title:"SEMANTIC 🏗️",
+desc:"Meaningful structure",
+detail:"Improves SEO and accessibility.",
+link:"https://developer.mozilla.org/en-US/docs/Glossary/Semantics",
+code:`<header></header>
+<article></article>`
+},
+
+{
+title:"CSS 🎨",
+desc:"Styling system",
+detail:"Controls layout, colors, design.",
 link:"https://developer.mozilla.org/en-US/docs/Web/CSS",
-code:`body {
-  margin:0;
-  background:#111;
-  color:white;
-}`
+code:`body { color:white; }`
 },
 
 {
-title:"Selectors 🎯",
-desc:"Target HTML elements",
-detail:"Selectors define which HTML elements CSS rules apply to.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors",
-code:`h1 {
-  color:red;
-}
-
-.class {
-  padding:10px;
-}`
-},
-
-{
-title:"Layout 📐",
-desc:"Flexbox & Grid systems",
-detail:"CSS layout systems control structure and positioning.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout",
-code:`display:flex;
-justify-content:center;
-align-items:center;`
-},
-
-{
-title:"Responsive 📱",
-desc:"Adapt UI to all screens",
-detail:"Media queries allow layouts to adapt to devices.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Media_queries",
-code:`@media (max-width:600px){
-  body{font-size:12px;}
-}`
-},
-
-{
-title:"Tailwind ⚡",
-desc:"Utility-first CSS framework",
-detail:"Tailwind uses utility classes instead of writing custom CSS.",
-link:"https://tailwindcss.com/docs",
-code:`<div class="flex items-center justify-center p-4">
-  Hello Tailwind
-</div>`
-},
-
-{
-title:"Tailwind Layout 🧩",
-desc:"Prebuilt spacing & grid utilities",
-detail:"Tailwind provides fast layout construction using utility classes.",
-link:"https://tailwindcss.com/docs/flexbox",
-code:`<div class="grid grid-cols-3 gap-4">
-  <div>Box</div>
-</div>`
-},
-
-{
-title:"Tailwind Styling 🎨",
-desc:"Colors, shadows, typography",
-detail:"Tailwind provides design tokens via class utilities.",
-link:"https://tailwindcss.com/docs/customizing-colors",
-code:`<div class="bg-blue-500 text-white p-4 shadow-lg">
-  Styled box
-</div>`
-},
-
-{
-title:"Figma UI Design 🧠",
-desc:"Design system & prototyping",
-detail:"Figma is used to design UI layouts before coding.",
-link:"https://www.figma.com/resources/learn-design/",
-code:`Frame → AutoLayout → Components → Variants`
-},
-
-{
-title:"Design System 🧱",
-desc:"Reusable UI components",
-detail:"Design systems ensure consistency across apps.",
-link:"https://www.figma.com/design-systems/",
-code:`Button / Card / Navbar / Input`
-},
-
-{
-title:"Dev Handoff 🚀",
-desc:"Design to code workflow",
-detail:"Figma designs are converted into CSS or Tailwind implementations.",
-link:"https://www.figma.com/developers/api",
-code:`Figma → Inspect → CSS → Tailwind`
+title:"JS ⚡",
+desc:"Interactivity engine",
+detail:"Adds logic and dynamic behavior.",
+link:"https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+code:`document.querySelector("h1")
+.innerText="Hi";`
 }
 
 ];
@@ -314,7 +337,10 @@ const learnBtn=document.getElementById("learnBtn");
 let cards=[];
 let index=0;
 
-/* RENDER */
+/* =========================
+   RENDER GRID
+========================= */
+
 function render(){
 
 grid.innerHTML="";
@@ -326,8 +352,8 @@ const div=document.createElement("div");
 div.className="card";
 
 div.innerHTML=`
-<div><b>${n.title}</b></div>
-<div style="font-size:12px;opacity:0.7">${n.desc}</div>
+<div class="title">${n.title}</div>
+<div class="desc">${n.desc}</div>
 `;
 
 div.onclick=()=>openModal(i);
@@ -341,13 +367,19 @@ cards.push(div);
 
 render();
 
-/* POSITION */
+/* =========================
+   POSITION
+========================= */
+
 function pos(el){
 const r=el.getBoundingClientRect();
 return {x:r.left+r.width/2,y:r.top+r.height/2};
 }
 
-/* FLOW */
+/* =========================
+   FLOW LINE + DOT
+========================= */
+
 function drawFlow(a,b){
 
 const p1=pos(cards[a]);
@@ -355,7 +387,6 @@ const p2=pos(cards[b]);
 
 const dx=p2.x-p1.x;
 const dy=p2.y-p1.y;
-
 const dist=Math.sqrt(dx*dx+dy*dy);
 
 const line=document.createElement("div");
@@ -390,7 +421,10 @@ setTimeout(()=>line.remove(),300);
 
 }
 
-/* FLOW RUN */
+/* =========================
+   FLOW RUN
+========================= */
+
 function run(){
 
 if(index>0){
@@ -410,7 +444,10 @@ setTimeout(run,900);
 
 }
 
-/* MODAL */
+/* =========================
+   MODAL
+========================= */
+
 function openModal(i){
 
 const n=nodes[i];
@@ -422,11 +459,15 @@ mDesc.innerText=n.desc;
 learnBtn.href=n.link;
 
 document.getElementById("detailContent").innerHTML=`
+<div style="margin-top:10px">
+
 <h3>Explanation</h3>
 <p>${n.detail}</p>
 
 <h3 style="margin-top:10px">Code Example</h3>
 <pre>${n.code}</pre>
+
+</div>
 `;
 
 }

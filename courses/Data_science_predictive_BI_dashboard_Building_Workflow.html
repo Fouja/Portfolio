@@ -2,13 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CSS + Tailwind + Figma Flow</title>
+<title>Data & BI Ecosystem Flow 2026</title>
 
 <style>
-
-/* =========================
-   BASE
-========================= */
 
 *{
 margin:0;
@@ -50,7 +46,7 @@ background:black;
 /* GRID */
 #grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:12px;
 padding:12px;
 height:calc(100vh - 90px);
@@ -76,6 +72,16 @@ border-color:#00f5ff;
 .card.active{
 box-shadow:0 0 15px #00f5ff;
 border-color:#00f5ff;
+}
+
+/* IMAGE */
+.nodeImg{
+width:42px;
+height:42px;
+object-fit:contain;
+border-radius:6px;
+background:#000;
+padding:3px;
 }
 
 /* FLOW */
@@ -118,11 +124,21 @@ align-items:center;
 }
 
 #modalBox{
-width:420px;
+width:500px;
 background:#0b1020;
 border:1px solid rgba(0,255,255,0.3);
 border-radius:12px;
 padding:20px;
+}
+
+pre{
+background:#000;
+padding:10px;
+border-radius:8px;
+overflow:auto;
+color:#00f5ff;
+font-size:12px;
+margin-top:10px;
 }
 
 #learnBtn{
@@ -136,16 +152,6 @@ border-radius:8px;
 font-weight:bold;
 }
 
-pre{
-background:#000;
-padding:10px;
-border-radius:8px;
-overflow:auto;
-color:#00f5ff;
-font-size:12px;
-margin-top:10px;
-}
-
 #close{
 margin-top:10px;
 background:red;
@@ -156,23 +162,14 @@ cursor:pointer;
 border-radius:6px;
 }
 
-#bar{
-height:5px;
-width:0%;
-background:#00f5ff;
-transition:0.3s;
-}
-
 </style>
 </head>
 
 <body>
 
-<div id="header">🎨 CSS + TAILWIND CSS + FIGMA ARCHITECTURE FLOW</div>
+<div id="header">📊 DATA + ML + BI DASHBOARD ECOSYSTEM (2026)</div>
 
 <img id="logo" src="file:///home/dell/Desktop/Big_data/Portfolio/assets/foujalab.png">
-
-<div id="bar"></div>
 
 <div id="grid"></div>
 <div id="flowLayer"></div>
@@ -195,117 +192,107 @@ transition:0.3s;
 <script>
 
 /* =========================
-   ARCHITECTURE DATA
+   DATA / ML / BI STACK
 ========================= */
 
 const nodes = [
 
 {
-title:"CSS Core 🎨",
-desc:"Base styling system of the web",
-detail:"CSS controls layout, colors, spacing, animations, and responsive design.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS",
-code:`body {
-  margin:0;
-  background:#111;
-  color:white;
-}`
+title:"Pandas 🐼",
+desc:"Data manipulation library",
+img:"https://upload.wikimedia.org/wikipedia/commons/e/ed/Pandas_logo.svg",
+detail:"Pandas is used for cleaning, transforming and analyzing structured data.",
+link:"https://pandas.pydata.org/docs/",
+code:`import pandas as pd
+df = pd.read_csv("data.csv")`
 },
 
 {
-title:"Selectors 🎯",
-desc:"Target HTML elements",
-detail:"Selectors define which HTML elements CSS rules apply to.",
-link:"https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors",
-code:`h1 {
-  color:red;
-}
-
-.class {
-  padding:10px;
-}`
+title:"NumPy 🔢",
+desc:"Numerical computing core",
+img:"https://upload.wikimedia.org/wikipedia/commons/3/31/NumPy_logo_2020.svg",
+detail:"NumPy provides fast array operations and mathematical computing.",
+link:"https://numpy.org/doc/",
+code:`import numpy as np
+arr = np.array([1,2,3])`
 },
 
 {
-title:"Layout 📐",
-desc:"Flexbox & Grid systems",
-detail:"CSS layout systems control structure and positioning.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout",
-code:`display:flex;
-justify-content:center;
-align-items:center;`
+title:"Scikit-learn 🤖",
+desc:"Machine learning toolkit",
+img:"https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg",
+detail:"Scikit-learn provides ML algorithms like regression, classification and clustering.",
+link:"https://scikit-learn.org/stable/",
+code:`from sklearn.linear_model import LinearRegression`
 },
 
 {
-title:"Responsive 📱",
-desc:"Adapt UI to all screens",
-detail:"Media queries allow layouts to adapt to devices.",
-link:"https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Media_queries",
-code:`@media (max-width:600px){
-  body{font-size:12px;}
-}`
+title:"Feature Engineering 🧠",
+desc:"Data transformation step",
+img:"https://cdn-icons-png.flaticon.com/512/2103/2103633.png",
+detail:"Transforms raw data into meaningful features for ML models.",
+link:"https://scikit-learn.org/stable/modules/preprocessing.html",
+code:`X = df.drop("target", axis=1)`
 },
 
 {
-title:"Tailwind ⚡",
-desc:"Utility-first CSS framework",
-detail:"Tailwind uses utility classes instead of writing custom CSS.",
-link:"https://tailwindcss.com/docs",
-code:`<div class="flex items-center justify-center p-4">
-  Hello Tailwind
-</div>`
+title:"Model Training 🏋️",
+desc:"Train ML models",
+img:"https://cdn-icons-png.flaticon.com/512/8637/8637099.png",
+detail:"Training process adjusts model parameters to minimize error.",
+link:"https://scikit-learn.org/stable/supervised_learning.html",
+code:`model.fit(X_train, y_train)`
 },
 
 {
-title:"Tailwind Layout 🧩",
-desc:"Prebuilt spacing & grid utilities",
-detail:"Tailwind provides fast layout construction using utility classes.",
-link:"https://tailwindcss.com/docs/flexbox",
-code:`<div class="grid grid-cols-3 gap-4">
-  <div>Box</div>
-</div>`
+title:"Evaluation 📊",
+desc:"Model performance metrics",
+img:"https://cdn-icons-png.flaticon.com/512/1828/1828884.png",
+detail:"Accuracy, precision, recall, F1-score evaluate models.",
+link:"https://scikit-learn.org/stable/modules/model_evaluation.html",
+code:`accuracy_score(y_true, y_pred)`
 },
 
 {
-title:"Tailwind Styling 🎨",
-desc:"Colors, shadows, typography",
-detail:"Tailwind provides design tokens via class utilities.",
-link:"https://tailwindcss.com/docs/customizing-colors",
-code:`<div class="bg-blue-500 text-white p-4 shadow-lg">
-  Styled box
-</div>`
+title:"Django BI Backend 🟢",
+desc:"API for data + models",
+img:"https://static.djangoproject.com/img/logos/django-logo-positive.png",
+detail:"Django serves ML models and data to dashboards via APIs.",
+link:"https://docs.djangoproject.com/",
+code:`from django.http import JsonResponse`
 },
 
 {
-title:"Figma UI Design 🧠",
-desc:"Design system & prototyping",
-detail:"Figma is used to design UI layouts before coding.",
-link:"https://www.figma.com/resources/learn-design/",
-code:`Frame → AutoLayout → Components → Variants`
+title:"React Dashboard ⚛️",
+desc:"Frontend BI UI",
+img:"https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
+detail:"React builds interactive dashboards for data visualization.",
+link:"https://react.dev",
+code:`function Dashboard(){ return <div>Stats</div> }`
 },
 
 {
-title:"Design System 🧱",
-desc:"Reusable UI components",
-detail:"Design systems ensure consistency across apps.",
-link:"https://www.figma.com/design-systems/",
-code:`Button / Card / Navbar / Input`
+title:"Charts 📈",
+desc:"Data visualization layer",
+img:"https://cdn-icons-png.flaticon.com/512/1828/1828884.png",
+detail:"Charts display KPIs and analytics visually.",
+link:"https://recharts.org/en-US/",
+code:`<LineChart data={data} />`
 },
 
 {
-title:"Dev Handoff 🚀",
-desc:"Design to code workflow",
-detail:"Figma designs are converted into CSS or Tailwind implementations.",
-link:"https://www.figma.com/developers/api",
-code:`Figma → Inspect → CSS → Tailwind`
+title:"Power BI 📊",
+desc:"Business intelligence tool",
+img:"https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg",
+detail:"Power BI creates dashboards, reports and enterprise analytics.",
+link:"https://learn.microsoft.com/power-bi/",
+code:`Power Query → Dataset → Dashboard`
 }
 
 ];
 
 const grid=document.getElementById("grid");
 const flowLayer=document.getElementById("flowLayer");
-const bar=document.getElementById("bar");
-
 const modal=document.getElementById("modal");
 const mTitle=document.getElementById("mTitle");
 const mDesc=document.getElementById("mDesc");
@@ -326,8 +313,13 @@ const div=document.createElement("div");
 div.className="card";
 
 div.innerHTML=`
-<div><b>${n.title}</b></div>
-<div style="font-size:12px;opacity:0.7">${n.desc}</div>
+<div style="display:flex;gap:10px;align-items:center">
+  <img class="nodeImg" src="${n.img}">
+  <div>
+    <div><b>${n.title}</b></div>
+    <div style="font-size:12px;opacity:0.7">${n.desc}</div>
+  </div>
+</div>
 `;
 
 div.onclick=()=>openModal(i);
@@ -355,7 +347,6 @@ const p2=pos(cards[b]);
 
 const dx=p2.x-p1.x;
 const dy=p2.y-p1.y;
-
 const dist=Math.sqrt(dx*dx+dy*dy);
 
 const line=document.createElement("div");
@@ -390,7 +381,7 @@ setTimeout(()=>line.remove(),300);
 
 }
 
-/* FLOW RUN */
+/* RUN */
 function run(){
 
 if(index>0){
@@ -401,8 +392,6 @@ drawFlow(index-1,index);
 if(index>=cards.length)return;
 
 cards[index].classList.add("active");
-
-bar.style.width=((index+1)/cards.length)*100+"%";
 
 index++;
 
