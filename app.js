@@ -1085,7 +1085,6 @@
 
     const sendMessage = async () => {
       if (!input.trim()) return
-
       if (!apiKey) {
         setShowKeyPrompt(true)
         return
@@ -1097,61 +1096,31 @@
       setIsLoading(true)
 
       try {
-        const coursesContext = window.PORTFOLIO_DATA?.courses
-          ?.map((c) => `${c.name}: ${c.description}`)
-          .join(', ')
+        const coursesContext = window.PORTFOLIO_DATA?.courses?.map((c) => `${c.name}: ${c.description}`).join(', ') || ''
         const resumeContext = window.PORTFOLIO_DATA?.profile?.summary || ''
-
-        const context = `You are an AI assistant for Fouad Hammani's portfolio. You can answer questions about:
-1. Available courses: ${coursesContext}
-2. Experience and resume: ${resumeContext}
-3. Skills and expertise
-4. Projects and work experience
-
-Please provide helpful, concise answers related to these topics.`
+        const context = `You are AI assistant for Fouad's portfolio. Answer about courses: ${coursesContext}. Resume: ${resumeContext}`
 
         const response = await fetch(
-          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' +
-            apiKey,
+          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              contents: [
-                {
-                  role: 'user',
-                  parts: [
-                    {
-                      text: context + '\n\nUser question: ' + input,
-                    },
-                  ],
-                },
-              ],
-              generationConfig: {
-                temperature: 0.7,
-                topP: 0.8,
-                maxOutputTokens: 500,
-              },
-            }),
+              contents: [{ role: 'user', parts: [{ text: context + '\n\nUser: ' + input }] }],
+              generationConfig: { temperature: 0.7, topP: 0.8, maxOutputTokens: 500 }
+            })
           }
         )
 
         if (!response.ok) throw new Error('API Error')
-
         const data = await response.json()
         const botMessage = {
           role: 'bot',
-          content:
-            data.candidates?.[0]?.content?.parts?.[0]?.text ||
-            'I could not process your request. Please try again.',
+          content: data.candidates?.[0]?.content?.parts?.[0]?.text || 'Could not process request.'
         }
         setMessages((prev) => [...prev, botMessage])
       } catch (error) {
-        const errorMessage = {
-          role: 'bot',
-          content: 'Sorry, I encountered an error. Please try again later or add a valid API key.',
-        }
-        setMessages((prev) => [...prev, errorMessage])
+        setMessages((prev) => [...prev, { role: 'bot', content: 'Error: Please try again or check your API key.' }])
       } finally {
         setIsLoading(false)
       }
@@ -1165,263 +1134,86 @@ Please provide helpful, concise answers related to these topics.`
     }
 
     return e.createElement(
-      e.Fragment,
-      null,
-      e.createElement(
-        'button',
-        {
-          onClick: () => setIsOpen(!isOpen),
-          title: 'Chat with AI Assistant',
-          style: {
-            position: 'fixed',
-            bottom: '80px',
-            right: '20px',
-            width: '50px',
-            height: '50px',
-            borderRadius: '50%',
-            background: '#06b6d4',
-            border: 'none',
-            color: '#fff',
-            fontSize: '24px',
-            cursor: 'pointer',
-            zIndex: 99,
-            boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
-            transition: 'all 0.3s ease',
-          },
-          onMouseEnter: (e) => {
-            e.currentTarget.style.background = '#0891b2'
-            e.currentTarget.style.transform = 'scale(1.1)'
-          },
-          onMouseLeave: (e) => {
-            e.currentTarget.style.background = '#06b6d4'
-            e.currentTarget.style.transform = 'scale(1)'
-          },
+      e.Fragment, null,
+      e.createElement('button', {
+        onClick: () => setIsOpen(!isOpen),
+        title: 'Chat with AI Assistant',
+        style: {
+          position: 'fixed', bottom: '80px', right: '20px', width: '50px', height: '50px',
+          borderRadius: '50%', background: '#06b6d4', border: 'none', color: '#fff',
+          fontSize: '24px', cursor: 'pointer', zIndex: 99, boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+          transition: 'all 0.3s ease', animation: 'pulse 2s infinite'
         },
-        '💬'
-      ),
-      isOpen
-        ? e.createElement(
-            'div',
-            {
-              style: {
-                position: 'fixed',
-                bottom: '140px',
-                right: '20px',
-                width: '350px',
-                height: '500px',
-                background: '#0b1120',
-                borderRadius: '12px',
-                border: '2px solid #06b6d4',
-                boxShadow: '0 8px 24px rgba(6,182,212,0.3)',
-                zIndex: 99,
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden',
-              },
-            },
-            e.createElement(
-              'div',
-              {
-                style: {
-                  background: '#06b6d4',
-                  color: '#000',
-                  padding: '1rem',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                },
-              },
-              e.createElement('div', { style: { fontWeight: 'bold' } }, '🤖 Speak with me'),
-              e.createElement(
-                'button',
-                {
-                  onClick: () => {
-                    setIsOpen(false)
-                    setMessages([])
-                  },
+        onMouseEnter: (e) => { e.currentTarget.style.background = '#0891b2'; e.currentTarget.style.transform = 'scale(1.15)' },
+        onMouseLeave: (e) => { e.currentTarget.style.background = '#06b6d4'; e.currentTarget.style.transform = 'scale(1)' }
+      }, '💬 Chat'),
+      isOpen ? e.createElement('div', {
+        style: {
+          position: 'fixed', bottom: '140px', right: '20px', width: '350px', height: '500px',
+          background: '#0b1120', borderRadius: '12px', border: '2px solid #06b6d4',
+          boxShadow: '0 8px 24px rgba(6,182,212,0.3)', zIndex: 99,
+          display: 'flex', flexDirection: 'column', overflow: 'hidden'
+        }
+      },
+        e.createElement('div', {
+          style: { background: '#06b6d4', color: '#000', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }
+        },
+          e.createElement('div', { style: { fontWeight: 'bold', fontSize: '0.95rem' } }, '🤖 Speak with me'),
+          e.createElement('button', {
+            onClick: () => { setIsOpen(false); setMessages([]) },
+            style: { background: 'none', border: 'none', color: '#000', fontSize: '20px', cursor: 'pointer' }
+          }, '×')
+        ),
+        showKeyPrompt ? e.createElement('div', {
+          style: { flex: 1, overflow: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'center' }
+        },
+          e.createElement('div', { style: { color: '#9ca3af', fontSize: '0.9rem' } }, 'Add your Gemini API key:'),
+          e.createElement('input', {
+            type: 'password', value: apiKey, onChange: (evt) => setApiKey(evt.target.value),
+            placeholder: 'Enter Gemini API key...', style: {
+              background: '#1a1f2e', border: '1px solid #38bdf8', borderRadius: '6px',
+              color: '#e5e7eb', padding: '0.75rem', fontSize: '0.85rem', outline: 'none'
+            }
+          }),
+          e.createElement('button', {
+            onClick: handleSaveApiKey,
+            style: { background: '#06b6d4', border: 'none', color: '#000', padding: '0.75rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }
+          }, 'Save Key'),
+          e.createElement('div', { style: { color: '#60a5fa', fontSize: '0.75rem', textAlign: 'center' } }, 'Get free key from console.cloud.google.com')
+        ) : e.createElement(e.Fragment, null,
+          e.createElement('div', {
+            style: { flex: 1, overflow: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }
+          },
+            messages.length === 0 ? e.createElement('div', {
+              style: { color: '#9ca3af', fontSize: '0.9rem', textAlign: 'center', marginTop: '2rem' }
+            }, 'Ask me about courses, experience, or skills!') : messages.map((msg, idx) =>
+              e.createElement('div', { key: idx, style: { display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: '0.5rem' } },
+                e.createElement('div', {
                   style: {
-                    background: 'none',
-                    border: 'none',
-                    color: '#000',
-                    fontSize: '20px',
-                    cursor: 'pointer',
-                  },
-                },
-                '×'
+                    maxWidth: '80%', padding: '0.75rem 1rem', borderRadius: '8px',
+                    background: msg.role === 'user' ? '#06b6d4' : '#1a1f2e',
+                    color: msg.role === 'user' ? '#000' : '#e5e7eb', fontSize: '0.9rem', wordWrap: 'break-word'
+                  }
+                }, msg.content)
               )
-            ),
-            showKeyPrompt
-              ? e.createElement(
-                  'div',
-                  {
-                    style: {
-                      flex: 1,
-                      overflow: 'auto',
-                      padding: '1rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '1rem',
-                      justifyContent: 'center',
-                    },
-                  },
-                  e.createElement(
-                    'div',
-                    { style: { color: '#9ca3af', fontSize: '0.9rem' } },
-                    'To use the AI chatbot, please add your Google Gemini API key:'
-                  ),
-                  e.createElement('input', {
-                    type: 'password',
-                    value: apiKey,
-                    onChange: (evt) => setApiKey(evt.target.value),
-                    placeholder: 'Enter your Gemini API key...',
-                    style: {
-                      background: '#1a1f2e',
-                      border: '1px solid #38bdf8',
-                      borderRadius: '6px',
-                      color: '#e5e7eb',
-                      padding: '0.75rem',
-                      fontSize: '0.85rem',
-                      outline: 'none',
-                    },
-                  }),
-                  e.createElement(
-                    'button',
-                    {
-                      onClick: handleSaveApiKey,
-                      style: {
-                        background: '#06b6d4',
-                        border: 'none',
-                        color: '#000',
-                        padding: '0.75rem',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                      },
-                    },
-                    'Save API Key'
-                  ),
-                  e.createElement(
-                    'div',
-                    { style: { color: '#60a5fa', fontSize: '0.75rem', textAlign: 'center' } },
-                    'Get your free API key from console.cloud.google.com'
-                  )
-                )
-              : e.createElement(
-                  e.Fragment,
-                  null,
-                  e.createElement(
-                    'div',
-                    {
-                      style: {
-                        flex: 1,
-                        overflow: 'auto',
-                        padding: '1rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.5rem',
-                      },
-                    },
-                    messages.length === 0
-                      ? e.createElement(
-                          'div',
-                          {
-                            style: {
-                              color: '#9ca3af',
-                              fontSize: '0.9rem',
-                              textAlign: 'center',
-                              marginTop: '2rem',
-                            },
-                          },
-                          'Ask me about my courses, experience, or skills!'
-                        )
-                      : messages.map((msg, idx) =>
-                          e.createElement(
-                            'div',
-                            {
-                              key: idx,
-                              style: {
-                                display: 'flex',
-                                justifyContent:
-                                  msg.role === 'user' ? 'flex-end' : 'flex-start',
-                                marginBottom: '0.5rem',
-                              },
-                            },
-                            e.createElement(
-                              'div',
-                              {
-                                style: {
-                                  maxWidth: '80%',
-                                  padding: '0.75rem 1rem',
-                                  borderRadius: '8px',
-                                  background:
-                                    msg.role === 'user' ? '#06b6d4' : '#1a1f2e',
-                                  color:
-                                    msg.role === 'user' ? '#000' : '#e5e7eb',
-                                  fontSize: '0.9rem',
-                                  wordWrap: 'break-word',
-                                },
-                              },
-                              msg.content
-                            )
-                          )
-                        )
-                  ),
-                  e.createElement(
-                    'div',
-                    {
-                      style: {
-                        padding: '1rem',
-                        borderTop: '1px solid #1f2933',
-                        display: 'flex',
-                        gap: '0.5rem',
-                      },
-                    },
-                    e.createElement('input', {
-                      type: 'text',
-                      value: input,
-                      onChange: (evt) => setInput(evt.target.value),
-                      onKeyPress: (evt) => {
-                        if (evt.key === 'Enter' && !evt.shiftKey) {
-                          evt.preventDefault()
-                          sendMessage()
-                        }
-                      },
-                      placeholder: 'Ask me something...',
-                      disabled: isLoading,
-                      style: {
-                        flex: 1,
-                        background: '#1a1f2e',
-                        border: '1px solid #38bdf8',
-                        borderRadius: '6px',
-                        color: '#e5e7eb',
-                        padding: '0.5rem',
-                        fontSize: '0.9rem',
-                        outline: 'none',
-                      },
-                    }),
-                    e.createElement(
-                      'button',
-                      {
-                        onClick: sendMessage,
-                        disabled: isLoading,
-                        style: {
-                          background: '#06b6d4',
-                          border: 'none',
-                          color: '#000',
-                          padding: '0.5rem 1rem',
-                          borderRadius: '6px',
-                          cursor: isLoading ? 'not-allowed' : 'pointer',
-                          fontWeight: 'bold',
-                          opacity: isLoading ? 0.6 : 1,
-                        },
-                      },
-                      isLoading ? '...' : '→'
-                    )
-                  )
-                )
             )
+          ),
+          e.createElement('div', {
+            style: { padding: '1rem', borderTop: '1px solid #1f2933', display: 'flex', gap: '0.5rem' }
+          },
+            e.createElement('input', {
+              type: 'text', value: input, onChange: (evt) => setInput(evt.target.value),
+              onKeyPress: (evt) => { if (evt.key === 'Enter' && !evt.shiftKey) { evt.preventDefault(); sendMessage() } },
+              placeholder: 'Ask me...', disabled: isLoading,
+              style: { flex: 1, background: '#1a1f2e', border: '1px solid #38bdf8', borderRadius: '6px', color: '#e5e7eb', padding: '0.5rem', fontSize: '0.9rem', outline: 'none' }
+            }),
+            e.createElement('button', {
+              onClick: sendMessage, disabled: isLoading,
+              style: { background: '#06b6d4', border: 'none', color: '#000', padding: '0.5rem 1rem', borderRadius: '6px', cursor: isLoading ? 'not-allowed' : 'pointer', fontWeight: 'bold', opacity: isLoading ? 0.6 : 1 }
+            }, isLoading ? '...' : '→')
           )
-        : null
+        )
+      ) : null
     )
   }
 
