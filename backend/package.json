@@ -1,0 +1,27 @@
+{
+  "name": "portfolio-chatbot-backend",
+  "version": "1.0.0",
+  "description": "Resume-based AI chatbot backend with RAG",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "@google/generative-ai": "^0.1.3"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "chatbot",
+    "rag",
+    "resume",
+    "ai",
+    "gemini"
+  ],
+  "author": "Fouad Hammani",
+  "license": "MIT"
+}

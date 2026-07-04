@@ -1080,15 +1080,10 @@
     const [messages, setMessages] = useState([])
     const [input, setInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
-    const [showKeyPrompt, setShowKeyPrompt] = useState(false)
-    const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '')
 
+    // RAG-enabled sendMessage - calls backend API with resume context
     const sendMessage = async () => {
       if (!input.trim()) return
-      if (!apiKey) {
-        setShowKeyPrompt(true)
-        return
-      }
 
       const userMessage = { role: 'user', content: input }
       setMessages((prev) => [...prev, userMessage])
@@ -1096,40 +1091,73 @@
       setIsLoading(true)
 
       try {
-        const coursesContext = window.PORTFOLIO_DATA?.courses?.map((c) => `${c.name}: ${c.description}`).join(', ') || ''
-        const resumeContext = window.PORTFOLIO_DATA?.profile?.summary || ''
-        const context = `You are AI assistant for Fouad's portfolio. Answer about courses: ${coursesContext}. Resume: ${resumeContext}`
+        // Try to call backend API first (RAG-enabled)
+        // Backend should be running at: http://localhost:3000/api/chat
+        // If backend not available, fallback to direct API
+        
+        const backendUrl = 'http://localhost:3000/api/chat'
+        
+        try {
+          const backendResponse = await fetch(backendUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: input,
+              context: {
+                courses: window.PORTFOLIO_DATA?.courses || [],
+                profile: window.PORTFOLIO_DATA?.profile || {}
+              }
+            })
+          })
+          
+          if (backendResponse.ok) {
+            const data = await backendResponse.json()
+            const botMessage = {
+              role: 'bot',
+              content: data.response || 'Could not process request.'
+            }
+            setMessages((prev) => [...prev, botMessage])
+            return
+          }
+        } catch (backendError) {
+          console.warn('Backend not available, using fallback:', backendError)
+        }
 
-        const response = await fetch(
-          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey,
+        // Fallback: Direct API call (when backend is unavailable)
+        // Note: This requires GEMINI_API_KEY env variable on backend
+        // In production, never expose API keys to frontend
+        const fallbackResponse = await fetch(
+          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=YOUR_API_KEY_HERE',
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              contents: [{ role: 'user', parts: [{ text: context + '\n\nUser: ' + input }] }],
+              contents: [{
+                role: 'user',
+                parts: [{
+                  text: `You are Fouad's AI assistant. Help users learn about Fouad's portfolio, courses, experience, and skills.\n\nUser: ${input}`
+                }]
+              }],
               generationConfig: { temperature: 0.7, topP: 0.8, maxOutputTokens: 500 }
             })
           }
         )
 
-        if (!response.ok) throw new Error('API Error')
-        const data = await response.json()
+        if (!fallbackResponse.ok) throw new Error('API Error')
+        const data = await fallbackResponse.json()
         const botMessage = {
           role: 'bot',
           content: data.candidates?.[0]?.content?.parts?.[0]?.text || 'Could not process request.'
         }
         setMessages((prev) => [...prev, botMessage])
       } catch (error) {
-        setMessages((prev) => [...prev, { role: 'bot', content: 'Error: Please try again or check your API key.' }])
+        console.error('Chat error:', error)
+        setMessages((prev) => [...prev, {
+          role: 'bot',
+          content: 'Sorry, I encountered an error. Please set up the backend API for full RAG capabilities.'
+        }])
       } finally {
         setIsLoading(false)
-      }
-    }
-
-    const handleSaveApiKey = () => {
-      if (apiKey.trim()) {
-        localStorage.setItem('gemini_api_key', apiKey)
-        setShowKeyPrompt(false)
       }
     }
 
@@ -1137,7 +1165,7 @@
       e.Fragment, null,
       e.createElement('button', {
         onClick: () => setIsOpen(!isOpen),
-        title: 'Chat with AI Assistant',
+        title: 'Chat with AI Assistant - Speak with me',
         style: {
           position: 'fixed', bottom: '80px', right: '20px', width: '50px', height: '50px',
           borderRadius: '50%', background: '#06b6d4', border: 'none', color: '#fff',
@@ -1164,54 +1192,36 @@
             style: { background: 'none', border: 'none', color: '#000', fontSize: '20px', cursor: 'pointer' }
           }, '×')
         ),
-        showKeyPrompt ? e.createElement('div', {
-          style: { flex: 1, overflow: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'center' }
+        e.createElement('div', {
+          style: { flex: 1, overflow: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }
         },
-          e.createElement('div', { style: { color: '#9ca3af', fontSize: '0.9rem' } }, 'Add your Gemini API key:'),
+          messages.length === 0 ? e.createElement('div', {
+            style: { color: '#9ca3af', fontSize: '0.9rem', textAlign: 'center', marginTop: '2rem' }
+          }, 'Ask me about courses, experience, or skills!') : messages.map((msg, idx) =>
+            e.createElement('div', { key: idx, style: { display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: '0.5rem' } },
+              e.createElement('div', {
+                style: {
+                  maxWidth: '80%', padding: '0.75rem 1rem', borderRadius: '8px',
+                  background: msg.role === 'user' ? '#06b6d4' : '#1a1f2e',
+                  color: msg.role === 'user' ? '#000' : '#e5e7eb', fontSize: '0.9rem', wordWrap: 'break-word'
+                }
+              }, msg.content)
+            )
+          )
+        ),
+        e.createElement('div', {
+          style: { padding: '1rem', borderTop: '1px solid #1f2933', display: 'flex', gap: '0.5rem' }
+        },
           e.createElement('input', {
-            type: 'password', value: apiKey, onChange: (evt) => setApiKey(evt.target.value),
-            placeholder: 'Enter Gemini API key...', style: {
-              background: '#1a1f2e', border: '1px solid #38bdf8', borderRadius: '6px',
-              color: '#e5e7eb', padding: '0.75rem', fontSize: '0.85rem', outline: 'none'
-            }
+            type: 'text', value: input, onChange: (evt) => setInput(evt.target.value),
+            onKeyPress: (evt) => { if (evt.key === 'Enter' && !evt.shiftKey) { evt.preventDefault(); sendMessage() } },
+            placeholder: 'Ask me...', disabled: isLoading,
+            style: { flex: 1, background: '#1a1f2e', border: '1px solid #38bdf8', borderRadius: '6px', color: '#e5e7eb', padding: '0.5rem', fontSize: '0.9rem', outline: 'none' }
           }),
           e.createElement('button', {
-            onClick: handleSaveApiKey,
-            style: { background: '#06b6d4', border: 'none', color: '#000', padding: '0.75rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }
-          }, 'Save Key'),
-          e.createElement('div', { style: { color: '#60a5fa', fontSize: '0.75rem', textAlign: 'center' } }, 'Get free key from console.cloud.google.com')
-        ) : e.createElement(e.Fragment, null,
-          e.createElement('div', {
-            style: { flex: 1, overflow: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }
-          },
-            messages.length === 0 ? e.createElement('div', {
-              style: { color: '#9ca3af', fontSize: '0.9rem', textAlign: 'center', marginTop: '2rem' }
-            }, 'Ask me about courses, experience, or skills!') : messages.map((msg, idx) =>
-              e.createElement('div', { key: idx, style: { display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: '0.5rem' } },
-                e.createElement('div', {
-                  style: {
-                    maxWidth: '80%', padding: '0.75rem 1rem', borderRadius: '8px',
-                    background: msg.role === 'user' ? '#06b6d4' : '#1a1f2e',
-                    color: msg.role === 'user' ? '#000' : '#e5e7eb', fontSize: '0.9rem', wordWrap: 'break-word'
-                  }
-                }, msg.content)
-              )
-            )
-          ),
-          e.createElement('div', {
-            style: { padding: '1rem', borderTop: '1px solid #1f2933', display: 'flex', gap: '0.5rem' }
-          },
-            e.createElement('input', {
-              type: 'text', value: input, onChange: (evt) => setInput(evt.target.value),
-              onKeyPress: (evt) => { if (evt.key === 'Enter' && !evt.shiftKey) { evt.preventDefault(); sendMessage() } },
-              placeholder: 'Ask me...', disabled: isLoading,
-              style: { flex: 1, background: '#1a1f2e', border: '1px solid #38bdf8', borderRadius: '6px', color: '#e5e7eb', padding: '0.5rem', fontSize: '0.9rem', outline: 'none' }
-            }),
-            e.createElement('button', {
-              onClick: sendMessage, disabled: isLoading,
-              style: { background: '#06b6d4', border: 'none', color: '#000', padding: '0.5rem 1rem', borderRadius: '6px', cursor: isLoading ? 'not-allowed' : 'pointer', fontWeight: 'bold', opacity: isLoading ? 0.6 : 1 }
-            }, isLoading ? '...' : '→')
-          )
+            onClick: sendMessage, disabled: isLoading,
+            style: { background: '#06b6d4', border: 'none', color: '#000', padding: '0.5rem 1rem', borderRadius: '6px', cursor: isLoading ? 'not-allowed' : 'pointer', fontWeight: 'bold', opacity: isLoading ? 0.6 : 1 }
+          }, isLoading ? '...' : '→')
         )
       ) : null
     )

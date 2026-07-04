@@ -1,0 +1,30 @@
+# Environment files
+.env
+.env.local
+backend/.env
+
+# Node modules
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# API Keys (never commit sensitive data)
+*.key
+secrets/
+
+# Chroma/Vector DB
+chroma_data/

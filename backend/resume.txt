@@ -1,0 +1,86 @@
+# Your Resume Content for RAG System
+# Replace this with your actual resume content
+# 
+# Format: Plain text, sections separated by double line breaks
+# This will be chunked and used for semantic search by the chatbot
+
+## PROFESSIONAL SUMMARY
+AI Software Engineer with 7+ years of experience in IT environments, SaaS/IaC architecture. Expertise in Web development (back-end and front-end) using HTML5, CSS, JavaScript, React, Python, and PHP. Certified Multi-agent Builder using Langchain, Langraph, CrewAI, and AutoGen. Extensive experience in database administration (SQL, PostgreSQL, MySQL, KQL, Apache Spark, Kafka). Proficient in Agile methodologies and prompt engineering for LLMs/NLP personalization with RAG and LoRA Fine-tuning. Bilingual (French/English) with strong communication skills.
+
+## CORE COMPETENCIES
+- Backend: Python, Django, Laravel, Node.js, FastAPI
+- Frontend: React, Vue.js, TypeScript, HTML5, CSS3, Tailwind
+- AI/ML: LangChain, LangGraph, CrewAI, AutoGen, RAG, Fine-tuning, Prompt Engineering
+- Databases: PostgreSQL, MySQL, MongoDB, Apache Spark, Kafka, Redis
+- DevOps: Docker, Kubernetes, CI/CD, GitHub Actions, AWS, Azure
+- Frameworks: Django REST, FastAPI, Express.js, Laravel, Inertia.js
+- Tools: Git, VS Code, Jupyter, Postman, Figma, Jira
+
+## EXPERIENCE
+
+### Full-Stack Developer / Product Owner
+**ACI (Agro Consulting International)** | Algiers, Algeria | Jan 2025 – April 2026
+
+- Built and deployed a full ERP platform with Laravel, React, Inertia.js, MySQL, and Docker
+- Improved inventory and supplier operations by 30% through automation and dashboard reporting
+- Converted the platform into a desktop application with Electron for internal deployment
+- Introduced secure HTTPS services, modular APIs, and an MCP-based AI analytics chatbot
+- Technologies: Laravel, React, TypeScript, Inertia.js, MySQL, Docker, Electron
+
+### Senior Backend Developer
+**TechFlow Solutions** | Remote | 2023 – 2024
+
+- Architected microservices for fintech platform using Python, FastAPI, and PostgreSQL
+- Implemented RAG system for intelligent document processing using LangChain and vector embeddings
+- Reduced API response time by 40% through database optimization and caching strategies
+- Led team of 3 developers in agile sprint cycles
+- Technologies: Python, FastAPI, PostgreSQL, Docker, LangChain, Redis
+
+### Full-Stack Web Developer
+**StartUp Hub** | Paris, France | 2020 – 2023
+
+- Developed customer-facing Django/React applications serving 50K+ users
+- Implemented automated testing pipeline achieving 85% code coverage
+- Mentored 2 junior developers on best practices and code quality
+- Technologies: Django, React, PostgreSQL, Docker, GitHub Actions
+
+### Frontend Developer
+**Digital Agency X** | Online | 2018 – 2020
+
+- Created responsive web applications using React and modern CSS frameworks
+- Collaborated with designers to implement pixel-perfect UI designs
+- Optimized bundle size resulting in 35% faster page loads
+- Technologies: React, TypeScript, Webpack, Tailwind CSS
+
+## EDUCATION
+
+### Bachelor Degree in Secure Infrastructure Administration
+**ADG Education** | 2021 – 2023
+- Focused on cybersecurity, system administration, and cloud architecture
+
+### College Diploma in Computer Science - Databases
+**INSFPTB** | 2018 – 2021
+- Specialized in database design, optimization, and management
+
+## CERTIFICATIONS
+
+- AI Multi-agent Builder Certification – IBM SkillsBuild
+- Agile Management Certification – IBM SkillsBuild  
+- Python & Django Certification – W3Schools
+- B2 English Certification – Islington Centre of English
+- Azure and Microsoft Fabric Badge – Microsoft Learn
+- Machine Learning Certification – Kaggle Data Science
+- Big Data Foundations - Level 2
+
+## LANGUAGES
+
+- English: Upper Intermediate (B2)
+- French: Native
+- Arabic: Native
+
+## INTERESTS
+
+Basketball, Ping-Pong, OSINT, Emerging Technologies, Music, Philosophy, History
+
+---
+📝 Replace this content with your actual resume for better chatbot responses!
