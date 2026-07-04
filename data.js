@@ -368,5 +368,77 @@ window.PORTFOLIO_DATA = {
     "Music",
     "Philosophy",
     "History"
+  ],
+  courses: [
+    {
+      id: 'html-basics',
+      name: 'HTML Basics',
+      file: './courses/HTML_Summary_Workflow.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/732/732212.png',
+      description: 'Learn the fundamentals of HTML markup'
+    },
+    {
+      id: 'css-styling',
+      name: 'CSS Styling',
+      file: './courses/css-styling.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/732/732190.png',
+      description: 'Master CSS for beautiful web design'
+    },
+    {
+      id: 'javascript-fundamentals',
+      name: 'JavaScript & TypeScript & React',
+      file: './courses/javascript-Typescript-React-Workflow.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/5968/5968292.png',
+      description: 'Interactive web development with JavaScript, TypeScript, and React'
+    },
+    {
+      id: 'agile-scrum',
+      name: 'Agile Scrum Methodologies',
+      file: './courses/Agile-Scrum-Methologies.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/906/906334.png',
+      description: 'Project management with Agile and Scrum principles'
+    },
+    {
+      id: 'django',
+      name: 'Django Framework',
+      file: './courses/Django_summary_Workflow.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/5968/5968341.png',
+      description: 'Build robust backend applications with Django'
+    },
+    {
+      id: 'big-data',
+      name: 'Big Data & Data Engineering',
+      file: './courses/Big_data_summary_Workflow.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/2913/2913152.png',
+      description: 'Process and manage large-scale data systems'
+    },
+    {
+      id: 'ai-agents',
+      name: 'AI Agent Building',
+      file: './courses/AI_agent_building_summary_Workflow.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/4436/4436481.png',
+      description: 'Build intelligent AI agents with modern frameworks'
+    },
+    {
+      id: 'data-science',
+      name: 'Data Science & BI Dashboard',
+      file: './courses/Data_science_predictive_BI_dashboard_Building_Workflow.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/2913/2913097.png',
+      description: 'Create predictive models and interactive dashboards'
+    },
+    {
+      id: 'lora-finetune',
+      name: 'LoRA Finetuning LLM',
+      file: './courses/LoRA_Finetunning_LLM_summary_Workflow.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/4436/4436481.png',
+      description: 'Fine-tune large language models efficiently'
+    },
+    {
+      id: 'rag',
+      name: 'RAG & LLM Workflow',
+      file: './courses/from_data_to_IA_Agent_Workflow.html',
+      image: 'https://cdn-icons-png.flaticon.com/512/4436/4436481.png',
+      description: 'Build RAG systems from data to intelligent agents'
+    }
   ]
 };

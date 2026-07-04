@@ -354,10 +354,15 @@
   }
 
   function AboutAwards({ awards }) {
-    const fallback = [
-      'Python & Django Certification – W3Schools (2024)',
-      'Full-Stack Web Developer Training – Sonelgaz (2021)',
-      'Soft Skills & Canadian Workplace Culture – SOPA Pre-Arrival Canada Program',
+    const aboutItems = [
+      "Over 7 years of experience in IT environment SaaS/IaC architecture environments",
+      "Expertise in Web development back-end and front-end using HTML5/ CSS/Javascript/React/Python and Php libraries",
+      "Certified Multi agent Builder using tools/libraries like Langchain/Langraph/CrewIA/AutoGen",
+      "Extensive experience in database administration and management (SQL, PostegresSQL, MySQL,KQL,Apache spark,Kafka for big data)",
+      "Proficient in Agile methodologies and project management tools certified",
+      "Expertise in prompt engineer LLMs/NLP and IA personalization RAG and LoRA Finetunning",
+      "Software user trainer/teacher didactic of software integration",
+      "Bilingual with excellent written and verbal communication skills in both French and English"
     ]
 
     const list =
@@ -367,7 +372,7 @@
             const issuer = a.issuer ? ' – ' + a.issuer : ''
             return a.title + issuer + year
           })
-        : fallback
+        : []
 
     return e.createElement(
       'div',
@@ -378,7 +383,7 @@
         e.createElement(
           'h2',
           { className: 'section-title' },
-          'Awards & Certifications'
+          'About Me'
         )
       ),
       e.createElement(
@@ -387,9 +392,33 @@
         e.createElement(
           'ul',
           { className: 'about-bullets' },
-          list.map(function (t, i) {
+          aboutItems.map(function (t, i) {
             return e.createElement('li', { key: i }, t)
           })
+        )
+      ),
+      e.createElement(
+        'div',
+        { style: { marginTop: '2rem' } },
+        e.createElement(
+          'div',
+          { className: 'section-header' },
+          e.createElement(
+            'h2',
+            { className: 'section-title' },
+            'Awards & Certifications'
+          )
+        ),
+        e.createElement(
+          'div',
+          { className: 'card' },
+          e.createElement(
+            'ul',
+            { className: 'about-bullets' },
+            list.map(function (t, i) {
+              return e.createElement('li', { key: i }, t)
+            })
+          )
         )
       )
     )
@@ -1046,6 +1075,356 @@
     )
   }
 
+  function ChatBotButton() {
+    const [isOpen, setIsOpen] = useState(false)
+    const [messages, setMessages] = useState([])
+    const [input, setInput] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+    const [showKeyPrompt, setShowKeyPrompt] = useState(false)
+    const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '')
+
+    const sendMessage = async () => {
+      if (!input.trim()) return
+
+      if (!apiKey) {
+        setShowKeyPrompt(true)
+        return
+      }
+
+      const userMessage = { role: 'user', content: input }
+      setMessages((prev) => [...prev, userMessage])
+      setInput('')
+      setIsLoading(true)
+
+      try {
+        const coursesContext = window.PORTFOLIO_DATA?.courses
+          ?.map((c) => `${c.name}: ${c.description}`)
+          .join(', ')
+        const resumeContext = window.PORTFOLIO_DATA?.profile?.summary || ''
+
+        const context = `You are an AI assistant for Fouad Hammani's portfolio. You can answer questions about:
+1. Available courses: ${coursesContext}
+2. Experience and resume: ${resumeContext}
+3. Skills and expertise
+4. Projects and work experience
+
+Please provide helpful, concise answers related to these topics.`
+
+        const response = await fetch(
+          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' +
+            apiKey,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: 'user',
+                  parts: [
+                    {
+                      text: context + '\n\nUser question: ' + input,
+                    },
+                  ],
+                },
+              ],
+              generationConfig: {
+                temperature: 0.7,
+                topP: 0.8,
+                maxOutputTokens: 500,
+              },
+            }),
+          }
+        )
+
+        if (!response.ok) throw new Error('API Error')
+
+        const data = await response.json()
+        const botMessage = {
+          role: 'bot',
+          content:
+            data.candidates?.[0]?.content?.parts?.[0]?.text ||
+            'I could not process your request. Please try again.',
+        }
+        setMessages((prev) => [...prev, botMessage])
+      } catch (error) {
+        const errorMessage = {
+          role: 'bot',
+          content: 'Sorry, I encountered an error. Please try again later or add a valid API key.',
+        }
+        setMessages((prev) => [...prev, errorMessage])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    const handleSaveApiKey = () => {
+      if (apiKey.trim()) {
+        localStorage.setItem('gemini_api_key', apiKey)
+        setShowKeyPrompt(false)
+      }
+    }
+
+    return e.createElement(
+      e.Fragment,
+      null,
+      e.createElement(
+        'button',
+        {
+          onClick: () => setIsOpen(!isOpen),
+          title: 'Chat with AI Assistant',
+          style: {
+            position: 'fixed',
+            bottom: '80px',
+            right: '20px',
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            background: '#06b6d4',
+            border: 'none',
+            color: '#fff',
+            fontSize: '24px',
+            cursor: 'pointer',
+            zIndex: 99,
+            boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+            transition: 'all 0.3s ease',
+          },
+          onMouseEnter: (e) => {
+            e.currentTarget.style.background = '#0891b2'
+            e.currentTarget.style.transform = 'scale(1.1)'
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.background = '#06b6d4'
+            e.currentTarget.style.transform = 'scale(1)'
+          },
+        },
+        '💬'
+      ),
+      isOpen
+        ? e.createElement(
+            'div',
+            {
+              style: {
+                position: 'fixed',
+                bottom: '140px',
+                right: '20px',
+                width: '350px',
+                height: '500px',
+                background: '#0b1120',
+                borderRadius: '12px',
+                border: '2px solid #06b6d4',
+                boxShadow: '0 8px 24px rgba(6,182,212,0.3)',
+                zIndex: 99,
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+              },
+            },
+            e.createElement(
+              'div',
+              {
+                style: {
+                  background: '#06b6d4',
+                  color: '#000',
+                  padding: '1rem',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                },
+              },
+              e.createElement('div', { style: { fontWeight: 'bold' } }, '🤖 Speak with me'),
+              e.createElement(
+                'button',
+                {
+                  onClick: () => {
+                    setIsOpen(false)
+                    setMessages([])
+                  },
+                  style: {
+                    background: 'none',
+                    border: 'none',
+                    color: '#000',
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                  },
+                },
+                '×'
+              )
+            ),
+            showKeyPrompt
+              ? e.createElement(
+                  'div',
+                  {
+                    style: {
+                      flex: 1,
+                      overflow: 'auto',
+                      padding: '1rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem',
+                      justifyContent: 'center',
+                    },
+                  },
+                  e.createElement(
+                    'div',
+                    { style: { color: '#9ca3af', fontSize: '0.9rem' } },
+                    'To use the AI chatbot, please add your Google Gemini API key:'
+                  ),
+                  e.createElement('input', {
+                    type: 'password',
+                    value: apiKey,
+                    onChange: (evt) => setApiKey(evt.target.value),
+                    placeholder: 'Enter your Gemini API key...',
+                    style: {
+                      background: '#1a1f2e',
+                      border: '1px solid #38bdf8',
+                      borderRadius: '6px',
+                      color: '#e5e7eb',
+                      padding: '0.75rem',
+                      fontSize: '0.85rem',
+                      outline: 'none',
+                    },
+                  }),
+                  e.createElement(
+                    'button',
+                    {
+                      onClick: handleSaveApiKey,
+                      style: {
+                        background: '#06b6d4',
+                        border: 'none',
+                        color: '#000',
+                        padding: '0.75rem',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                      },
+                    },
+                    'Save API Key'
+                  ),
+                  e.createElement(
+                    'div',
+                    { style: { color: '#60a5fa', fontSize: '0.75rem', textAlign: 'center' } },
+                    'Get your free API key from console.cloud.google.com'
+                  )
+                )
+              : e.createElement(
+                  e.Fragment,
+                  null,
+                  e.createElement(
+                    'div',
+                    {
+                      style: {
+                        flex: 1,
+                        overflow: 'auto',
+                        padding: '1rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem',
+                      },
+                    },
+                    messages.length === 0
+                      ? e.createElement(
+                          'div',
+                          {
+                            style: {
+                              color: '#9ca3af',
+                              fontSize: '0.9rem',
+                              textAlign: 'center',
+                              marginTop: '2rem',
+                            },
+                          },
+                          'Ask me about my courses, experience, or skills!'
+                        )
+                      : messages.map((msg, idx) =>
+                          e.createElement(
+                            'div',
+                            {
+                              key: idx,
+                              style: {
+                                display: 'flex',
+                                justifyContent:
+                                  msg.role === 'user' ? 'flex-end' : 'flex-start',
+                                marginBottom: '0.5rem',
+                              },
+                            },
+                            e.createElement(
+                              'div',
+                              {
+                                style: {
+                                  maxWidth: '80%',
+                                  padding: '0.75rem 1rem',
+                                  borderRadius: '8px',
+                                  background:
+                                    msg.role === 'user' ? '#06b6d4' : '#1a1f2e',
+                                  color:
+                                    msg.role === 'user' ? '#000' : '#e5e7eb',
+                                  fontSize: '0.9rem',
+                                  wordWrap: 'break-word',
+                                },
+                              },
+                              msg.content
+                            )
+                          )
+                        )
+                  ),
+                  e.createElement(
+                    'div',
+                    {
+                      style: {
+                        padding: '1rem',
+                        borderTop: '1px solid #1f2933',
+                        display: 'flex',
+                        gap: '0.5rem',
+                      },
+                    },
+                    e.createElement('input', {
+                      type: 'text',
+                      value: input,
+                      onChange: (evt) => setInput(evt.target.value),
+                      onKeyPress: (evt) => {
+                        if (evt.key === 'Enter' && !evt.shiftKey) {
+                          evt.preventDefault()
+                          sendMessage()
+                        }
+                      },
+                      placeholder: 'Ask me something...',
+                      disabled: isLoading,
+                      style: {
+                        flex: 1,
+                        background: '#1a1f2e',
+                        border: '1px solid #38bdf8',
+                        borderRadius: '6px',
+                        color: '#e5e7eb',
+                        padding: '0.5rem',
+                        fontSize: '0.9rem',
+                        outline: 'none',
+                      },
+                    }),
+                    e.createElement(
+                      'button',
+                      {
+                        onClick: sendMessage,
+                        disabled: isLoading,
+                        style: {
+                          background: '#06b6d4',
+                          border: 'none',
+                          color: '#000',
+                          padding: '0.5rem 1rem',
+                          borderRadius: '6px',
+                          cursor: isLoading ? 'not-allowed' : 'pointer',
+                          fontWeight: 'bold',
+                          opacity: isLoading ? 0.6 : 1,
+                        },
+                      },
+                      isLoading ? '...' : '→'
+                    )
+                  )
+                )
+            )
+          )
+        : null
+    )
+  }
+
   function MusicButton({ isMuted, onToggle }) {
     return e.createElement(
       'button',
@@ -1074,50 +1453,19 @@
     )
   }
 
-  function CoursesModal({ isOpen, onClose, selectedCourse, onSelectCourse }) {
+  function CoursesModal({ isOpen, onClose, selectedCourse, onSelectCourse, courses: dataCourses }) {
     const fallbackCourses = [
-      { id: 'html-basics', name: 'HTML Basics', file: './courses/html-basics.html' },
-      { id: 'css-styling', name: 'CSS Styling', file: './courses/css-styling.html' },
-      { id: 'javascript-fundamentals', name: 'JavaScript Fundamentals', file: './courses/javascript-fundamentals.html' },
+      { id: 'html-basics', name: 'HTML Basics', file: './courses/html-basics.html', image: 'https://cdn-icons-png.flaticon.com/512/732/732212.png' },
+      { id: 'css-styling', name: 'CSS Styling', file: './courses/css-styling.html', image: 'https://cdn-icons-png.flaticon.com/512/732/732190.png' },
+      { id: 'javascript-fundamentals', name: 'JavaScript Fundamentals', file: './courses/javascript-fundamentals.html', image: 'https://cdn-icons-png.flaticon.com/512/5968/5968292.png' },
     ]
-    const [courses, setCourses] = useState(fallbackCourses)
+    const [courses, setCourses] = useState(dataCourses || fallbackCourses)
 
     useEffect(() => {
-      if (!isOpen) return undefined
-
-      let cancelled = false
-      fetch('https://api.github.com/repos/Fouja/Portfolio/contents/courses')
-        .then((response) => {
-          if (!response.ok) throw new Error('Unable to load courses')
-          return response.json()
-        })
-        .then((items) => {
-          if (cancelled || !Array.isArray(items)) return
-          const htmlCourses = items
-            .filter((item) => item && item.type === 'file' && /\.html?$/i.test(item.name))
-            .map((item) => ({
-              id: item.name,
-              name: item.name
-                .replace(/\.html?$/i, '')
-                .replace(/[-_]+/g, ' ')
-                .replace(/\b\w/g, (char) => char.toUpperCase()),
-              file: `./courses/${item.name}`,
-            }))
-
-          if (htmlCourses.length > 0) {
-            setCourses(htmlCourses)
-          }
-        })
-        .catch(() => {
-          if (!cancelled) {
-            setCourses(fallbackCourses)
-          }
-        })
-
-      return () => {
-        cancelled = true
+      if (dataCourses && dataCourses.length > 0) {
+        setCourses(dataCourses)
       }
-    }, [isOpen])
+    }, [dataCourses])
 
     if (!isOpen) return null
 
@@ -1134,7 +1482,8 @@
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 200
+          zIndex: 200,
+          overflowY: 'auto'
         },
         onClick: (evt) => {
           if (evt.target === evt.currentTarget) onClose()
@@ -1147,11 +1496,12 @@
             background: '#0b1120',
             borderRadius: '12px',
             padding: '2rem',
-            maxWidth: '800px',
-            maxHeight: '80vh',
+            maxWidth: '900px',
+            maxHeight: '90vh',
             overflow: 'auto',
             border: '1px solid #38bdf8',
-            color: '#e5e7eb'
+            color: '#e5e7eb',
+            margin: 'auto'
           }
         },
         selectedCourse
@@ -1193,11 +1543,12 @@
               ),
               e.createElement(
                 'div',
-                { style: { display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' } },
+                { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' } },
                 courses.map((course) =>
                   e.createElement(
                     'button',
                     {
+                      key: course.id,
                       onClick: () => onSelectCourse(course),
                       style: {
                         background: '#1a1f2e',
@@ -1207,18 +1558,30 @@
                         borderRadius: '8px',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        textAlign: 'left'
+                        textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '0.75rem'
                       },
                       onMouseEnter: (e) => {
-                        e.target.style.background = '#38bdf8'
-                        e.target.style.color = '#000'
+                        e.currentTarget.style.background = '#38bdf8'
+                        e.currentTarget.style.color = '#000'
+                        e.currentTarget.style.transform = 'scale(1.05)'
                       },
                       onMouseLeave: (e) => {
-                        e.target.style.background = '#1a1f2e'
-                        e.target.style.color = '#e5e7eb'
+                        e.currentTarget.style.background = '#1a1f2e'
+                        e.currentTarget.style.color = '#e5e7eb'
+                        e.currentTarget.style.transform = 'scale(1)'
                       }
                     },
-                    course.name
+                    course.image ? e.createElement('img', {
+                      src: course.image,
+                      alt: course.name,
+                      style: { width: '50px', height: '50px', objectFit: 'contain' }
+                    }) : null,
+                    e.createElement('div', { style: { fontWeight: 'bold' } }, course.name),
+                    e.createElement('div', { style: { fontSize: '0.85rem', opacity: 0.8 } }, course.description)
                   )
                 )
               ),
@@ -1356,11 +1719,13 @@
         interests: data.interests,
       }),
       e.createElement(MusicButton, { isMuted: musicMuted, onToggle: () => setMusicMuted(!musicMuted) }),
+      e.createElement(ChatBotButton),
       e.createElement(CoursesModal, { 
         isOpen: coursesOpen, 
         onClose: () => setCoursesOpen(false),
         selectedCourse,
-        onSelectCourse: setSelectedCourse
+        onSelectCourse: setSelectedCourse,
+        courses: data.courses
       }),
       lightbox.isOpen && e.createElement(
           'div',
