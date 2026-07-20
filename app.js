@@ -833,9 +833,77 @@
   }
 
   function SkillsSection({ skills, embedded }) {
+    const skillLogos = {
+      'Python': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'JavaScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+      'TypeScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg',
+      'PHP': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg',
+      'ES6': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+      'React': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+      'Django': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-original.svg',
+      'Django / Django REST': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-original.svg',
+      'Laravel': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg',
+      'React Native': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+      'Electron': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/electron/electron-original.svg',
+      'Inertia.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg',
+      'Next.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg',
+      'Streamlit': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Tailwind CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg',
+      'WCAG': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
+      'Kivy': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Langchain': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Langraph': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'CrewAI': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'AutoGen': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Ollama (Local LLMs)': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Hugging Face': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'RAG (Retrieval-Augmented Generation)': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'LoRA Fine-tuning': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Scikit-Learn': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg',
+      'TensorFlow': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg',
+      'Transformers': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'IBM WatsonAI': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'NLP': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Machine Learning': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg',
+      'PostgreSQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg',
+      'MySQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
+      'SQLite': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg',
+      'NoSQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg',
+      'SQLAlchemy': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Pandas': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg',
+      'Json': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+      'KQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Kafka': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apachekafka/apachekafka-original.svg',
+      'RabbitMQ': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rabbitmq/rabbitmq-original.svg',
+      'Apache Spark': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apachespark/apachespark-original.svg',
+      'Selenium': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg',
+      'Playwright': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+      'Web Scraping': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Web Crawling': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'Docker': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
+      'Git': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg',
+      'GitHub': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+      'Linux': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg',
+      'Bash': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg',
+      'Nginx': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg',
+      'Gunicorn': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'CI/CD': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+      'REST APIs': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+      'AWS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg',
+      'Azure': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg',
+      'Microsoft Fabric': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoft/microsoft-original.svg',
+      'JWT': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+      'OAuth2': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+      'OWASP': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/security/security-original.svg',
+      'CSRF/XSS Protection': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/security/security-original.svg',
+      'MVC': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+      'Microservices': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
+      'Agile/Scrum': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/trello/trello-original.svg',
+      'Jira': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg'
+    }
+
     let groups = []
     if (skills && !Array.isArray(skills)) {
-      // Handle object format from data.js
       groups = Object.keys(skills).map(function(key) {
         return {
           name: key,
@@ -843,7 +911,6 @@
         }
       })
     } else if (skills && Array.isArray(skills)) {
-      // Handle array format if we kept that
       groups = skills.map(function (c) {
         return {
           name: c.name,
@@ -853,13 +920,11 @@
         }
       })
     } else {
-        // Fallback
         groups = [
             {
                 name: 'Programming Languages',
                 skills: ['Python', 'JavaScript', 'TypeScript', 'PHP'],
             },
-            // ... (rest of fallback)
         ]
     }
 
@@ -887,7 +952,18 @@
               'div',
               { className: 'skills-chips' },
               g.skills.map(function (s) {
-                return e.createElement('span', { key: g.name + s }, s)
+                const logoUrl = skillLogos[s]
+                return e.createElement(
+                  'span',
+                  { key: g.name + s, className: 'skill-chip' },
+                  logoUrl ? e.createElement('img', {
+                    src: logoUrl,
+                    alt: s,
+                    className: 'skill-logo',
+                    onError: (e) => { e.target.style.display = 'none' }
+                  }) : null,
+                  s
+                )
               })
             )
           )
@@ -1499,9 +1575,8 @@
         { className: 'section' },
         e.createElement(
           'div',
-          { className: 'container section-grid-two paired-section-grid' },
-          e.createElement(EducationSection, { education: data.education, embedded: true }),
-          e.createElement(AboutSection, { awards: data.awards, embedded: true })
+          { className: 'container' },
+          e.createElement(ExperienceSection, { experiences: data.experience, embedded: false })
         )
       ),
       e.createElement(
@@ -1509,9 +1584,17 @@
         { className: 'section' },
         e.createElement(
           'div',
-          { className: 'container section-grid-two paired-section-grid' },
-          e.createElement(ExperienceSection, { experiences: data.experience, embedded: true }),
-          e.createElement(SkillsSection, { skills: data.skills, embedded: true })
+          { className: 'container' },
+          e.createElement(EducationSection, { education: data.education, embedded: false })
+        )
+      ),
+      e.createElement(
+        'section',
+        { className: 'section' },
+        e.createElement(
+          'div',
+          { className: 'container' },
+          e.createElement(SkillsSection, { skills: data.skills, embedded: false })
         )
       ),
       e.createElement(ProjectsSection, { projects: data.projects, openLightbox }),
