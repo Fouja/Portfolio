@@ -1157,81 +1157,194 @@
     const [input, setInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
 
-    // RAG-enabled sendMessage - calls backend API with resume context
-    const sendMessage = async () => {
-      if (!input.trim()) return
+    function parseFormatted(text) {
+      if (!text) return null
+      var lines = text.split('\n')
+      var elements = []
+      var key = 0
+      for (var i = 0; i < lines.length; i++) {
+        var trimmed = lines[i].trim()
+        if (!trimmed) { elements.push(e.createElement('div', { key: key++, style: { height: '6px' } })); continue }
+        if (/^[A-Z][A-Za-z\s&/()']+$/.test(trimmed) && trimmed.endsWith(':')) {
+          elements.push(e.createElement('div', { key: key++, style: { fontWeight: '700', color: '#22d3ee', fontSize: '0.8rem', marginTop: '8px', marginBottom: '2px', letterSpacing: '0.04em' } }, trimmed)); continue
+        }
+        if (/^[•\-\*]\s/.test(trimmed)) {
+          var content = trimmed.replace(/^[\•\-\*]\s+/, '')
+          elements.push(e.createElement('div', { key: key++, style: { display: 'flex', gap: '6px', paddingLeft: '4px', lineHeight: '1.4' } },
+            e.createElement('span', { style: { color: '#06b6d4', fontWeight: 'bold', flexShrink: 0 } }, '\u203A'),
+            e.createElement('span', { style: { flex: 1 } }, parseInline(content))
+          )); continue
+        }
+        elements.push(e.createElement('div', { key: key++, style: { lineHeight: '1.45', paddingLeft: '2px' } }, parseInline(trimmed)))
+      }
+      return elements
+    }
 
-      const userMessage = { role: 'user', content: input }
+    function parseInline(text) {
+      var parts = []
+      var rem = text
+      var pk = 0
+      while (rem.length > 0) {
+        var boldM = rem.match(/\*\*(.+?)\*\*/)
+        var urlM = rem.match(/(https?:\/\/[^\\s,)]+)/)
+        var next = rem.length; var mt = null; var m = null
+        if (boldM && rem.indexOf(boldM[0]) < next) { next = rem.indexOf(boldM[0]); mt = 'b'; m = boldM }
+        if (urlM && rem.indexOf(urlM[0]) < next) { next = rem.indexOf(urlM[0]); mt = 'u'; m = urlM }
+        if (!m) { parts.push(rem); break }
+        if (next > 0) parts.push(rem.substring(0, next))
+        if (mt === 'b') { parts.push(e.createElement('strong', { key: 'b' + pk++, style: { color: '#e5e7eb' } }, m[1])); rem = rem.substring(next + m[0].length) }
+        else { parts.push(e.createElement('a', { key: 'a' + pk++, href: m[1], target: '_blank', rel: 'noopener noreferrer', style: { color: '#38bdf8', textDecoration: 'underline' } }, m[1].length > 40 ? m[1].substring(0, 37) + '...' : m[1])); rem = rem.substring(next + m[0].length) }
+      }
+      return parts.length === 1 && typeof parts[0] === 'string' ? parts[0] : parts
+    }
+
+    function generateLocalReply(query) {
+      const d = window.PORTFOLIO_DATA || {}
+      const p = d.profile || {}
+      const q = query.toLowerCase()
+      const hits = []
+
+      // Greeting
+      if (/^(hi|hello|hey|yo|sup|bonjour|salut|howdy|hola)/.test(q)) {
+        return "Hey! I'm Fouad's portfolio assistant. Ask me about his skills, experience, projects, education, or how to contact him."
+      }
+
+      // Contact
+      if (/contact|email|phone|reach|hire|available|collaborat|work with/.test(q)) {
+        return `You can reach Fouad at:\n\nEmail: ${p.email || 'Fouadhammani94@gmail.com'}\nPhone: ${p.phone || '(613) 451-0031'}\nLinkedIn: ${p.linkedin_url || ''}\nGitHub: ${p.github_url || ''}\n\nHe's based in ${p.location || 'Ontario, Canada'} and open for opportunities!`
+      }
+
+      // Skills
+      if (/skill|tech|stack|know|language|framework|tool|proficien/.test(q)) {
+        const cats = Object.entries(d.skills || {}).map(([cat, list]) => `• ${cat}: ${list.join(', ')}`)
+        return `Fouad's technical skills:\n\n${cats.join('\n')}\n\nHe's strongest in Python, JavaScript, React, Django, and AI/ML toolchains.`
+      }
+
+      // Experience
+      if (/experience|work|job|career|role|position|employ|company/.test(q)) {
+        const exps = (d.experience || []).map(e => `• ${e.role} at ${e.company} (${e.start}–${e.end})`)
+        return `Fouad's work experience:\n\n${exps.join('\n')}\n\nTotal: ${p.years_experience || 7}+ years across ${p.organizations_worked || 5} organizations. Ask me about a specific role for details!`
+      }
+
+      // Specific experience
+      if (/aci|agro|erp/.test(q)) {
+        const e = (d.experience || []).find(e => e.company && e.company.includes('ACI'))
+        return e ? `${e.role} at ${e.company} (${e.start}–${e.end}):\n\n${e.description}\n\nTechnologies: ${e.technologies || 'Laravel, React, Inertia.js, MySQL, Docker, Electron'}` : 'ACI experience info not found.'
+      }
+      if (/techflow|fastapi/.test(q)) {
+        const e = (d.experience || []).find(e => e.company && e.company.includes('TechFlow'))
+        return e ? `${e.role} at ${e.company} (${e.start}–${e.end}):\n\n${e.description}\n\nTechnologies: ${e.technologies || 'Python, FastAPI, PostgreSQL, LangChain, Redis'}` : 'TechFlow info not found.'
+      }
+      if (/startup|paris|django react 50k/.test(q)) {
+        const e = (d.experience || []).find(e => e.company && e.company.includes('StartUp'))
+        return e ? `${e.role} at ${e.company} (${e.start}–${e.end}):\n\n${e.description}` : 'StartUp Hub info not found.'
+      }
+
+      // Projects
+      if (/project|portfolio|build|develop|creat|app|application|product/.test(q)) {
+        const projs = (d.projects || []).slice(0, 5).map(pr => `• ${pr.title}: ${pr.description ? pr.description.substring(0, 120) + '...' : ''}`)
+        return `Key projects:\n\n${projs.join('\n')}\n\nAsk about a specific project for more details!`
+      }
+
+      // Specific projects
+      if (/ecommerce|e-commerce|django.*react|secure/.test(q)) {
+        const pr = (d.projects || []).find(p => /ecommerce|e-commerce/i.test(p.title))
+        return pr ? `${pr.title}:\n\n${pr.description}\n\nStack: ${pr.tech_stack || 'Django, React, PostgreSQL'}` : 'E-commerce project info not found.'
+      }
+      if (/streamlit|statistics|map|global|indicator/.test(q)) {
+        const pr = (d.projects || []).find(p => /statistic|streamlit|global/i.test(p.title))
+        return pr ? `${pr.title}:\n\n${pr.description}\n\nStack: ${pr.tech_stack || 'Streamlit, Python, Pandas'}` : 'Statistics project info not found.'
+      }
+      if (/ai agent|kivy|ollama|local ai/.test(q)) {
+        const pr = (d.projects || []).find(p => /agent|kivy|ollama/i.test(p.title))
+        return pr ? `${pr.title}:\n\n${pr.description}\n\nStack: ${pr.tech_stack || 'Kivy, Python, Ollama'}` : 'AI Agent project info not found.'
+      }
+      if (/mobile|react native|expo/.test(q)) {
+        const pr = (d.projects || []).find(p => /mobile|react native/i.test(p.title))
+        return pr ? `${pr.title}:\n\n${pr.description}\n\nStack: ${pr.tech_stack || 'React Native, Expo, Django'}` : 'Mobile project info not found.'
+      }
+
+      // Education
+      if (/education|degree|diploma|school|university|college|study|wes/.test(q)) {
+        const edu = (d.education || []).map(e => `• ${e.degree || e.title} — ${e.school || e.institution || ''} (${e.dates || e.start || ''})`)
+        return `Fouad's education:\n\n${edu.join('\n') || 'Education details in data.'}`
+      }
+
+      // AI/ML
+      if (/ai|machine learning|ml|deep learning|langchain|rag|nlp|llm/.test(q)) {
+        return "Fouad is certified in AI Multi-Agent Building (IBM SkillsBuild) and has hands-on experience with:\n\n• LangChain, LangGraph, CrewAI, AutoGen\n• RAG systems (built production RAG for document processing)\n• LoRA Fine-tuning, Prompt Engineering\n• Ollama for local LLM deployment\n• Scikit-Learn, TensorFlow, Transformers\n• NLP and Machine Learning\n\nHe's particularly strong in building multi-agent AI systems and integrating LLMs into production applications."
+      }
+
+      // DevOps
+      if (/devops|docker|kubernetes|ci\/cd|aws|azure|deploy|cloud|linux/.test(q)) {
+        return "Fouad's DevOps & Cloud skills:\n\n• Docker & Kubernetes for containerization\n• CI/CD with GitHub Actions\n• AWS & Azure cloud platforms\n• Linux server administration\n• Nginx, Gunicorn for deployment\n• Microsoft Fabric\n\nHe has experience deploying Dockerized apps on Linux VPS with SSH/SSL."
+      }
+
+      // Certifications
+      if (/certif|badge|credential/.test(q)) {
+        return "Fouad's certifications:\n\n• AI Multi-agent Builder – IBM SkillsBuild\n• Agile Management – IBM SkillsBuild\n• Python & Django – W3Schools\n• B2 English – Islington Centre of English\n• Azure & Microsoft Fabric – Microsoft Learn\n• Machine Learning – Kaggle\n• Big Data Foundations Level 2"
+      }
+
+      // Languages
+      if (/language|french|english|arabic|bilingual/.test(q)) {
+        return "Fouad speaks:\n\n• French: Native\n• Arabic: Native\n• English: Upper Intermediate (B2)\n\nHe's bilingual French-English with strong communication skills."
+      }
+
+      // About / summary
+      if (/about|summary|who|tell me about|background|overview|introduce/.test(q)) {
+        return `${p.name || 'Fouad Hammani'} — ${p.headline || 'AI Software Engineer'}\n\n${p.summary || 'AI Software Engineer with 7+ years of experience in full-stack development, AI/ML, and data engineering.'}\n\nKey highlights:\n${(p.highlights || []).map(h => '• ' + h).join('\n')}`
+      }
+
+      // Location
+      if (/where|location|city|country|canada|ontario|algeria|paris/.test(q)) {
+        return `Fouad is based in ${p.location || 'Ontario, Canada'}. He has worked in Algiers (Algeria), Paris (France), and remotely. He's open for opportunities and available for remote work.`
+      }
+
+      // Philosophy / interests
+      if (/hobby|interest|free time|philosoph|music|sport|basketball/.test(q)) {
+        return "Outside of tech, Fouad is interested in:\n\nBasketball, Ping-Pong, OSINT, Emerging Technologies, Music, Philosophy, and History."
+      }
+
+      // Default
+      return "I can help you learn about Fouad's:\n\n• Skills & tech stack\n• Work experience\n• Projects\n• Education & certifications\n• AI/ML expertise\n• How to contact him\n\nTry asking something like \"What are Fouad's skills?\" or \"Tell me about his projects!\""
+    }
+
+    const sendMessage = async (overrideQuestion) => {
+      const question = overrideQuestion || input
+      if (!question.trim()) return
+
+      const userMessage = { role: 'user', content: question }
       setMessages((prev) => [...prev, userMessage])
       setInput('')
       setIsLoading(true)
 
       try {
-        // Try to call backend API first (RAG-enabled)
-        // Backend should be running at: http://localhost:3000/api/chat
-        // If backend not available, fallback to direct API
-        
-        const backendUrl = 'http://localhost:3000/api/chat'
-        
+        // Try Pollinations API first (short prompt, fast)
+        const shortPrompt = `You are Fouad Hammani's portfolio AI assistant. Fouad is an AI Software Engineer in Ontario. Skills: Python, JS, TS, React, Django, Laravel, Langchain, PostgreSQL, Docker. Answer concisely. Question: ${question}`
+        const apiUrl = `https://text.pollinations.ai/${encodeURIComponent(shortPrompt)}`
+
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 8000)
+
         try {
-          const backendResponse = await fetch(backendUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              message: input,
-              context: {
-                courses: window.PORTFOLIO_DATA?.courses || [],
-                profile: window.PORTFOLIO_DATA?.profile || {}
-              }
-            })
-          })
-          
-          if (backendResponse.ok) {
-            const data = await backendResponse.json()
-            const botMessage = {
-              role: 'bot',
-              content: data.response || 'Could not process request.'
+          const apiResponse = await fetch(apiUrl, { signal: controller.signal })
+          clearTimeout(timeoutId)
+          if (apiResponse.ok) {
+            const reply = (await apiResponse.text()).trim()
+            if (reply && reply.length > 5 && !reply.includes('error')) {
+              setMessages((prev) => [...prev, { role: 'bot', content: reply }])
+              return
             }
-            setMessages((prev) => [...prev, botMessage])
-            return
           }
-        } catch (backendError) {
-          console.warn('Backend not available, using fallback:', backendError)
+        } catch (apiErr) {
+          // API failed, fall through to local
         }
 
-        // Fallback: Direct API call (when backend is unavailable)
-        // Note: This requires GEMINI_API_KEY env variable on backend
-        // In production, never expose API keys to frontend
-        const fallbackResponse = await fetch(
-          'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=YOUR_API_KEY_HERE',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{
-                role: 'user',
-                parts: [{
-                  text: `You are Fouad's AI assistant. Help users learn about Fouad's portfolio, courses, experience, and skills.\n\nUser: ${input}`
-                }]
-              }],
-              generationConfig: { temperature: 0.7, topP: 0.8, maxOutputTokens: 500 }
-            })
-          }
-        )
-
-        if (!fallbackResponse.ok) throw new Error('API Error')
-        const data = await fallbackResponse.json()
-        const botMessage = {
-          role: 'bot',
-          content: data.candidates?.[0]?.content?.parts?.[0]?.text || 'Could not process request.'
-        }
-        setMessages((prev) => [...prev, botMessage])
+        // Fallback: smart local response from portfolio data
+        const localReply = generateLocalReply(question)
+        setMessages((prev) => [...prev, { role: 'bot', content: localReply }])
       } catch (error) {
-        console.error('Chat error:', error)
-        setMessages((prev) => [...prev, {
-          role: 'bot',
-          content: 'Sorry, I encountered an error. Please set up the backend API for full RAG capabilities.'
-        }])
+        setMessages((prev) => [...prev, { role: 'bot', content: generateLocalReply(question) }])
       } finally {
         setIsLoading(false)
       }
@@ -1241,63 +1354,94 @@
       e.Fragment, null,
       e.createElement('button', {
         onClick: () => setIsOpen(!isOpen),
-        title: 'Chat with AI Assistant - Speak with me',
+        title: 'Chat with me about what I can do',
         style: {
-          position: 'fixed', bottom: '80px', right: '20px', width: '50px', height: '50px',
-          borderRadius: '50%', background: '#06b6d4', border: 'none', color: '#fff',
-          fontSize: '24px', cursor: 'pointer', zIndex: 99, boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
-          transition: 'all 0.3s ease', animation: 'pulse 2s infinite'
+          position: 'fixed', bottom: '80px', right: '20px', height: '50px',
+          borderRadius: '25px', background: 'linear-gradient(135deg, #06b6d4, #0891b2)', border: 'none', color: '#fff',
+          fontSize: '14px', cursor: 'pointer', zIndex: 99, boxShadow: '0 4px 15px rgba(6,182,212,0.4)',
+          transition: 'all 0.3s ease', animation: 'pulse 2s infinite',
+          display: 'flex', alignItems: 'center', gap: '8px', padding: '0 16px', fontWeight: '600', fontFamily: 'Inter, sans-serif'
         },
-        onMouseEnter: (e) => { e.currentTarget.style.background = '#0891b2'; e.currentTarget.style.transform = 'scale(1.15)' },
-        onMouseLeave: (e) => { e.currentTarget.style.background = '#06b6d4'; e.currentTarget.style.transform = 'scale(1)' }
-      }, '💬 Chat'),
+        onMouseEnter: (e) => { e.currentTarget.style.background = 'linear-gradient(135deg, #0891b2, #0e7490)'; e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(6,182,212,0.5)' },
+        onMouseLeave: (e) => { e.currentTarget.style.background = 'linear-gradient(135deg, #06b6d4, #0891b2)'; e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(6,182,212,0.4)' }
+      },
+        e.createElement('span', { style: { fontSize: '20px' } }, '\uD83D\uDCAC'),
+        e.createElement('span', null, 'Chat with me')
+      ),
       isOpen ? e.createElement('div', {
         style: {
-          position: 'fixed', bottom: '140px', right: '20px', width: '350px', height: '500px',
-          background: '#0b1120', borderRadius: '12px', border: '2px solid #06b6d4',
-          boxShadow: '0 8px 24px rgba(6,182,212,0.3)', zIndex: 99,
-          display: 'flex', flexDirection: 'column', overflow: 'hidden'
+          position: 'fixed', bottom: '140px', right: '20px', width: '380px', height: '520px',
+          background: '#0b1120', borderRadius: '16px', border: '1px solid rgba(6,182,212,0.3)',
+          boxShadow: '0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(6,182,212,0.1)', zIndex: 99,
+          display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: 'Inter, sans-serif'
         }
       },
         e.createElement('div', {
-          style: { background: '#06b6d4', color: '#000', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }
+          style: { background: 'linear-gradient(135deg, #06b6d4, #0891b2)', color: '#000', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }
         },
-          e.createElement('div', { style: { fontWeight: 'bold', fontSize: '0.95rem' } }, '🤖 Speak with me'),
+          e.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
+            e.createElement('span', { style: { fontSize: '20px' } }, '\uD83E\uDD16'),
+            e.createElement('div', null,
+              e.createElement('div', { style: { fontWeight: 'bold', fontSize: '0.95rem' } }, 'Fouad\u2019s Assistant'),
+              e.createElement('div', { style: { fontSize: '0.72rem', opacity: 0.8 } }, 'Ask me about skills, projects, experience...')
+            )
+          ),
           e.createElement('button', {
             onClick: () => { setIsOpen(false); setMessages([]) },
-            style: { background: 'none', border: 'none', color: '#000', fontSize: '20px', cursor: 'pointer' }
-          }, '×')
+            style: { background: 'rgba(0,0,0,0.15)', border: 'none', color: '#000', fontSize: '18px', cursor: 'pointer', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }
+          }, '\u00D7')
         ),
         e.createElement('div', {
-          style: { flex: 1, overflow: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }
+          style: { flex: 1, overflow: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', background: '#0b1120' }
         },
-          messages.length === 0 ? e.createElement('div', {
-            style: { color: '#9ca3af', fontSize: '0.9rem', textAlign: 'center', marginTop: '2rem' }
-          }, 'Ask me about courses, experience, or skills!') : messages.map((msg, idx) =>
-            e.createElement('div', { key: idx, style: { display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', marginBottom: '0.5rem' } },
+          messages.length === 0 ? e.createElement('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '12px', color: '#9ca3af', textAlign: 'center', padding: '0 20px' } },
+            e.createElement('div', { style: { fontSize: '36px' } }, '\uD83E\uDD16'),
+            e.createElement('div', { style: { fontWeight: '600', color: '#e5e7eb', fontSize: '0.95rem' } }, 'Hi! I\u2019m Fouad\u2019s AI Assistant'),
+            e.createElement('div', { style: { fontSize: '0.8rem', lineHeight: '1.5', color: '#9ca3af' } }, 'I can tell you about his skills, experience, projects, education, or how to reach him.'),
+            e.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center', marginTop: '4px' } },
+              ['What are your skills?', 'Show me your projects', 'How can I contact you?', 'Tell me about your AI work'].map(function(q, i) {
+                return e.createElement('button', {
+                  key: i, onClick: function() { sendMessage(q) },
+                  style: { background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.3)', color: '#22d3ee', borderRadius: '16px', padding: '5px 12px', fontSize: '0.75rem', cursor: 'pointer', transition: 'all 0.2s' },
+                  onMouseEnter: function(ev) { ev.currentTarget.style.background = 'rgba(6,182,212,0.25)' },
+                  onMouseLeave: function(ev) { ev.currentTarget.style.background = 'rgba(6,182,212,0.12)' }
+                }, q)
+              })
+            )
+          ) : messages.map(function(msg, idx) {
+            return e.createElement('div', { key: idx, style: { display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' } },
               e.createElement('div', {
                 style: {
-                  maxWidth: '80%', padding: '0.75rem 1rem', borderRadius: '8px',
-                  background: msg.role === 'user' ? '#06b6d4' : '#1a1f2e',
-                  color: msg.role === 'user' ? '#000' : '#e5e7eb', fontSize: '0.9rem', wordWrap: 'break-word'
+                  maxWidth: '85%', padding: '10px 14px', borderRadius: msg.role === 'user' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
+                  background: msg.role === 'user' ? 'linear-gradient(135deg, #06b6d4, #0891b2)' : '#141b2d',
+                  color: msg.role === 'user' ? '#000' : '#d1d5db', fontSize: '0.85rem', wordWrap: 'break-word',
+                  border: msg.role === 'bot' ? '1px solid rgba(6,182,212,0.15)' : 'none',
+                  lineHeight: '1.5'
                 }
-              }, msg.content)
+              }, msg.role === 'bot' ? parseFormatted(msg.content) : msg.content)
             )
-          )
+          }),
+          isLoading ? e.createElement('div', { style: { display: 'flex', gap: '4px', padding: '8px 14px', background: '#141b2d', borderRadius: '14px', width: 'fit-content', border: '1px solid rgba(6,182,212,0.15)' } },
+            e.createElement('span', { style: { animation: 'blink 1.4s infinite both', color: '#06b6d4', fontSize: '0.8rem' } }, '\u25CF'),
+            e.createElement('span', { style: { animation: 'blink 1.4s infinite 0.2s both', color: '#06b6d4', fontSize: '0.8rem' } }, '\u25CF'),
+            e.createElement('span', { style: { animation: 'blink 1.4s infinite 0.4s both', color: '#06b6d4', fontSize: '0.8rem' } }, '\u25CF')
+          ) : null
         ),
         e.createElement('div', {
-          style: { padding: '1rem', borderTop: '1px solid #1f2933', display: 'flex', gap: '0.5rem' }
+          style: { padding: '12px', borderTop: '1px solid rgba(6,182,212,0.15)', display: 'flex', gap: '8px', background: '#0b1120' }
         },
           e.createElement('input', {
-            type: 'text', value: input, onChange: (evt) => setInput(evt.target.value),
-            onKeyPress: (evt) => { if (evt.key === 'Enter' && !evt.shiftKey) { evt.preventDefault(); sendMessage() } },
-            placeholder: 'Ask me...', disabled: isLoading,
-            style: { flex: 1, background: '#1a1f2e', border: '1px solid #38bdf8', borderRadius: '6px', color: '#e5e7eb', padding: '0.5rem', fontSize: '0.9rem', outline: 'none' }
+            type: 'text', value: input, onChange: function(evt) { setInput(evt.target.value) },
+            onKeyPress: function(evt) { if (evt.key === 'Enter' && !evt.shiftKey) { evt.preventDefault(); sendMessage() } },
+            placeholder: 'Ask me anything...', disabled: isLoading,
+            style: { flex: 1, background: '#141b2d', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '10px', color: '#e5e7eb', padding: '10px 14px', fontSize: '0.85rem', outline: 'none', transition: 'border-color 0.2s' },
+            onFocus: function(ev) { ev.target.style.borderColor = '#06b6d4' },
+            onBlur: function(ev) { ev.target.style.borderColor = 'rgba(6,182,212,0.25)' }
           }),
           e.createElement('button', {
             onClick: sendMessage, disabled: isLoading,
-            style: { background: '#06b6d4', border: 'none', color: '#000', padding: '0.5rem 1rem', borderRadius: '6px', cursor: isLoading ? 'not-allowed' : 'pointer', fontWeight: 'bold', opacity: isLoading ? 0.6 : 1 }
-          }, isLoading ? '...' : '→')
+            style: { background: isLoading ? 'rgba(6,182,212,0.3)' : 'linear-gradient(135deg, #06b6d4, #0891b2)', border: 'none', color: '#000', width: '38px', height: '38px', borderRadius: '10px', cursor: isLoading ? 'not-allowed' : 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }
+          }, isLoading ? '\u2026' : '\u2192')
         )
       ) : null
     )

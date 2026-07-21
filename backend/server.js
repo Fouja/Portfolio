@@ -2,22 +2,20 @@
  * Backend Server for Resume-Based Chatbot with RAG
  * 
  * This server provides the `/api/chat` endpoint that:
- * 1. Retrieves relevant resume sections using embeddings
- * 2. Sends them to Gemini API with user query
+ * 1. Retrieves relevant resume sections using keyword matching
+ * 2. Sends them to Pollinations.ai (free, no API key) with user query
  * 3. Returns AI response based on resume context
  * 
  * Setup:
- * 1. npm install express cors axios chroma-sdk @google/generative-ai dotenv
- * 2. Create .env with GEMINI_API_KEY=your_key
- * 3. Add your resume text to resume.txt
- * 4. node backend.js
- * 5. Frontend will call http://localhost:3000/api/chat
+ * 1. npm install express cors dotenv
+ * 2. Add your resume text to resume.txt
+ * 3. node server.js
+ * 4. Frontend will call http://localhost:3000/api/chat
  */
 
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -31,8 +29,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(cors());
 app.use(express.json());
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const POLLINATIONS_URL = 'https://text.pollinations.ai';
 
 // In-memory resume storage (in production, use vector database like Chroma)
 let resumeChunks = [];
@@ -128,24 +125,31 @@ ${coursesInfo}
 
 Always be helpful, professional, and concise. Keep responses under 500 tokens.`;
 
-    // Call Gemini API with RAG context
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    // Call Pollinations.ai API (free, no API key needed)
+    // Using simple GET endpoint - no Turnstile token required
+    const prompt = systemPrompt + '\n\nUser Question: ' + message
+    const encoded = encodeURIComponent(prompt)
 
-    const response = await model.generateContent({
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: systemPrompt + '\n\nUser Question: ' + message }]
-        }
-      ],
-      generationConfig: {
-        temperature: 0.7,
-        topP: 0.8,
-        maxOutputTokens: 500
+    let responseText
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const response = await fetch(`${POLLINATIONS_URL}/${encoded}`);
+
+      if (response.ok) {
+        responseText = await response.text();
+        break;
       }
-    });
 
-    const responseText = response.response.text();
+      if (attempt < 2) {
+        await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+        continue;
+      }
+
+      throw new Error(`Pollinations API error ${response.status}`);
+    }
+
+    if (!responseText || !responseText.trim()) {
+      throw new Error('Empty response from Pollinations API');
+    }
 
     res.json({
       response: responseText,
@@ -166,7 +170,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     resumeChunksLoaded: resumeChunks.length,
-    apiKey: process.env.GEMINI_API_KEY ? 'configured' : 'missing'
+    api: 'Pollinations.ai (free, no key needed)'
   });
 });
 
