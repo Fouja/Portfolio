@@ -67,14 +67,9 @@
       },
     ]
 
-    const aboutItems =
-      profile?.highlights && profile.highlights.length
-        ? profile.highlights
-        : [
-            'Full-stack engineer with strong foundations in Python, Django, React, and Laravel, building secure and scalable systems from ERP platforms to e-commerce and AI-powered agents.',
-            'Experienced in microservices and monolithic architectures, testable APIs, and clean data flows across relational and NoSQL databases.',
-            'Practical background in B2B/B2C environments, data analytics, and automation that improves operational efficiency and decision-making.',
-          ]
+    const summaryText = profile?.summary ||
+      'AI Software Engineer with 7+ years of experience in IT environments, SaaS/IaC architecture. Expertise in Web development (back-end and front-end) using HTML5, CSS, JavaScript, React, Python, and PHP. Certified Multi-agent Builder using Langchain, Langraph, CrewAI, and AutoGen. Extensive experience in database administration (SQL, PostgreSQL, MySQL, KQL, Apache Spark, Kafka). Proficient in Agile methodologies and prompt engineering for LLMs/NLP personalization with RAG and LoRA Fine-tuning. Bilingual (French/English) with strong communication skills.'
+    const summaryPoints = summaryText.split(/\.\s+/).filter(function(s) { return s.trim().length > 0 }).map(function(s) { return s.trim().replace(/\.$/, '') })
 
     return e.createElement(
       e.Fragment,
@@ -85,7 +80,7 @@
         { id: 'about', className: 'section intro-section' },
         e.createElement(
           'div',
-          { className: 'container intro-grid' },
+          { className: 'container' },
           e.createElement(
             'div',
             { className: 'card presentation-card' },
@@ -125,7 +120,7 @@
             e.createElement(
               'ul',
               { className: 'about-bullets hero-summary' },
-              aboutItems.map(function (item, i) {
+              summaryPoints.map(function (item, i) {
                 return e.createElement('li', { key: i }, item)
               })
             ),
@@ -184,7 +179,7 @@
                 )
               })
             )
-          ),
+          )
 
         )
       )

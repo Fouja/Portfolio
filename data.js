@@ -363,6 +363,9 @@ window.PORTFOLIO_DATA = {
   interests: [
     "Basketball",
     "Ping-Pong",
+    "Workout",
+    "Scubadiving",
+    "Classical Piano",
     "OSINT (Open-Source Intelligence)",
     "Emerging Technologies",
     "Music",
