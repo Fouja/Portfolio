@@ -123,10 +123,11 @@
               )
             ),
             e.createElement(
-              'p',
-              { className: 'hero-summary' },
-              profile?.summary ||
-                'Solution-oriented Software Engineer with 7+ years in full-stack development, data automation, and AI integration. I build secure, scalable web and mobile solutions across B2B/B2C environments, from ERPs and e-commerce to AI-powered agents.'
+              'ul',
+              { className: 'about-bullets hero-summary' },
+              aboutItems.map(function (item, i) {
+                return e.createElement('li', { key: i }, item)
+              })
             ),
             e.createElement(
               'div',
@@ -184,26 +185,7 @@
               })
             )
           ),
-          e.createElement(
-            'div',
-            null,
-            e.createElement(
-              'div',
-              { className: 'section-header' },
-              e.createElement('h2', { className: 'section-title' }, 'About Me')
-            ),
-            e.createElement(
-              'div',
-              { className: 'card about-intro-card' },
-              e.createElement(
-                'ul',
-                { className: 'about-bullets' },
-                aboutItems.map(function (item, i) {
-                  return e.createElement('li', { key: i }, item)
-                })
-              )
-            )
-          )
+
         )
       )
     )
@@ -1639,7 +1621,7 @@
 
     useEffect(() => {
       if (!audioRef.current) {
-        const audio = new Audio('./assets/Ayla.mpga')
+        const audio = new Audio('./assets/malice%20mizer%20-%20gekka%20no%20yasoukyoku%20(instrumental%2Bsped%20up).mp3')
         audio.loop = true
         audio.volume = 0.3
         audio.muted = musicMuted
