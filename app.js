@@ -30,17 +30,31 @@
       { id: 'hero', className: 'media-hero-section' },
       e.createElement(
         'div',
-        { className: 'hero-media-frame' },
+        { className: 'hero-media-frame hero-3d-scene' },
         profile?.photo
-          ? e.createElement('img', {
-              src: profile.photo,
-              alt: 'Fouad Hammani profile',
-              className: 'carousel-image active',
-              fetchpriority: 'high',
-              decoding: 'async',
-              width: 1920,
-              height: 1280,
-            })
+          ? e.createElement(
+              'div',
+              {
+                className: 'hero-3d-card',
+                'data-tilt': true,
+                'data-tilt-max': '15',
+                'data-tilt-speed': '400',
+                'data-tilt-glare': true,
+                'data-tilt-max-glare': '0.35',
+                'data-tilt-perspective': '1000',
+                'data-tilt-scale': '1.03',
+              },
+              e.createElement('div', { className: 'hero-3d-bg' }),
+              e.createElement('img', {
+                src: profile.photo,
+                alt: 'Fouad Hammani profile',
+                className: 'carousel-image active hero-3d-image',
+                fetchpriority: 'high',
+                decoding: 'async',
+                width: 1920,
+                height: 1280,
+              })
+            )
           : null
       )
     )
@@ -700,6 +714,139 @@
     )
   }
 
+  function ProjectCard({ p, openLightbox, variant }) {
+    const techs = (p.tech_stack || '')
+      .split(',')
+      .map(function (s) {
+        return s.trim()
+      })
+      .filter(Boolean)
+
+    const projectImages =
+      p.images && p.images.length > 0 ? p.images : p.image_url ? [p.image_url] : []
+    const mainImage = projectImages.length > 0 ? projectImages[0] : null
+    const cardClass =
+      variant === 'featured' ? 'project-card project-card-featured' : 'project-card'
+
+    return e.createElement(
+      'article',
+      { key: p.id || p.title, className: cardClass },
+      e.createElement(
+        'div',
+        { className: 'project-media-wrap' },
+        p.video
+          ? e.createElement('video', {
+              src: p.video,
+              controls: true,
+              className: 'project-video',
+              style: { width: '100%', borderRadius: '8px 8px 0 0' },
+              title: p.title + ' demo video',
+              preload: 'none',
+              poster: mainImage,
+            })
+          : mainImage
+            ? e.createElement(
+                'div',
+                {
+                  className: 'project-image-wrap',
+                  style: { cursor: 'pointer', position: 'relative' },
+                  onClick: () => openLightbox(projectImages, 0),
+                },
+                e.createElement('img', {
+                  src: mainImage,
+                  alt: p.title + ' screenshot',
+                  className: 'project-image',
+                  loading: variant === 'featured' ? 'eager' : 'lazy',
+                  decoding: 'async',
+                }),
+                projectImages.length > 1
+                  ? e.createElement(
+                      'div',
+                      {
+                        style: {
+                          position: 'absolute',
+                          bottom: '10px',
+                          right: '10px',
+                          background: 'rgba(0,0,0,0.7)',
+                          color: '#fff',
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          fontSize: '0.8rem',
+                        },
+                      },
+                      `+${projectImages.length - 1} more`
+                    )
+                  : null
+              )
+            : null
+      ),
+      e.createElement(
+        'div',
+        { className: 'project-body' },
+        e.createElement('div', { className: 'project-title' }, p.title),
+        p.subtitle
+          ? e.createElement('div', { className: 'project-subtitle' }, p.subtitle)
+          : null,
+        e.createElement('p', { className: 'project-description' }, p.description),
+        techs.length
+          ? e.createElement(
+              'div',
+              { className: 'project-tech' },
+              techs.map(function (t) {
+                return e.createElement('span', { key: t }, t)
+              })
+            )
+          : null,
+        e.createElement(
+          'div',
+          { className: 'project-links' },
+          projectImages.length > 1
+            ? e.createElement(
+                'button',
+                {
+                  type: 'button',
+                  className: 'project-link',
+                  style: {
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    font: 'inherit',
+                  },
+                  onClick: () => openLightbox(projectImages, 0),
+                },
+                'View Gallery'
+              )
+            : null,
+          p.live_url
+            ? e.createElement(
+                'a',
+                {
+                  href: p.live_url,
+                  target: '_blank',
+                  rel: 'noreferrer',
+                  className: 'project-link',
+                },
+                'Live Demo'
+              )
+            : null,
+          p.code_url
+            ? e.createElement(
+                'a',
+                {
+                  href: p.code_url,
+                  target: '_blank',
+                  rel: 'noreferrer',
+                  className: 'project-link',
+                },
+                'View Code'
+              )
+            : null
+        )
+      )
+    )
+  }
+
   function ProjectsSection({ projects, openLightbox }) {
     const [tab, setTab] = useState('all')
 
@@ -722,7 +869,10 @@
             },
           ]
 
-    const filtered = mapped.filter(function (p) {
+    const featured = mapped[0]
+    const rest = mapped.slice(1)
+
+    const filtered = rest.filter(function (p) {
       if (tab === 'all') return true
       return p.project_type === tab
     })
@@ -745,7 +895,18 @@
         ),
         e.createElement(
           'div',
-          { style: { marginBottom: '1rem' } },
+          { className: 'featured-project-wrap' },
+          e.createElement(
+            'div',
+            { className: 'featured-project-label' },
+            e.createElement('span', { className: 'featured-project-star' }, '★'),
+            ' Featured Project — The one I\'m most proud of'
+          ),
+          e.createElement(ProjectCard, { p: featured, openLightbox, variant: 'featured' })
+        ),
+        e.createElement(
+          'div',
+          { style: { marginBottom: '1rem', marginTop: '2.5rem' } },
           e.createElement(
             'div',
             { className: 'tabs' },
@@ -791,133 +952,7 @@
           'div',
           { className: 'projects-grid' },
           filtered.map(function (p) {
-            const techs = (p.tech_stack || '')
-              .split(',')
-              .map(function (s) {
-                return s.trim()
-              })
-              .filter(Boolean)
-            
-            const projectImages = p.images && p.images.length > 0 ? p.images : (p.image_url ? [p.image_url] : [])
-            const mainImage = projectImages.length > 0 ? projectImages[0] : null
-
-            return e.createElement(
-              'article',
-              { key: p.id || p.title, className: 'project-card' },
-              e.createElement(
-                'div',
-                { className: 'project-media-wrap' },
-                p.video 
-                  ? e.createElement('video', {
-                      src: p.video,
-                      controls: true,
-                      className: 'project-video',
-                      style: { width: '100%', borderRadius: '8px 8px 0 0' },
-                      title: p.title + ' demo video',
-                      preload: 'none',
-                      poster: mainImage
-                    })
-                  : (mainImage
-                      ? e.createElement('div', {
-                          className: 'project-image-wrap',
-                          style: { cursor: 'pointer', position: 'relative' },
-                          onClick: () => openLightbox(projectImages, 0)
-                        },
-                        e.createElement('img', {
-                          src: mainImage,
-                          alt: p.title + ' screenshot',
-                          className: 'project-image',
-                          loading: 'lazy',
-                          decoding: 'async',
-                        }),
-                        projectImages.length > 1 
-                          ? e.createElement('div', {
-                              style: {
-                                position: 'absolute',
-                                bottom: '10px',
-                                right: '10px',
-                                background: 'rgba(0,0,0,0.7)',
-                                color: '#fff',
-                                padding: '4px 8px',
-                                borderRadius: '4px',
-                                fontSize: '0.8rem'
-                              }
-                            }, `+${projectImages.length - 1} more`)
-                          : null
-                        )
-                      : null)
-              ),
-              e.createElement(
-                'div',
-                { className: 'project-body' },
-                e.createElement(
-                  'div',
-                  { className: 'project-title' },
-                  p.title
-                ),
-                p.subtitle
-                  ? e.createElement(
-                      'div',
-                      { className: 'project-subtitle' },
-                      p.subtitle
-                    )
-                  : null,
-                e.createElement(
-                  'p',
-                  { className: 'project-description' },
-                  p.description
-                ),
-                techs.length
-                  ? e.createElement(
-                      'div',
-                      { className: 'project-tech' },
-                      techs.map(function (t) {
-                        return e.createElement('span', { key: t }, t)
-                      })
-                    )
-                  : null,
-                e.createElement(
-                  'div',
-                  { className: 'project-links' },
-                  projectImages.length > 1
-                    ? e.createElement(
-                        'button',
-                        {
-                          type: 'button',
-                          className: 'project-link',
-                          style: { background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' },
-                          onClick: () => openLightbox(projectImages, 0)
-                        },
-                        'View Gallery'
-                      )
-                    : null,
-                  p.live_url
-                    ? e.createElement(
-                        'a',
-                        {
-                          href: p.live_url,
-                          target: '_blank',
-                          rel: 'noreferrer',
-                          className: 'project-link',
-                        },
-                        'Live Demo'
-                      )
-                    : null,
-                  p.code_url
-                    ? e.createElement(
-                        'a',
-                        {
-                          href: p.code_url,
-                          target: '_blank',
-                          rel: 'noreferrer',
-                          className: 'project-link',
-                        },
-                        'View Code'
-                      )
-                    : null
-                )
-              )
-            )
+            return e.createElement(ProjectCard, { p, openLightbox, variant: 'standard' })
           })
         )
       )

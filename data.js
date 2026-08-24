@@ -195,22 +195,64 @@ window.PORTFOLIO_DATA = {
   ],
   badges: [
     {
-      name: "Agile Explorer",
+      name: "Vulnerability Management",
       issuer: "IBM SkillsBuild",
-      url: "https://www.credly.com/badges/34a87604-f82f-480c-998b-d7b0c9f290f9",
-      image: "https://images.credly.com/images/3b7846e2-bdbd-4ed6-8543-182f47502190/linkedin_thumb_image.png"
+      url: "https://www.credly.com/badges/786780bc-f6a8-40d1-8a7f-2ad0ec39e3df",
+      image: "https://images.credly.com/images/2fdda845-70ac-493d-9f37-533773d63be0/image.png"
+    },
+    {
+      name: "Governance, Risk, Compliance, and Data Privacy",
+      issuer: "IBM SkillsBuild",
+      url: "https://www.credly.com/badges/e88bb138-9372-4104-a468-83b4cad9d737",
+      image: "https://images.credly.com/images/5d324f5d-18fa-43ee-8321-be88763c9e14/image.png"
+    },
+    {
+      name: "Quantum Machine Learning",
+      issuer: "IBM",
+      url: "https://www.credly.com/badges/d0e22ec3-c2bc-4d44-bd98-5cace2e9b6cf",
+      image: "https://images.credly.com/images/6474ba18-3b83-4a34-878d-158e5869a20d/Quantum_20Machine_20Learning.png"
+    },
+    {
+      name: "Retrieval-Augmented Generation for Enhanced AI Outputs",
+      issuer: "IBM SkillsBuild",
+      url: "https://www.credly.com/badges/750c4fed-6389-4dfd-94ad-41980b3f04d0",
+      image: "https://images.credly.com/images/2dbf6354-48b2-4fa6-b350-8944a15f82de/Retrieval-Augmented_20Generation_20for_20Enhanced_20AI_20Outputs.png"
+    },
+    {
+      name: "Make Agentic AI Work for You",
+      issuer: "IBM SkillsBuild",
+      url: "https://www.credly.com/badges/7d23904f-021b-4ab3-ad95-792da7b10281",
+      image: "https://images.credly.com/images/124daa9f-13ce-43be-b3fd-aa45e3924245/Make_20Agentic_20AI_20Work_20for_20You.png"
+    },
+    {
+      name: "Unsupervised Learning Methods",
+      issuer: "IBM SkillsBuild",
+      url: "https://www.credly.com/badges/98ddd451-b3a4-44ab-b92f-9788bee8e286",
+      image: "https://images.credly.com/images/2d511587-8392-47b5-ad9f-300d9d29a145/image.png"
+    },
+    {
+      name: "Supervised Learning Methods",
+      issuer: "IBM SkillsBuild",
+      url: "https://www.credly.com/badges/a230d6b1-a60f-4cee-a386-3b9ff3b30f5c",
+      image: "https://images.credly.com/images/ee025107-4651-4165-ab0a-c72884045e7b/image.png"
     },
     {
       name: "Build an AI Agent",
       issuer: "IBM SkillsBuild",
       url: "https://www.credly.com/badges/31a3151e-cbf6-4ba1-8d7b-0eb40e29811b",
-      image: "https://images.credly.com/images/d8f30e8e-4c24-42e8-bb15-b106bb082614/linkedin_thumb_BadgeEmblem_BuildAnAIAgent.png"
+      image: "https://images.credly.com/images/d8f30e8e-4c24-42e8-bb15-b106bb082614/BadgeEmblem_BuildAnAIAgent.png"
+    },
+    {
+      name: "Agile Explorer",
+      issuer: "IBM SkillsBuild",
+      url: "https://www.credly.com/badges/34a87604-f82f-480c-998b-d7b0c9f290f9",
+      image: "https://images.credly.com/images/3b7846e2-bdbd-4ed6-8543-182f47502190/image.png"
     },
     {
       name: "Verified International Academic Qualifications",
       issuer: "World Education Services",
       url: "https://www.credly.com/badges/581a26dc-73fa-4d74-80e8-6fba32a2dceb",
-      image: "https://images.credly.com/images/28243fa9-71f4-4b55-9fb3-eab99e1dff95/linkedin_thumb_image.png"
+      image: "https://images.credly.com/images/28243fa9-71f4-4b55-9fb3-eab99e1dff95/image.png"
     }
   ],
   certifications: [
@@ -218,16 +260,22 @@ window.PORTFOLIO_DATA = {
       name: "IBM Data Analysis",
       issuer: "IBM",
       file: "./assets/Certifications/Ibm_fouadhammani_certifcate_data_analyse.pdf",
-      image: "./assets/Certifications/image-1.webp"
+      image: "./assets/Certifications/IBM_Data_Analysis.webp"
     },
     {
-      name: "Intro to Deep Learning",
+      name: "NLP and LLM Transformers",
+      issuer: "Hugging Face",
+      file: "./assets/Certifications/NLP_and_LLM_Transformers_HuggingFace.webp",
+      image: "./assets/Certifications/NLP_and_LLM_Transformers_HuggingFace.webp"
+    },
+    {
+      name: "Deep Learning",
       issuer: "Kaggle",
       file: "./assets/Certifications/Fouad Hammani - Intro to Deep Learning.webp",
       image: "./assets/Certifications/Fouad Hammani - Intro to Deep Learning.webp"
     },
     {
-      name: "Intro to Machine Learning",
+      name: "Machine Learning",
       issuer: "Kaggle",
       file: "./assets/Certifications/Fouad Hammani - Intro to Machine Learning.webp",
       image: "./assets/Certifications/Fouad Hammani - Intro to Machine Learning.webp"
