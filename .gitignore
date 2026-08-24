@@ -3,6 +3,10 @@
 .env.local
 backend/.env
 
+# Python virtual environments
+.venv/
+venv/
+
 # Node modules
 node_modules/
 package-lock.json

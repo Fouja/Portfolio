@@ -129,28 +129,40 @@ main {
 }
 
 .hero-3d-scene {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
   min-height: 420px;
-  background: radial-gradient(circle at 30% 30%, #1e293b 0, #020617 55%);
+  background: radial-gradient(circle at 30% 30%, #0f172a 0, #020617 60%);
+  overflow: hidden;
+}
+
+.hero-neural-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .hero-3d-card {
   position: relative;
-  width: min(720px, 92vw);
+  width: min(520px, 80vw);
   border-radius: 1.5rem;
   transform-style: preserve-3d;
   transition: transform 0.1s ease-out;
   overflow: hidden;
-  box-shadow: 0 30px 70px rgba(2, 6, 23, 0.7);
+  z-index: 1;
+  filter: drop-shadow(0 25px 50px rgba(2, 6, 23, 0.8));
 }
 
 .hero-3d-card::before {
   content: '';
   position: absolute;
-  inset: -50%;
+  inset: -40%;
   background: conic-gradient(
     from 0deg,
     #38bdf8,
@@ -160,32 +172,24 @@ main {
     #38bdf8
   );
   opacity: 0;
-  z-index: 0;
+  z-index: -1;
   transition: opacity 0.4s ease;
-  animation: hero-rotate-glow 4s linear infinite;
-  filter: blur(28px);
+  animation: hero-rotate-glow 5s linear infinite;
+  filter: blur(32px);
 }
 
 .hero-3d-card:hover::before,
 .hero-3d-card:focus-within::before {
-  opacity: 0.55;
+  opacity: 0.45;
 }
 
 @keyframes hero-rotate-glow {
   0% {
-    transform: rotate(0deg) scale(1.2);
+    transform: rotate(0deg) scale(1.1);
   }
   100% {
-    transform: rotate(360deg) scale(1.2);
+    transform: rotate(360deg) scale(1.1);
   }
-}
-
-.hero-3d-bg {
-  position: absolute;
-  inset: 2px;
-  border-radius: 1.4rem;
-  background: radial-gradient(circle at 30% 30%, #1e293b 0, #0b1220 70%);
-  z-index: 1;
 }
 
 .hero-3d-image {
