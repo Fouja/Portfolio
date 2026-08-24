@@ -32,9 +32,14 @@
         'div',
         { className: 'hero-media-frame' },
         profile?.photo
-          ? e.createElement(MediaCarousel, {
-              videoSrc: './assets/linked_video.mp4',
-              imageSrc: profile.photo,
+          ? e.createElement('img', {
+              src: profile.photo,
+              alt: 'Fouad Hammani profile',
+              className: 'carousel-image active',
+              fetchpriority: 'high',
+              decoding: 'async',
+              width: 1920,
+              height: 1280,
             })
           : null
       )
@@ -92,6 +97,10 @@
                     src: profile.badge_photo,
                     alt: profile?.name || 'Fouad Hammani',
                     className: 'hero-badge-photo presentation-photo',
+                    loading: 'eager',
+                    decoding: 'async',
+                    width: 84,
+                    height: 84,
                   })
                 : null,
               e.createElement(
@@ -186,7 +195,7 @@
     )
   }
 
-  function MediaCarousel({ videoSrc, imageSrc }) {
+  function MediaCarousel({ videoSrc, imageSrc, altText }) {
     const [showVideo, setShowVideo] = useState(true)
     const videoRef = React.useRef(null)
     const imageTimerRef = React.useRef(null)
@@ -237,9 +246,11 @@
           })
         : e.createElement('img', {
             src: imageSrc,
-            alt: 'Profile',
+            alt: altText || 'Profile cover',
             className: 'carousel-image active',
-            style: { cursor: 'default' }
+            style: { cursor: 'default' },
+            loading: 'lazy',
+            decoding: 'async'
           })
     )
   }
@@ -274,7 +285,8 @@
         profile?.photo 
           ? e.createElement(MediaCarousel, { 
               videoSrc: './assets/linked_video.mp4',
-              imageSrc: profile.photo
+              imageSrc: profile.photo,
+              altText: 'Fouad Hammani'
             })
           : 'FH'
       ),
@@ -397,6 +409,100 @@
             })
           )
         )
+      )
+    )
+  }
+
+  function BadgesSection({ badges, certifications }) {
+    const badgeList = badges && badges.length ? badges : []
+    const certList = certifications && certifications.length ? certifications : []
+
+    return e.createElement(
+      'section',
+      { id: 'badges', className: 'section' },
+      e.createElement(
+        'div',
+        { className: 'container' },
+        e.createElement(
+          'div',
+          { className: 'section-header' },
+          e.createElement('h2', { className: 'section-title' }, 'Badges & Certifications')
+        ),
+        badgeList.length > 0
+          ? e.createElement(
+              'div',
+              { className: 'card', style: { marginBottom: '1.5rem' } },
+              e.createElement('h3', { className: 'skills-group-title', style: { marginTop: 0 } }, 'Credly Badges'),
+              e.createElement(
+                'div',
+                { className: 'badges-grid' },
+                badgeList.map(function (b) {
+                  return e.createElement(
+                    'a',
+                    {
+                      key: b.name,
+                      href: b.url,
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                      className: 'badge-card',
+                      title: b.name + ' issued by ' + b.issuer,
+                    },
+                    e.createElement('img', {
+                      src: b.image,
+                      alt: b.name + ' badge',
+                      className: 'badge-image',
+                      loading: 'lazy',
+                      decoding: 'async',
+                      width: 120,
+                      height: 120,
+                    }),
+                    e.createElement('div', { className: 'badge-name' }, b.name),
+                    e.createElement('div', { className: 'badge-issuer' }, b.issuer)
+                  )
+                })
+              )
+            )
+          : null,
+        certList.length > 0
+          ? e.createElement(
+              'div',
+              { className: 'card' },
+              e.createElement('h3', { className: 'skills-group-title', style: { marginTop: 0 } }, 'Certifications'),
+              e.createElement(
+                'div',
+                { className: 'cert-grid' },
+                certList.map(function (c) {
+                  const isPdf = /\.pdf$/i.test(c.file || '')
+                  const linkProps = {
+                    key: c.name,
+                    href: c.file,
+                    target: '_blank',
+                    rel: 'noopener noreferrer',
+                    className: 'cert-card',
+                    title: c.name + ' issued by ' + c.issuer,
+                  }
+                  return e.createElement(
+                    'a',
+                    linkProps,
+                    e.createElement('img', {
+                      src: c.image,
+                      alt: c.name + ' certificate',
+                      className: 'cert-image',
+                      loading: 'lazy',
+                      decoding: 'async',
+                      width: 160,
+                      height: 120,
+                    }),
+                    e.createElement('div', { className: 'cert-name' }, c.name),
+                    e.createElement('div', { className: 'cert-issuer' }, c.issuer),
+                    isPdf
+                      ? e.createElement('span', { className: 'cert-tag' }, 'PDF')
+                      : null
+                  )
+                })
+              )
+            )
+          : null
       )
     )
   }
@@ -651,6 +757,7 @@
                 onClick: function () {
                   setTab('all')
                 },
+                'aria-pressed': tab === 'all',
               },
               'All'
             ),
@@ -662,6 +769,7 @@
                 onClick: function () {
                   setTab('personal')
                 },
+                'aria-pressed': tab === 'personal',
               },
               'Personal'
             ),
@@ -673,6 +781,7 @@
                 onClick: function () {
                   setTab('school')
                 },
+                'aria-pressed': tab === 'school',
               },
               'School'
             )
@@ -703,7 +812,10 @@
                       src: p.video,
                       controls: true,
                       className: 'project-video',
-                      style: { width: '100%', borderRadius: '8px 8px 0 0' }
+                      style: { width: '100%', borderRadius: '8px 8px 0 0' },
+                      title: p.title + ' demo video',
+                      preload: 'none',
+                      poster: mainImage
                     })
                   : (mainImage
                       ? e.createElement('div', {
@@ -713,8 +825,10 @@
                         },
                         e.createElement('img', {
                           src: mainImage,
-                          alt: p.title,
+                          alt: p.title + ' screenshot',
                           className: 'project-image',
+                          loading: 'lazy',
+                          decoding: 'async',
                         }),
                         projectImages.length > 1 
                           ? e.createElement('div', {
@@ -769,6 +883,7 @@
                     ? e.createElement(
                         'button',
                         {
+                          type: 'button',
                           className: 'project-link',
                           style: { background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' },
                           onClick: () => openLightbox(projectImages, 0)
@@ -935,8 +1050,12 @@
                   { key: g.name + s, className: 'skill-chip' },
                   logoUrl ? e.createElement('img', {
                     src: logoUrl,
-                    alt: s,
+                    alt: '',
                     className: 'skill-logo',
+                    loading: 'lazy',
+                    decoding: 'async',
+                    width: 18,
+                    height: 18,
                     onError: (e) => { e.target.style.display = 'none' }
                   }) : null,
                   s
@@ -974,7 +1093,7 @@
     const inter =
       interests && interests.length
         ? interests.map(function (i) {
-            return i.name
+            return typeof i === 'string' ? i : i.name
           })
         : [
             'Basketball',
@@ -1330,8 +1449,10 @@
     return e.createElement(
       e.Fragment, null,
       e.createElement('button', {
+        type: 'button',
         onClick: () => setIsOpen(!isOpen),
         title: 'Chat with me about what I can do',
+        'aria-label': 'Chat with me - open assistant',
         style: {
           position: 'fixed', bottom: '80px', right: '20px', height: '50px',
           borderRadius: '25px', background: 'linear-gradient(135deg, #06b6d4, #0891b2)', border: 'none', color: '#fff',
@@ -1364,7 +1485,9 @@
             )
           ),
           e.createElement('button', {
+            type: 'button',
             onClick: () => { setIsOpen(false); setMessages([]) },
+            'aria-label': 'Close chat',
             style: { background: 'rgba(0,0,0,0.15)', border: 'none', color: '#000', fontSize: '18px', cursor: 'pointer', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }
           }, '\u00D7')
         ),
@@ -1378,6 +1501,7 @@
             e.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'center', marginTop: '4px' } },
               ['What are your skills?', 'Show me your projects', 'How can I contact you?', 'Tell me about your AI work'].map(function(q, i) {
                 return e.createElement('button', {
+                  type: 'button',
                   key: i, onClick: function() { sendMessage(q) },
                   style: { background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.3)', color: '#22d3ee', borderRadius: '16px', padding: '5px 12px', fontSize: '0.75rem', cursor: 'pointer', transition: 'all 0.2s' },
                   onMouseEnter: function(ev) { ev.currentTarget.style.background = 'rgba(6,182,212,0.25)' },
@@ -1416,7 +1540,9 @@
             onBlur: function(ev) { ev.target.style.borderColor = 'rgba(6,182,212,0.25)' }
           }),
           e.createElement('button', {
+            type: 'button',
             onClick: sendMessage, disabled: isLoading,
+            'aria-label': 'Send message',
             style: { background: isLoading ? 'rgba(6,182,212,0.3)' : 'linear-gradient(135deg, #06b6d4, #0891b2)', border: 'none', color: '#000', width: '38px', height: '38px', borderRadius: '10px', cursor: isLoading ? 'not-allowed' : 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }
           }, isLoading ? '\u2026' : '\u2192')
         )
@@ -1428,9 +1554,11 @@
     return e.createElement(
       'button',
       {
+        type: 'button',
         onClick: onToggle,
         className: 'music-button',
         title: isMuted ? 'Unmute Music' : 'Mute Music',
+        'aria-label': isMuted ? 'Unmute background music' : 'Mute background music',
         style: {
           position: 'fixed',
           bottom: '20px',
@@ -1510,6 +1638,7 @@
               e.createElement(
                 'button',
                 {
+                  type: 'button',
                   onClick: () => onSelectCourse(null),
                   style: {
                     background: 'none',
@@ -1547,6 +1676,7 @@
                   e.createElement(
                     'button',
                     {
+                      type: 'button',
                       key: course.id,
                       onClick: () => onSelectCourse(course),
                       style: {
@@ -1576,8 +1706,10 @@
                     },
                     course.image ? e.createElement('img', {
                       src: course.image,
-                      alt: course.name,
-                      style: { width: '50px', height: '50px', objectFit: 'contain' }
+                      alt: '',
+                      style: { width: '50px', height: '50px', objectFit: 'contain' },
+                      loading: 'lazy',
+                      decoding: 'async'
                     }) : null,
                     e.createElement('div', { style: { fontWeight: 'bold' } }, course.name),
                     e.createElement('div', { style: { fontSize: '0.85rem', opacity: 0.8 } }, course.description)
@@ -1587,6 +1719,7 @@
               e.createElement(
                 'button',
                 {
+                  type: 'button',
                   onClick: onClose,
                   style: {
                     background: '#ef4444',
@@ -1609,47 +1742,34 @@
   function App() {
     const [data] = useState(window.PORTFOLIO_DATA || {})
     const [lightbox, setLightbox] = useState({ isOpen: false, images: [], index: 0 })
-    const [musicMuted, setMusicMuted] = useState(false)
+    const [musicMuted, setMusicMuted] = useState(true)
     const [coursesOpen, setCoursesOpen] = useState(false)
     const [selectedCourse, setSelectedCourse] = useState(null)
     const audioRef = React.useRef(null)
 
     useEffect(() => {
+      if (musicMuted) {
+        if (audioRef.current) {
+          audioRef.current.pause()
+        }
+        return undefined
+      }
+
       if (!audioRef.current) {
         const audio = new Audio('./assets/malice%20mizer%20-%20gekka%20no%20yasoukyoku%20(instrumental%2Bsped%20up).mp3')
         audio.loop = true
         audio.volume = 0.3
-        audio.muted = musicMuted
+        audio.muted = false
         audioRef.current = audio
+      }
 
-        const playAudio = () => {
-          audio.play().catch(() => {})
-          document.removeEventListener('click', playAudio)
-          document.removeEventListener('keydown', playAudio)
-          document.removeEventListener('touchstart', playAudio)
-        }
+      const audio = audioRef.current
+      audio.play().catch(() => {})
 
-        document.addEventListener('click', playAudio)
-        document.addEventListener('keydown', playAudio)
-        document.addEventListener('touchstart', playAudio)
-
-        audio.play().catch(() => {})
-
-        return () => {
-          document.removeEventListener('click', playAudio)
-          document.removeEventListener('keydown', playAudio)
-          document.removeEventListener('touchstart', playAudio)
+      return () => {
+        if (audio) {
           audio.pause()
         }
-      } else {
-        audioRef.current.muted = musicMuted
-      }
-      return undefined
-    }, [])
-
-    useEffect(() => {
-      if (audioRef.current) {
-        audioRef.current.muted = musicMuted
       }
     }, [musicMuted])
 
@@ -1709,6 +1829,10 @@
           e.createElement(EducationSection, { education: data.education, embedded: false })
         )
       ),
+      e.createElement(BadgesSection, {
+        badges: data.badges,
+        certifications: data.certifications,
+      }),
       e.createElement(
         'section',
         { className: 'section' },
@@ -1753,7 +1877,9 @@
             onClick: closeLightbox
           },
           e.createElement('button', {
+            type: 'button',
             onClick: closeLightbox,
+            'aria-label': 'Close image preview',
             style: {
               position: 'absolute',
               top: '20px',
@@ -1770,7 +1896,9 @@
             onClick: (e) => e.stopPropagation()
           },
             lightbox.images.length > 1 && e.createElement('button', {
+              type: 'button',
               onClick: prevImage,
+              'aria-label': 'Previous image',
               style: {
                 position: 'absolute',
                 left: '-50px',
@@ -1787,10 +1915,13 @@
             }, '‹'),
             e.createElement('img', {
               src: lightbox.images[lightbox.index],
+              alt: 'Project screenshot ' + (lightbox.index + 1) + ' of ' + lightbox.images.length,
               style: { maxWidth: '100%', maxHeight: '80vh', borderRadius: '4px' }
             }),
             lightbox.images.length > 1 && e.createElement('button', {
+              type: 'button',
               onClick: nextImage,
+              'aria-label': 'Next image',
               style: {
                 position: 'absolute',
                 right: '-50px',

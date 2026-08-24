@@ -20,9 +20,9 @@ window.PORTFOLIO_DATA = {
     projects_completed: 8,
     years_experience: 7,
       organizations_worked: 5,
-      photo: "./assets/linked_cover.png",
-      badge_photo: "./assets/photomoi.jpg",
-      logo: "./assets/foujalab.png",
+      photo: "./assets/fouad-hammani.webp",
+      badge_photo: "./assets/fouad-hammani.webp",
+      logo: "./assets/foujalab.webp",
       resume_url: "./assets/Fouad_Hammani_Engineer_Canada_ATS.pdf"
     },
     experience: [
@@ -120,6 +120,14 @@ window.PORTFOLIO_DATA = {
   ],
   education: [
     {
+      institution: "Woolf University / GoMyCode School",
+      program: "Master Degree in Software Engineering",
+      start: "2026",
+      end: "Expected 2027",
+      location: "Remote / Europe",
+      description: "Earned in 15 months. Elevate your career with the Software Engineering Master, awarded by Woolf and accredited with 90 ECTS credits. This program combines in-depth knowledge of web development with hands-on experience in building full-stack applications. Gain the expertise to lead digital projects, solve complex challenges, and shape the tech industry's future."
+    },
+    {
       institution: "WES",
       program: "EDE - Diploma in Computer Science (Databases)",
       start: "Nov 2024",
@@ -183,6 +191,46 @@ window.PORTFOLIO_DATA = {
       title: "B2 English Certification",
       issuer: "Islington Centre of English | London, UK",
       year: "Sep 2017"
+    }
+  ],
+  badges: [
+    {
+      name: "Agile Explorer",
+      issuer: "IBM SkillsBuild",
+      url: "https://www.credly.com/badges/34a87604-f82f-480c-998b-d7b0c9f290f9",
+      image: "https://images.credly.com/images/3b7846e2-bdbd-4ed6-8543-182f47502190/linkedin_thumb_image.png"
+    },
+    {
+      name: "Build an AI Agent",
+      issuer: "IBM SkillsBuild",
+      url: "https://www.credly.com/badges/31a3151e-cbf6-4ba1-8d7b-0eb40e29811b",
+      image: "https://images.credly.com/images/d8f30e8e-4c24-42e8-bb15-b106bb082614/linkedin_thumb_BadgeEmblem_BuildAnAIAgent.png"
+    },
+    {
+      name: "Verified International Academic Qualifications",
+      issuer: "World Education Services",
+      url: "https://www.credly.com/badges/581a26dc-73fa-4d74-80e8-6fba32a2dceb",
+      image: "https://images.credly.com/images/28243fa9-71f4-4b55-9fb3-eab99e1dff95/linkedin_thumb_image.png"
+    }
+  ],
+  certifications: [
+    {
+      name: "IBM Data Analysis",
+      issuer: "IBM",
+      file: "./assets/Certifications/Ibm_fouadhammani_certifcate_data_analyse.pdf",
+      image: "./assets/Certifications/image-1.webp"
+    },
+    {
+      name: "Intro to Deep Learning",
+      issuer: "Kaggle",
+      file: "./assets/Certifications/Fouad Hammani - Intro to Deep Learning.webp",
+      image: "./assets/Certifications/Fouad Hammani - Intro to Deep Learning.webp"
+    },
+    {
+      name: "Intro to Machine Learning",
+      issuer: "Kaggle",
+      file: "./assets/Certifications/Fouad Hammani - Intro to Machine Learning.webp",
+      image: "./assets/Certifications/Fouad Hammani - Intro to Machine Learning.webp"
     }
   ],
   skills: {
@@ -270,6 +318,29 @@ window.PORTFOLIO_DATA = {
   },
   projects: [
     {
+      title: "Argus ML-Auditor",
+      subtitle: "AI-Powered Command Center for Finance, Operations & Intelligence",
+      description: "Built for AI-Sommelier, Argus ML-Auditor is a secure, AI-powered assistant that unifies email, calendar, banking, project management, and news feeds into one intelligent interface. It connects to the tools professionals already use, understands their data, and performs real work — from summarizing emails and generating bank statements to monitoring competitors and tracking projects. The platform keeps data under user control while delivering the productivity gains of a full-time analyst.",
+      tech_stack: "Next.js, React, Tailwind CSS, Django, Django Ninja, LangGraph, NVIDIA NIM, PostgreSQL, pgvector, Redis, Celery, Docker, ELK",
+      live_url: "https://ai-sommelier.ca/about/",
+      code_url: "",
+      project_type: "personal",
+      images: [
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-42-11.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-41-52.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-41-42.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-41-28.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-40-36.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-40-14.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-40-06.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-39-57.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-39-49.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-39-28.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-38-58.webp",
+        "./assets/Argus-MLAuditor/Screenshot From 2026-08-13 16-38-00.webp"
+      ]
+    },
+    {
       title: "ERP & SharePoint Integration for Agro Consulting",
       subtitle: "Full-Stack ERP · Garden Algérie / ACI",
       description: "Designed, developed, and deployed a full ERP and SharePoint solution using Laravel (backend), React (frontend), Inertia.js (API), MySQL, and Docker. Included supplier, inventory, purchase orders, analytics, and dashboards, deployed on company infrastructure and offered as a desktop app via Electron.",
@@ -277,18 +348,18 @@ window.PORTFOLIO_DATA = {
       live_url: "",
       code_url: "",
       images: [
-        "./assets/depot_garden_scres/homepage_garden.png",
-        "./assets/depot_garden_scres/graphics_garden.png",
-        "./assets/depot_garden_scres/history_page.png",
-        "./assets/depot_garden_scres/homepage2_garden.png",
-        "./assets/depot_garden_scres/loginpage_garden.png",
-        "./assets/depot_garden_scres/lost_productspage_garden.png",
-        "./assets/depot_garden_scres/pdf_exemple.png",
-        "./assets/depot_garden_scres/receipts_page_garden.png",
-        "./assets/depot_garden_scres/statistics_page.png",
-        "./assets/depot_garden_scres/stock_page_garden.png",
-        "./assets/depot_garden_scres/transferbuttenclick.png",
-        "./assets/depot_garden_scres/transfertded page.png"
+        "./assets/depot_garden_scres/homepage_garden.webp",
+        "./assets/depot_garden_scres/graphics_garden.webp",
+        "./assets/depot_garden_scres/history_page.webp",
+        "./assets/depot_garden_scres/homepage2_garden.webp",
+        "./assets/depot_garden_scres/loginpage_garden.webp",
+        "./assets/depot_garden_scres/lost_productspage_garden.webp",
+        "./assets/depot_garden_scres/pdf_exemple.webp",
+        "./assets/depot_garden_scres/receipts_page_garden.webp",
+        "./assets/depot_garden_scres/statistics_page.webp",
+        "./assets/depot_garden_scres/stock_page_garden.webp",
+        "./assets/depot_garden_scres/transferbuttenclick.webp",
+        "./assets/depot_garden_scres/transfertded page.webp"
       ]
     },
     {
@@ -299,9 +370,9 @@ window.PORTFOLIO_DATA = {
       live_url: "https://ppaindicator.streamlit.app",
       code_url: "",
       images: [
-        "./assets/PPA_stramlite_screen/ppastreamlit1.png",
-        "./assets/PPA_stramlite_screen/PPA streamlit2.png",
-        "./assets/PPA_stramlite_screen/ppastreamlit3.png"
+        "./assets/PPA_stramlite_screen/ppastreamlit1.webp",
+        "./assets/PPA_stramlite_screen/PPA streamlit2.webp",
+        "./assets/PPA_stramlite_screen/ppastreamlit3.webp"
       ]
     },
     {
@@ -312,11 +383,11 @@ window.PORTFOLIO_DATA = {
       live_url: "",
       code_url: "",
       images: [
-        "./assets/secured_ecommerce_screns/chinamall.png",
-        "./assets/secured_ecommerce_screns/card.png",
-        "./assets/secured_ecommerce_screns/chat.png",
-        "./assets/secured_ecommerce_screns/chat_chinamall.png",
-        "./assets/secured_ecommerce_screns/footer.png"
+        "./assets/secured_ecommerce_screns/chinamall.webp",
+        "./assets/secured_ecommerce_screns/card.webp",
+        "./assets/secured_ecommerce_screns/chat.webp",
+        "./assets/secured_ecommerce_screns/chat_chinamall.webp",
+        "./assets/secured_ecommerce_screns/footer.webp"
       ]
     },
     {
@@ -327,7 +398,7 @@ window.PORTFOLIO_DATA = {
       live_url: "",
       code_url: "",
       images: [
-        "./assets/localia_screen/Capture d'écran 2026-02-07 162142.png"
+        "./assets/localia_screen/Capture d'écran 2026-02-07 162142.webp"
       ]
     },
     {
@@ -338,10 +409,10 @@ window.PORTFOLIO_DATA = {
       live_url: "",
       code_url: "",
       images: [
-        "./assets/expo_mobile_app_screens/expo_mobile_app.png",
-        "./assets/expo_mobile_app_screens/expo_3.png",
-        "./assets/expo_mobile_app_screens/expo_mobile_app2.png",
-        "./assets/expo_mobile_app_screens/expo_mobile_app3.png"
+        "./assets/expo_mobile_app_screens/expo_mobile_app.webp",
+        "./assets/expo_mobile_app_screens/expo_3.webp",
+        "./assets/expo_mobile_app_screens/expo_mobile_app2.webp",
+        "./assets/expo_mobile_app_screens/expo_mobile_app3.webp"
       ]
     },
     {

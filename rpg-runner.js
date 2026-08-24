@@ -245,27 +245,27 @@
   ]
 
   const oreTypes = [
-    { id: 'bookJeanJacquesRousseau', label: 'Rousseau', cover: '#7c3aed', image: './assets/books/rousseau.png' },
-    { id: 'bookSpinoza', label: 'Spinoza', cover: '#2563eb', image: './assets/books/spinoza.png' },
-    { id: 'bookKant', label: 'Kant', cover: '#0f766e', image: './assets/books/kant.png' },
-    { id: 'bookHegel', label: 'Hegel', cover: '#be123c', image: './assets/books/hegel.png' },
-    { id: 'bookMarx', label: 'Marx', cover: '#b45309', image: './assets/books/marx.png' },
-    { id: 'bookGramsci', label: 'Gramsci', cover: '#334155', image: './assets/books/gramsci.png' },
-    { id: 'bookAlgorithms', label: 'Algorithms', cover: '#0891b2', image: './assets/books/algorithms.png' },
-    { id: 'bookDatabases', label: 'Databases', cover: '#1d4ed8', image: './assets/books/databases.png' },
-    { id: 'bookPython', label: 'Python', cover: '#ca8a04', image: './assets/books/python.png' },
-    { id: 'bookWebDev', label: 'Web Dev', cover: '#15803d', image: './assets/books/webdev.png' },
-    { id: 'bookMachineLearning', label: 'ML', cover: '#9333ea', image: './assets/books/ml.png' },
-    { id: 'bookReact', label: 'React', cover: '#06b6d4', image: './assets/books/react.png' },
-    { id: 'bookTypeScript', label: 'TS', cover: '#2563eb', image: './assets/books/typescript.png' },
-    { id: 'bookDocker', label: 'Docker', cover: '#0ea5e9', image: './assets/books/docker.png' },
-    { id: 'bookLangChain', label: 'LangChain', cover: '#16a34a', image: './assets/books/langchain.png' },
-    { id: 'bookPostgreSQL', label: 'Postgres', cover: '#1d4ed8', image: './assets/books/postgresql.png' },
-    { id: 'bookKafka', label: 'Kafka', cover: '#52525b', image: './assets/books/kafka.png' },
-    { id: 'bookSpark', label: 'Spark', cover: '#ea580c', image: './assets/books/spark.png' },
-    { id: 'bookHuggingFace', label: 'HF', cover: '#eab308', image: './assets/books/huggingface.png' },
-    { id: 'bookGit', label: 'Git', cover: '#f97316', image: './assets/books/git.png' },
-    { id: 'bookLinux', label: 'Linux', cover: '#111827', image: './assets/books/linux.png' },
+    { id: 'bookJeanJacquesRousseau', label: 'Rousseau', cover: '#7c3aed', image: './assets/books/rousseau.webp' },
+    { id: 'bookSpinoza', label: 'Spinoza', cover: '#2563eb', image: './assets/books/spinoza.webp' },
+    { id: 'bookKant', label: 'Kant', cover: '#0f766e', image: './assets/books/kant.webp' },
+    { id: 'bookHegel', label: 'Hegel', cover: '#be123c', image: './assets/books/hegel.webp' },
+    { id: 'bookMarx', label: 'Marx', cover: '#b45309', image: './assets/books/marx.webp' },
+    { id: 'bookGramsci', label: 'Gramsci', cover: '#334155', image: './assets/books/gramsci.webp' },
+    { id: 'bookAlgorithms', label: 'Algorithms', cover: '#0891b2', image: './assets/books/algorithms.webp' },
+    { id: 'bookDatabases', label: 'Databases', cover: '#1d4ed8', image: './assets/books/databases.webp' },
+    { id: 'bookPython', label: 'Python', cover: '#ca8a04', image: './assets/books/python.webp' },
+    { id: 'bookWebDev', label: 'Web Dev', cover: '#15803d', image: './assets/books/webdev.webp' },
+    { id: 'bookMachineLearning', label: 'ML', cover: '#9333ea', image: './assets/books/ml.webp' },
+    { id: 'bookReact', label: 'React', cover: '#06b6d4', image: './assets/books/react.webp' },
+    { id: 'bookTypeScript', label: 'TS', cover: '#2563eb', image: './assets/books/typescript.webp' },
+    { id: 'bookDocker', label: 'Docker', cover: '#0ea5e9', image: './assets/books/docker.webp' },
+    { id: 'bookLangChain', label: 'LangChain', cover: '#16a34a', image: './assets/books/langchain.webp' },
+    { id: 'bookPostgreSQL', label: 'Postgres', cover: '#1d4ed8', image: './assets/books/postgresql.webp' },
+    { id: 'bookKafka', label: 'Kafka', cover: '#52525b', image: './assets/books/kafka.webp' },
+    { id: 'bookSpark', label: 'Spark', cover: '#ea580c', image: './assets/books/spark.webp' },
+    { id: 'bookHuggingFace', label: 'HF', cover: '#eab308', image: './assets/books/huggingface.webp' },
+    { id: 'bookGit', label: 'Git', cover: '#f97316', image: './assets/books/git.webp' },
+    { id: 'bookLinux', label: 'Linux', cover: '#111827', image: './assets/books/linux.webp' },
   ]
 
   const hazardTypes = [
@@ -296,7 +296,7 @@
   runnerSprite.onload = () => {
     runnerSpriteLoaded = true
   }
-  runnerSprite.src = './assets/game-runner.png'
+  runnerSprite.src = './assets/game-runner.webp'
 
   oreTypes.forEach((type) => {
     const image = new Image()

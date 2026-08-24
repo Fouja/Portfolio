@@ -2,27 +2,105 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Fouad Hammani – Portfolio</title>
+    <title>Fouad Hammani – AI Software Engineer Portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/png" href="./assets/foujalab.png" />
-    <link rel="shortcut icon" type="image/png" href="./assets/foujalab.png" />
+    <meta
+      name="description"
+      content="Fouad Hammani – AI Software Engineer in Ontario. Full-stack developer specializing in Python, Django, React, AI agents, LangChain, and data engineering."
+    />
+    <meta
+      name="keywords"
+      content="Fouad Hammani, AI Software Engineer, Full-Stack Developer, Python, Django, React, LangChain, Portfolio"
+    />
+    <meta name="author" content="Fouad Hammani" />
+    <meta name="theme-color" content="#050816" />
+    <link rel="canonical" href="https://fouja.github.io/Portfolio/" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/foujalab-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/foujalab-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+    <link rel="manifest" href="./site.webmanifest" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fouja.github.io/Portfolio/" />
+    <meta property="og:title" content="Fouad Hammani – AI Software Engineer Portfolio" />
+    <meta
+      property="og:description"
+      content="Full-stack developer specializing in Python, Django, React, AI agents, LangChain, and data engineering."
+    />
+    <meta property="og:image" content="https://fouja.github.io/Portfolio/assets/fouad-hammani-social.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Fouad Hammani – AI Software Engineer Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Full-stack developer specializing in Python, Django, React, AI agents, LangChain, and data engineering."
+    />
+    <meta name="twitter:image" content="https://fouja.github.io/Portfolio/assets/fouad-hammani-social.jpg" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://images.credly.com" />
+    <link rel="dns-prefetch" href="https://unpkg.com" />
+
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
     />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="preload" as="image" href="./assets/fouad-hammani.webp" fetchpriority="high" />
+    <link rel="stylesheet" href="./styles.min.css" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Fouad Hammani",
+        "jobTitle": "AI Software Engineer",
+        "url": "https://fouja.github.io/Portfolio/",
+        "image": "https://fouja.github.io/Portfolio/assets/fouad-hammani.png",
+        "email": "Fouadhammani94@gmail.com",
+        "telephone": "+1-613-451-0031",
+        "address": {
+          "@type": "PostalAddress",
+          "addressRegion": "Ontario",
+          "addressCountry": "CA"
+        },
+        "sameAs": [
+          "https://www.linkedin.com/in/fouad-hammani-software-engineer/",
+          "https://github.com/Fouja",
+          "https://www.credly.com/users/fouad-hammani"
+        ],
+        "knowsAbout": [
+          "Python",
+          "Django",
+          "React",
+          "Artificial Intelligence",
+          "Machine Learning",
+          "LangChain",
+          "Data Engineering"
+        ]
+      }
+    </script>
   </head>
   <body>
+    <a href="#root" class="skip-link">Skip to main content</a>
     <header class="site-header">
       <div class="container nav-container">
         <div class="logo">
-          <img src="./assets/foujalab.png" alt="FoujeLab" class="site-logo" />
+          <a href="#hero" aria-label="Fouad Hammani home">
+            <img src="./assets/foujalab.webp" alt="FoujeLab logo" class="site-logo" width="36" height="36" />
+          </a>
         </div>
-        <nav class="nav-links">
+        <nav class="nav-links" aria-label="Primary navigation">
           <a href="#hero">Home</a>
           <a href="#education">Education</a>
           <a href="#experience">Experience</a>
           <a href="#projects">Projects</a>
+          <a href="#badges">Badges</a>
           <a href="#skills">Skills</a>
           <a href="#contact">Contact</a>
         </nav>
@@ -40,15 +118,15 @@
       </div>
     </footer>
 
-    <script src="./rpg-runner.js"></script>
-    <script src="./data.js"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="./data.min.js" defer></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js" defer></script>
     <script
       crossorigin
       src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+      defer
     ></script>
 
-    <script src="./app.js"></script>
+    <script src="./app.min.js" defer></script>
   </body>
 </html>
 

@@ -1,0 +1,21 @@
+{
+  "name": "Fouad Hammani – AI Software Engineer Portfolio",
+  "short_name": "Fouad Portfolio",
+  "description": "Portfolio of Fouad Hammani, AI Software Engineer specializing in Python, Django, React, AI agents, and data engineering.",
+  "start_url": "/Portfolio/",
+  "display": "standalone",
+  "background_color": "#050816",
+  "theme_color": "#050816",
+  "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/foujalab.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

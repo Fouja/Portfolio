@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fouja.github.io/Portfolio/sitemap.xml
